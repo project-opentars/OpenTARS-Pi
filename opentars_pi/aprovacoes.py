@@ -1,5 +1,5 @@
 """Aprovação na própria placa para pedidos que vêm pela rede: o token não pode virar chave do terminal.
-Cada pendência é um arquivo; quem está na placa responde com `opentars-pi --aprovacoes`. Sem resposta, é não."""
+Cada pendência é um arquivo; quem está na placa responde com `opentars --approvals`. Sem resposta, é não."""
 import json
 import os
 import secrets

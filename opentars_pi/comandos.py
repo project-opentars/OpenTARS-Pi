@@ -44,7 +44,7 @@ def plano(pedido, n):
     if a:
         return f"touch {_q(grupo(a, 1))}"
     # pastas
-    a = _achar(r"\b(?:pasta|diretorio|folder|directory)\b(?: chamada| chamado| called| named)?\s+([\w.-]+)\s+(?:em|na|no|in|inside|under)\s+(?:a pasta |the folder )?" + _CAMINHO, n)
+    a = _achar(r"\b(?:pasta|diretorio|folder|directory)\b(?: nova| novo)?(?: chamada| chamado| called| named)?\s+([\w.-]+)\s+(?:dentro d[eao]|em|na|no|in|inside|under)\s+(?:a pasta |the folder )?" + _CAMINHO, n)
     if a and _achar(r"\b(cria|crie|criar|faz|faca|make|create|new|nova)\b", n):
         return "mkdir -p " + _q(grupo(a, 2).rstrip("/") + "/" + grupo(a, 1))
     a = _achar(r"\b(?:cria|crie|criar|faz|faca|make|create|new|nova)\b.{0,20}\b(?:pasta|diretorio|folder|directory)\b(?: chamada| chamado| called| named)?\s+(?:a |the )?" + r"(~?/[^\s'\"?,;]*|[\w.-]+)\s*$", n)

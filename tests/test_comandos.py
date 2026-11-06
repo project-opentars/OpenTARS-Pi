@@ -29,6 +29,7 @@ class TesteComandos(unittest.TestCase):
             "create a folder called demo in /tmp": "mkdir -p /tmp/demo",
             "cria uma pasta chamada teste em /tmp": "mkdir -p /tmp/teste",
             "cria a pasta fotos": "mkdir -p ~/fotos",
+            "cria uma pasta nova chamada teste dentro de /tmp": "mkdir -p /tmp/teste",
             "copia /etc/hostname para /tmp/h": "cp -r /etc/hostname /tmp/h",
             "rename /tmp/a.txt to /tmp/b.txt": "mv /tmp/a.txt /tmp/b.txt",
             "apaga o arquivo /tmp/velho.txt": "rm /tmp/velho.txt",

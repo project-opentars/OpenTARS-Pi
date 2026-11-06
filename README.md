@@ -9,18 +9,18 @@ Talk to your Raspberry Pi or Orange Pi in plain words: it runs commands, drives 
 curl -fsSL https://github.com/project-opentars/OpenTARS-Pi/releases/latest/download/install.sh | bash
 ```
 
-One line, no sudo, about a minute. Everything lands in one folder and one command removes it.
+One line, no sudo, about a minute. Then just type `opentars`. Everything lands in one folder and one command removes it.
 
 ## What it looks like
 
 Real session on an Orange Pi Zero 2W (4x Cortex-A53, 1 GB of RAM):
 
 ```text
-$ opentars-pi
+$ opentars
 openTARS Pi 1.0 · Gargantua Pi 270M · OrangePi Zero 2W · 796 MB free
 
 you how much free memory is there?
-gp  796 MB of memory free, out of 969 MB.
+Gargantua  796 MB of memory free, out of 969 MB.
 
 you list the files in /etc/ssl
   ⎿ ls -la /etc/ssl
@@ -28,13 +28,13 @@ you list the files in /etc/ssl
     -rw-r--r--   1 root root 12509 Apr  7  2026 openssl.cnf
 
 you remember that the relay is on pin PI13
-gp  Noted: the relay is on pin PI13.
+Gargantua  Noted: the relay is on pin PI13.
 
 you turn the relay on
 Change a pin?
   PI13 on
 Allow [y/N] y
-gp  PI13 is on.
+Gargantua  PI13 is on.
 ```
 
 ## What it does
@@ -67,32 +67,32 @@ The model is small, so the rule is strict: **only commands that just read run on
 
 ## Local by default
 
-The model, your memory and your commands stay on the board. The one thing that leaves is the text of a search: it goes to Wikipedia. For the whole web, point it at your own [SearXNG](https://docs.searxng.org/) with `opentars-pi search http://your-server:8888`. To keep everything on the board, use `opentars-pi search off`.
+The model, your memory and your commands stay on the board. The one thing that leaves is the text of a search: it goes to Wikipedia. For the whole web, point it at your own [SearXNG](https://docs.searxng.org/) with `opentars search http://your-server:8888`. To keep everything on the board, use `opentars search off`.
 
 ## Commands
 
 | | |
 |---|---|
-| `opentars-pi` | Chat |
-| `opentars-pi "how hot is the board?"` | One question |
-| `opentars-pi --auto` | Run changes without asking (dangerous ones still ask) |
-| `opentars-pi gpio list`, `read PC5`, `on PC5`, `off PC5`, `release PC5` | The pins by hand |
-| `opentars-pi service on`, `off`, `status` | Keep it running in the background (off by default) |
-| `opentars-pi --approvals` | Answer what is waiting from the network |
-| `opentars-pi search on`, `off`, `URL` | Web search on, off, or through your SearXNG |
-| `opentars-pi --window` | The small window (needs `python3-tk`) |
-| `opentars-pi --doctor` | Check the installation |
-| `opentars-pi --test` | Run the built-in test with the real model |
-| `opentars-pi --update` | Install the latest release |
-| `opentars-pi --uninstall` | Remove everything |
+| `opentars` | Chat |
+| `opentars "how hot is the board?"` | One question |
+| `opentars --auto` | Run changes without asking (dangerous ones still ask) |
+| `opentars gpio list`, `read PC5`, `on PC5`, `off PC5`, `release PC5` | The pins by hand |
+| `opentars service on`, `off`, `status` | Keep it running in the background (off by default) |
+| `opentars --approvals` | Answer what is waiting from the network |
+| `opentars search on`, `off`, `URL` | Web search on, off, or through your SearXNG |
+| `opentars --window` | The small window (needs `python3-tk`) |
+| `opentars --doctor` | Check the installation |
+| `opentars --test` | Run the built-in test with the real model |
+| `opentars --update` | Install the latest release |
+| `opentars --uninstall` | Remove everything |
 
 ## Use it from other devices
 
 The service listens only on the board until you say otherwise:
 
 ```bash
-opentars-pi service on --network
-opentars-pi --token
+opentars service on --network
+opentars --token
 ```
 
 ```bash

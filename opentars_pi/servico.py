@@ -8,12 +8,14 @@ UNIDADE = Path.home() / ".config/systemd/user/opentars-pi.service"
 
 
 def _systemctl(*args):
+    if not shutil.which("systemctl"):       # contêiner ou placa sem systemd: não há serviço para mexer
+        return subprocess.CompletedProcess(args, 1, "", "no systemd")
     return subprocess.run(["systemctl", "--user", *args], capture_output=True, text=True)
 
 
 def ligar(rede=False):
     if not shutil.which("systemctl"):
-        sys.exit("This system has no systemd. Run it by hand: opentars-pi --serve")
+        sys.exit("This system has no systemd. Run it by hand: opentars --serve")
     UNIDADE.parent.mkdir(parents=True, exist_ok=True)
     raiz = Path(__file__).resolve().parent.parent
     UNIDADE.write_text("[Unit]\nDescription=openTARS Pi\nAfter=network-online.target\n\n[Service]\n"

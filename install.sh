@@ -27,8 +27,8 @@ esac
 command -v curl >/dev/null || falhar "curl is missing. Install it with: sudo apt install curl"
 command -v sha256sum >/dev/null || falhar "sha256sum is missing (package coreutils)."
 python3 -c 'import sys; sys.exit(sys.version_info < (3, 9))' 2>/dev/null || falhar "Python 3.9 or newer is needed. Install it with: sudo apt install python3"
-GLIBC=$(ldd --version 2>/dev/null | head -1 | grep -oE '[0-9]+\.[0-9]+$' || echo 0)
-python3 -c "import sys; sys.exit(tuple(map(int, '$GLIBC'.split('.'))) < (2, 35))" || falhar "this system is too old (glibc $GLIBC). openTARS Pi needs glibc 2.35: Debian 12, Ubuntu 22.04, Raspberry Pi OS Bookworm or newer."
+GLIBC=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')
+python3 -c "import sys; v = '$GLIBC'; sys.exit(not v or tuple(map(int, v.split('.'))) < (2, 35))" || falhar "this system is too old or has no glibc (${GLIBC:-none}). openTARS Pi needs glibc 2.35: Debian 12, Ubuntu 22.04, Raspberry Pi OS Bookworm or newer."
 LIVRE=$(df -Pk "$HOME" | awk 'NR==2 {print int($4 / 1024)}')
 [ "$LIVRE" -ge 600 ] || falhar "not enough disk space: $LIVRE MB free, 600 MB needed."
 
@@ -61,6 +61,16 @@ mv "$TMP/app" "$BASE/app"
 mv "$TMP/motor" "$BASE/motor"
 ln -sf "$BASE/app/opentars-pi" "$BIN/opentars-pi"
 
+# O comando é `opentars`. Se o openTARS completo já usa esse nome aqui, ele continua dono e este fica em opentars-pi.
+COMANDO=opentars
+ATUAL=$(PATH="$BIN:$PATH" command -v opentars || true)
+if [ -z "$ATUAL" ] || [ "$(readlink -f "$ATUAL")" = "$(readlink -f "$BASE/app/opentars-pi")" ]; then
+  ln -sf "$BASE/app/opentars-pi" "$BIN/opentars"
+else
+  COMANDO=opentars-pi
+  printf 'The full openTARS already uses the opentars command here, so this one is opentars-pi.\n'
+fi
+
 case ":$PATH:" in
   *":$BIN:"*) ;;
   *) for perfil in "$HOME/.profile" "$HOME/.bashrc"; do
@@ -77,5 +87,5 @@ fi
 
 printf '\n\033[32mopenTARS Pi is installed.\033[0m\n'
 [ -z "${NOVO_PATH:-}" ] || printf 'Open a new terminal first, or run: export PATH="$HOME/.local/bin:$PATH"\n'
-printf 'Start it with: opentars-pi\n'
+printf 'Start it with: %s\n' "$COMANDO"
 printf 'The Gargantua Pi model is provided under the Gemma Terms of Use: https://ai.google.dev/gemma/terms\n'

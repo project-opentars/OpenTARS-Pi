@@ -56,6 +56,16 @@ class TesteMemoria(unittest.TestCase):
         self.assertIn("- meu gato é Mingau\n", contrato.sistema("", memoria.ler(), "pt"))
 
 
+class TesteSemSystemd(unittest.TestCase):
+    def test_estado_e_desligar_nao_quebram(self):
+        import os
+        from unittest import mock
+        from opentars_pi import servico
+        with mock.patch.dict(os.environ, {"PATH": "/nada"}):
+            self.assertEqual(servico.estado(), "inactive")
+            servico.desligar()
+
+
 class TesteBusca(unittest.TestCase):
     def test_melhor_frase_e_a_que_responde(self):
         from opentars_pi import busca

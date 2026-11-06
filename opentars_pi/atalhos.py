@@ -22,15 +22,16 @@ _MEMORIA = re.compile(r"\b(ram|memoria|memory)\b")
 _QUANTO = re.compile(r"\b(quanta|quanto|livre|disponivel|sobrando|usada|uso|usando|how much|free|usage|used|left|available)\b")
 _DISCO = re.compile(r"\b(disco|disk|armazenamento|storage|sd card|cartao sd|espaco livre|espaco no|free space)\b")
 _TEMP = re.compile(r"\b(temperatura|temperature|temp)\b.{0,20}\b(placa|cpu|processador|sistema|board|soc|system|chip)\b|"
-                   r"\b(placa|cpu|processador|board|chip)\b.{0,25}\b(temperatura|temperature|temp|quente|hot)\b|\bhow hot\b|\boverheat|\b(superaquec|esquentando)|^(qual a )?temperatura\??$|^temperature\??$")
+                   r"\b(placa|cpu|processador|board|chip)\b.{0,25}\b(temperatura|temperature|temp|quente|hot)\b|\bhow (hot|warm)\b|\boverheat|\b(superaquec|esquentando)|^(qual a )?temperatura\??$|^temperature\??$")
 _LIGADA = re.compile(r"\buptime\b|\b(ha )?quanto tempo\b.{0,30}\b(ligad|rodando)|\bhow long\b.{0,30}\b(running|been on|been up|up)\b")
-_IP = re.compile(r"\b(meu ip|o ip|endereco ip|ip address|my ip|the ip|ip local|ip da placa)\b")
+_IP = re.compile(r"\b(meu ip|o ip|endereco ip|ip address|my ip|the ip|ip local|ip da placa)\b|^ip\??$")
 _CPU = re.compile(r"\b(uso|carga|usage|load)\b.{0,15}\b(cpu|processador)\b|\b(cpu|processador)\b.{0,15}\b(uso|carga|usage|load)\b|\b(quantos nucleos|how many cores)\b")
 _QUE_PLACA = re.compile(r"\b(que|qual|which|what)\b.{0,12}\b(placa|board|computador|computer|hardware)\b.{0,12}\b(e|esta|essa|is|this)\b|"
                         r"\b(modelo|model)\b.{0,20}\b(placa|board|computador|computer)\b")
 _HORA = re.compile(r"\b(que horas|what time|horas sao)\b")
 _DATA = re.compile(r"\b(que dia|qual a data|que data|what day|what's the date|whats the date|what is the date|today's date)\b")
-_ESTADO = re.compile(r"\b(status|estado|como esta)\b.{0,15}\b(placa|board|sistema|system)\b|^status\??$|^estado\??$|\bhow is the (board|system)\b")
+_ESTADO = re.compile(r"\b(status|estado|como esta)\b.{0,15}\b(placa|board|sistema|system)\b|\b(placa|board|sistema|system)\b.{0,10}\b(status|estado)\b|"
+                     r"^status\??$|^estado\??$|\bhow is the (board|system)\b")
 
 
 def _estado(n, idioma):

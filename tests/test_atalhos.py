@@ -18,6 +18,11 @@ class TesteAtalhos(unittest.TestCase):
         self.assertIn("disco", self.fala("quanto espaço livre tem no disco?", "pt"))
         self.assertIn("cores", self.fala("how many cores does it have?"))
 
+    def test_jeitos_curtos_de_perguntar_da_placa(self):
+        self.assertIn("board", self.fala("how warm is the cpu right now?"))
+        self.assertIn("address", self.fala("ip?"))
+        self.assertIn("Memory:", self.fala("show me the board status"))
+
     def test_uso_de_memoria_e_ram(self):
         self.assertIn("MB", self.fala("qual o uso de memória agora?", "pt"))
 

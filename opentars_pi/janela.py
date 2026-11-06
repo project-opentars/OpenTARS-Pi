@@ -70,7 +70,7 @@ class Janela:
             tipo, dados = self.eventos.get()
             if tipo == "pedaco":
                 if not self.falando:
-                    self.escrever("gp  ", "gp")
+                    self.escrever("Gargantua  ", "gp")
                     self.falando = True
                 self.escrever(dados)
             elif tipo == "comando":
@@ -83,7 +83,7 @@ class Janela:
                 self.aviso.pack(fill="x", before=self.entrada)
             elif tipo == "fim":
                 if dados and not self.falando:
-                    self.escrever("gp  ", "gp")
+                    self.escrever("Gargantua  ", "gp")
                 self.escrever(dados + "\n\n")
                 self.falando = False
                 self.entrada.config(state="normal")

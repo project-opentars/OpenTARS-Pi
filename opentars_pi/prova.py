@@ -1,4 +1,4 @@
-"""A prova do app inteiro com o modelo real: `opentars-pi --test`. Roda numa pasta temporária; a memória e os arquivos da pessoa
+"""A prova do app inteiro com o modelo real: `opentars --test`. Roda numa pasta temporária; a memória e os arquivos da pessoa
 não entram. O juiz olha o que aconteceu de fato: a resposta veio do sistema, o fato foi guardado, o arquivo existe."""
 import os
 import re

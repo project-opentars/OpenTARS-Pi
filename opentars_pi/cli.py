@@ -15,6 +15,7 @@ from .textos import t
 SHA_MODELO = "f921e2370833585eda692d4878f9ba50899bdce18b57dc10d0300f8a66f5ac60"
 INSTALADOR = "https://github.com/project-opentars/OpenTARS-Pi/releases/latest/download/install.sh"
 COR = sys.stdout.isatty() and not os.environ.get("NO_COLOR")
+NOME = "Gargantua"
 
 
 def cor(codigo, texto):
@@ -43,7 +44,7 @@ class Terminal:
     def mostrar(self, tipo, texto):
         if tipo == "pedaco":
             if not self.falando:
-                print(verde("gp") + "  ", end="")
+                print(verde(NOME) + "  ", end="")
                 self.falando = True
             print(texto, end="", flush=True)
         elif tipo == "comando":
@@ -74,7 +75,7 @@ class Terminal:
             self.falando = False
             return
         if resposta:
-            print(verde("gp") + "  " + resposta)
+            print(verde(NOME) + "  " + resposta)
 
 
 def conversar(motor, auto, pedido=None):
@@ -105,7 +106,7 @@ def conversar(motor, auto, pedido=None):
 
 
 def comando_gpio(args):
-    uso = "usage: opentars-pi gpio list | read PIN | on PIN | off PIN | release PIN"
+    uso = "usage: opentars gpio list | read PIN | on PIN | off PIN | release PIN"
     if not args:
         sys.exit(uso)
     acao, pino = args[0], (args[1] if len(args) > 1 else None)
@@ -159,7 +160,7 @@ def comando_busca(args):
         pastas.salvar_config(busca=True, searxng=valor)
         print(f"Web search goes to your SearXNG: {valor}")
     else:
-        sys.exit("usage: opentars-pi search on | off | http://your-searxng:8888")
+        sys.exit("usage: opentars search on | off | http://your-searxng:8888")
 
 
 def responder_aprovacoes():
@@ -197,10 +198,13 @@ def remover():
     if sys.stdin.isatty() and input("Type yes to remove: ").strip().lower() not in ("yes", "sim"):
         return print("Nothing was removed.")
     servico.desligar()
-    lancador = os.path.expanduser("~/.local/bin/opentars-pi")
-    for arquivo in (lancador, os.path.expanduser("~/.local/share/applications/opentars-pi.desktop")):
-        if os.path.exists(arquivo):
-            os.remove(arquivo)
+    for nome in ("opentars-pi", "opentars"):      # `opentars` só sai se for nosso: pode ser o do app completo
+        lancador = os.path.expanduser("~/.local/bin/" + nome)
+        if os.path.islink(lancador) and os.path.realpath(lancador).startswith(os.path.realpath(pastas.BASE)):
+            os.remove(lancador)
+    atalho = os.path.expanduser("~/.local/share/applications/opentars-pi.desktop")
+    if os.path.exists(atalho):
+        os.remove(atalho)
     for perfil in ("~/.profile", "~/.bashrc"):    # a linha do PATH que o instalador pôs
         caminho = os.path.expanduser(perfil)
         if os.path.exists(caminho):
@@ -213,8 +217,8 @@ def remover():
 
 
 def opcoes():
-    p = argparse.ArgumentParser(prog="opentars-pi", description="openTARS Pi: a local AI assistant for small boards.",
-                                epilog="Also: opentars-pi gpio ..., opentars-pi service on|off|status, opentars-pi search on|off|URL")
+    p = argparse.ArgumentParser(prog="opentars", description="openTARS Pi: a local AI assistant for small boards.",
+                                epilog="Also: opentars gpio ..., opentars service on|off|status, opentars search on|off|URL")
     p.add_argument("pedido", nargs="*", help="what to do; leave empty to chat")
     p.add_argument("--version", action="version", version=f"openTARS Pi {VERSAO}")
     p.add_argument("--auto", action="store_true", help="run commands that change things without asking (dangerous ones still ask)")

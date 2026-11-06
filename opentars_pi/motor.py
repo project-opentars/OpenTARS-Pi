@@ -50,7 +50,7 @@ class Motor:
             return
         binario = self.binario()
         if not binario or not os.path.exists(self.modelo):
-            raise MotorForaDoAr("engine or model not found. Reinstall with: opentars-pi --atualizar")
+            raise MotorForaDoAr("engine or model not found. Reinstall with: opentars --update")
         pastas.CACHE.mkdir(parents=True, exist_ok=True)
         nucleos = os.cpu_count() or 4
         comando = [binario, "-m", self.modelo, "--host", "127.0.0.1", "--port", str(self.porta), "-c", str(CONTEXTO), "-t", str(nucleos),
