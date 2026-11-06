@@ -48,7 +48,7 @@ Gargantua  PI13 is on.
 
 ## Built for a small board
 
-Most requests never reach the model: common commands, board status, memory and pins are answered by code, so they come back right away and with the exact path you typed. The model, **[Gargantua Pi](https://huggingface.co/OpenTARS/Gargantua-Pi)** (270M, 300 MB), takes the conversation and everything else.
+Most requests never reach the model: common commands, board status, memory, pins and questions about the world are answered by code and search, so they come back right away, with the exact path you typed or the source they came from. The model, **[Gargantua Pi](https://huggingface.co/OpenTARS/Gargantua-Pi)** (270M, 300 MB), takes the conversation and everything else. It is honest about its size: ask it to write a program and it will point you to the full openTARS instead of handing you broken code.
 
 Measured on the Orange Pi Zero 2W:
 
@@ -58,8 +58,8 @@ Measured on the Orange Pi Zero 2W:
 | Status, files, memory, pins | 0.6 s |
 | First answer from the model, cold | 25 s |
 | Next runs (the prompt is cached on disk) | about 11 s |
-| Next answers in the same chat | 2 to 4 s |
-| Test with 32 new requests, on the board | 29 of 32 |
+| Conversation, once the model is loaded | 2 to 4 s |
+| Test with 30 new requests, on the board | 29 of 30 |
 
 ## Nothing changes without your yes
 
