@@ -58,6 +58,8 @@ Measured on the Orange Pi Zero 2W:
 | Status, files, memory, pins | 0.6 s |
 | First answer from the model, cold | 25 s |
 | Next runs (the prompt is cached on disk) | about 11 s |
+| Next answers in the same chat | 2 to 4 s |
+| Test with 30 new requests, on the board | 25 of 30 |
 
 ## Nothing changes without your yes
 
