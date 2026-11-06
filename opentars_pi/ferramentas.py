@@ -1,5 +1,6 @@
 """As 4 ferramentas do Gargantua Pi. Os resultados têm o formato que o modelo viu no treino."""
 import os
+import re
 import signal
 import subprocess
 import threading
@@ -42,9 +43,9 @@ def rodar(comando, tempo=TEMPO_COMANDO):
 
 
 class Ferramentas:
-    def __init__(self, aprovar, auto=False, idioma="en"):
-        """aprovar(comando, nivel) -> bool. auto: roda o que muda coisas sem perguntar, menos o perigoso."""
-        self.aprovar, self.auto, self.idioma = aprovar, auto, idioma
+    def __init__(self, aprovar, auto=False, idioma="en", ao_rodar=None):
+        """aprovar(comando, nivel) -> bool. auto: roda o que muda coisas sem perguntar, menos o perigoso. ao_rodar(comando): logo antes de rodar."""
+        self.aprovar, self.auto, self.idioma, self.ao_rodar = aprovar, auto, idioma, ao_rodar
 
     def chamar(self, nome, argumentos):
         funcao = {"execute_terminal": self.terminal, "search_web": self.pesquisar, "remember": self.lembrar, "forget": self.esquecer}.get(nome)
@@ -53,13 +54,15 @@ class Ferramentas:
         return funcao(argumentos)
 
     def terminal(self, a):
-        comando = str(a.get("command") or "").strip()
+        comando = re.sub(r'"~/', '"$HOME/', str(a.get("command") or "").strip())    # entre aspas o shell não expande o ~, e o modelo escreve assim
         if not comando:
             return {"success": False, "message": "ERROR: empty command."}
         nivel = seguranca.nivel(comando)
         if nivel == "perigoso" or (nivel == "perguntar" and not self.auto):
             if not self.aprovar(comando, nivel):
                 return {"success": False, "message": NAO_APROVOU}
+        if self.ao_rodar:
+            self.ao_rodar(comando)
         return rodar(comando)
 
     def pesquisar(self, a):

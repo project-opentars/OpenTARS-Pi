@@ -6,8 +6,8 @@ from . import pastas
 
 TEXTOS = {
     "en": {
-        "mem": "{livre} MB of memory free, out of {total} MB.",
-        "disco": "{livre:.1f} GB free on the disk, out of {total:.1f} GB.",
+        "mem": "{usada} MB of memory in use, {livre} MB free, out of {total} MB.",
+        "disco": "{usado:.1f} GB used on the disk, {livre:.1f} GB free, out of {total:.1f} GB.",
         "temp": "The board is at {temp:.0f} °C.", "sem_temp": "This board has no temperature sensor I can read.",
         "ligada": "Running for {tempo}.", "ip": "This board's address is {ip}.", "sem_ip": "No network address right now.",
         "cpu": "{nucleos} cores, load {carga:.2f}.", "placa": "This is a {modelo}, running {sistema}.",
@@ -21,7 +21,8 @@ TEXTOS = {
         "pino_ligado": "{pino} is on.", "pino_desligado": "{pino} is off.", "pino_valor": "{pino} reads {valor}.",
         "pino_negado": "Okay, I did not touch the pin.", "pino_erro": "I could not use that pin: {erro}",
         "nao_fiz": "I did not run anything, so nothing changed. Try asking in other words.",
-        "oi": "Hi! What can I do on this board?", "de_nada": "You're welcome.",
+        "oi": "Hi! What can I do on this board?", "nao_achei": "I could not find a good answer. The closest I found: {titulo} ({site}).",
+        "codigo": "Writing programs is too much for a model this small, and I would rather not hand you broken code. The full openTARS has Gargantua Code Gen 2 for that: https://project-opentars.github.io/OpenTARS/", "de_nada": "You're welcome.",
         "sem_busca": "I could not search right now, and I would rather not guess.", "nao_me_contou": "You haven't told me that yet. Say: remember that…",
         "falhou": "That did not work: {erro}", "feito": "Done.", "negado": "Okay, I did not run it.", "sem_resposta": "I don't have an answer for that.",
         "de_onde": "From {site}: {trecho}", "tambem": "Also: {site} ({titulo})",
@@ -31,8 +32,8 @@ TEXTOS = {
         "ligando": "Starting the engine…", "pronto": "ready in {s:.0f} s", "ajuda": "Ask in plain words. /memory shows what I remember, /exit leaves.",
     },
     "pt": {
-        "mem": "{livre} MB de memória livres, de {total} MB.",
-        "disco": "{livre:.1f} GB livres no disco, de {total:.1f} GB.",
+        "mem": "{usada} MB de memória em uso, {livre} MB livres, de {total} MB.",
+        "disco": "{usado:.1f} GB usados no disco, {livre:.1f} GB livres, de {total:.1f} GB.",
         "temp": "A placa está a {temp:.0f} °C.", "sem_temp": "Esta placa não tem um sensor de temperatura que eu consiga ler.",
         "ligada": "Ligada há {tempo}.", "ip": "O endereço desta placa é {ip}.", "sem_ip": "Sem endereço de rede agora.",
         "cpu": "{nucleos} núcleos, carga {carga:.2f}.", "placa": "Esta é uma {modelo}, com {sistema}.",
@@ -46,7 +47,8 @@ TEXTOS = {
         "pino_ligado": "{pino} está ligado.", "pino_desligado": "{pino} está desligado.", "pino_valor": "{pino} está em {valor}.",
         "pino_negado": "Certo, não mexi no pino.", "pino_erro": "Não consegui usar esse pino: {erro}",
         "nao_fiz": "Não rodei nada, então nada mudou. Tente pedir de outro jeito.",
-        "oi": "Oi! O que eu faço nesta placa?", "de_nada": "De nada.",
+        "oi": "Oi! O que eu faço nesta placa?", "nao_achei": "Não achei uma boa resposta. O mais perto que encontrei: {titulo} ({site}).",
+        "codigo": "Escrever programas é demais para um modelo deste tamanho, e prefiro não te entregar código quebrado. O openTARS completo tem o Gargantua Code Gen 2 para isso: https://project-opentars.github.io/OpenTARS/", "de_nada": "De nada.",
         "sem_busca": "Não consegui pesquisar agora, e prefiro não chutar.", "nao_me_contou": "Você ainda não me contou isso. Diga: lembra que…",
         "falhou": "Não deu certo: {erro}", "feito": "Pronto.", "negado": "Certo, não rodei.", "sem_resposta": "Não tenho resposta para isso.",
         "de_onde": "Segundo {site}: {trecho}", "tambem": "Também: {site} ({titulo})",

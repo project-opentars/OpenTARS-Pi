@@ -40,6 +40,7 @@ class Terminal:
     def __init__(self):
         self.idioma = textos.idioma_padrao()
         self.falando = False
+        self.aprovado = None
 
     def mostrar(self, tipo, texto):
         if tipo == "pedaco":
@@ -48,7 +49,8 @@ class Terminal:
                 self.falando = True
             print(texto, end="", flush=True)
         elif tipo == "comando":
-            print(cinza(f"  ⎿ {texto}"))
+            if texto != self.aprovado:       # o que acabou de ser aprovado já está na tela
+                print(cinza(f"  ⎿ {texto}"))
         elif tipo == "saida":
             linhas = texto.splitlines()
             for linha in linhas[:40]:
@@ -67,7 +69,9 @@ class Terminal:
         except (EOFError, KeyboardInterrupt):
             print()
             return False
-        return resposta in t("sim_forte" if nivel == "perigoso" else "sim", self.idioma)
+        sim = resposta in t("sim_forte" if nivel == "perigoso" else "sim", self.idioma)
+        self.aprovado = descricao if sim else None
+        return sim
 
     def fala(self, resposta):
         if self.falando:

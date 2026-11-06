@@ -39,10 +39,10 @@ def _estado(n, idioma):
         return None
     if _MEMORIA.search(n) and _QUANTO.search(n):
         total, livre = placa.memoria()
-        return t("mem", idioma, total=total, livre=livre)
+        return t("mem", idioma, total=total, livre=livre, usada=total - livre)
     if _DISCO.search(n):
         total, livre = placa.disco()
-        return t("disco", idioma, total=total, livre=livre)
+        return t("disco", idioma, total=total, livre=livre, usado=total - livre)
     if _TEMP.search(n):
         temp = placa.temperatura()
         return t("temp", idioma, temp=temp) if temp is not None else t("sem_temp", idioma)
@@ -69,6 +69,21 @@ def estado_completo(idioma):
     temp = placa.temperatura()
     return t("estado", idioma, modelo=placa.modelo(), total=total, livre=livre, disco=placa.disco()[1],
              temp=t("temp_linha", idioma, temp=temp) if temp is not None else "", tempo=duracao(placa.ligada_ha(), idioma))
+
+
+# Código: o modelo de 270M não sustenta. O script de "imprime a data" saiu `echo "21 28 31 30..."` (medido em 06/11).
+_PEDE_CODIGO = re.compile(r"\b(escreve|escreva|escrever|write|cria|crie|criar|create|make|faz|faca|fazer|gera|gere|generate|programa|programe|code)\b.{0,40}"
+                          r"\b(codigo|script|programa|program|code|funcao|function|app|aplicativo|site|website|hello world|ola mundo)\b")
+_OLA_MUNDO = {"python": 'print("Hello, world!")', "bash": 'echo "Hello, world!"', "shell": 'echo "Hello, world!"', "javascript": 'console.log("Hello, world!");',
+              "node": 'console.log("Hello, world!");', "c": '#include <stdio.h>\n\nint main(void) {\n    puts("Hello, world!");\n    return 0;\n}'}
+
+
+def _codigo(n, idioma):
+    if re.search(r"\b(hello world|ola mundo)\b", n):
+        for linguagem, exemplo in _OLA_MUNDO.items():
+            if re.search(rf"\b{linguagem}\b", n):
+                return exemplo
+    return t("codigo", idioma)
 
 
 _QUEM = re.compile(r"\b(quem (e|es) (voce|tu)|qual (e )?o seu nome|como voce se chama|who are you|what are you|what is your name|what's your name|"
@@ -170,7 +185,7 @@ def _sabe_de_memoria(n):
 
 
 def resolver(pedido, idioma):
-    """{'fala': texto}, {'pino': (...)}, {'comando': shell}, {'pesquisa': consulta} ou None (vai para o modelo)."""
+    """{'fala': texto}, {'pino': (...)}, {'comando': shell}, {'pesquisa': consulta}, {'conversa': True} ou None (o modelo com as ferramentas)."""
     n = normalizar(pedido)
     if pino := _pino(n):
         return {"pino": pino}
@@ -190,11 +205,15 @@ def resolver(pedido, idioma):
     tarefa, confianca = murph.classificar(pedido)
     if tarefa == "visao" and confianca > 0.85:     # "o que é isso aqui na tela", que as regras não pegaram
         return {"fala": t("tela", idioma)}
-    if _sabe_de_memoria(n) or _PAPO.search(n):
+    if _sabe_de_memoria(n):
         return None
+    if _PAPO.search(n):
+        return {"conversa": True}
     pergunta = _PERGUNTA.search(n)
     if pergunta and _DE_QUEM_PEDE.search(n):
         return {"fala": t("nao_me_contou", idioma)}
     if pergunta or (tarefa == "busca" and confianca > 0.6):
         return {"pesquisa": pedido.strip(" ?.")}
-    return None
+    if _PEDE_CODIGO.search(n) or (tarefa == "codigo" and confianca > 0.8):
+        return {"fala": _codigo(n, idioma)}
+    return {"conversa": True} if tarefa in ("simples", "geral") else None

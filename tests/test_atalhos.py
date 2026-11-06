@@ -13,6 +13,7 @@ class TesteAtalhos(unittest.TestCase):
 
     def test_estado_da_placa_sem_modelo(self):
         self.assertIn("MB of memory", self.fala("how much RAM is free?"))
+        self.assertIn("in use", self.fala("how much ram am i using"))
         self.assertIn("memória", self.fala("quanta memória livre eu tenho?", "pt"))
         self.assertIn("disk", self.fala("how much free disk space do I have?"))
         self.assertIn("disco", self.fala("quanto espaço livre tem no disco?", "pt"))
@@ -78,8 +79,18 @@ class TesteAtalhos(unittest.TestCase):
             self.assertIn("pesquisa", atalhos.resolver(pedido, "en") or {}, pedido)
 
     def test_papo_fica_com_o_modelo(self):
-        for pedido in ("how are you?", "tudo bem com você?", "me conta uma piada"):
+        for pedido in ("how are you?", "tudo bem com você?", "me conta uma curiosidade", "write a short poem about the sea"):
+            self.assertEqual(atalhos.resolver(pedido, "en"), {"conversa": True}, pedido)
+
+    def test_acao_livre_fica_com_o_modelo_e_as_ferramentas(self):
+        for pedido in ("connect to the wifi casa", "compress /var/log into a zip"):
             self.assertIsNone(atalhos.resolver(pedido, "en"), pedido)
+
+    def test_codigo_nao_sai_do_modelo(self):
+        self.assertIn('print("Hello, world!")', self.fala("write me a hello world in python"))
+        self.assertIn("puts", self.fala("write a hello world in c"))
+        self.assertIn("too much", self.fala("write a python function that adds two numbers"))
+        self.assertIn("demais", self.fala("faz um script em python que conta de 1 a 5", "pt"))
 
     def test_saudacao_e_agradecimento_saem_na_hora(self):
         for pedido in ("oi", "bom dia!", "hello there", "thanks a lot!", "valeu"):

@@ -36,6 +36,12 @@ class TesteTerminal(unittest.TestCase):
         f.chamar("execute_terminal", {"command": "rm -rf /tmp/nada-disso"})
         self.assertEqual(pedidos, ["perigoso"])
 
+    def test_til_entre_aspas_vira_a_pasta_pessoal(self):
+        rodados = []
+        f = ferramentas.Ferramentas(lambda c, n: True, ao_rodar=rodados.append)
+        f.chamar("execute_terminal", {"command": 'ls "~/nada-disso"'})
+        self.assertEqual(rodados, ['ls "$HOME/nada-disso"'])
+
     def test_ferramenta_desconhecida(self):
         self.assertFalse(ferramentas.Ferramentas(lambda c, n: False).chamar("open_website", {})["success"])
 
@@ -71,6 +77,29 @@ class TesteBusca(unittest.TestCase):
         from opentars_pi import busca
         resumo = "O Peru é um país da América do Sul. Tem costa no Pacífico. A capital do Peru é Lima, a maior cidade do país."
         self.assertIn("Lima", busca.melhor_frase(resumo, "qual a capital do Peru?"))
+
+    def test_pergunta_vira_palavras_chave(self):
+        from opentars_pi import busca
+        self.assertEqual(busca.chaves("what is the capital of France?"), ["capital", "france"])
+        self.assertEqual(busca.chaves("qual é a capital do Peru?"), ["capital", "peru"])
+
+    def test_o_assunto_ganha_do_que_so_tem_as_palavras(self):
+        from unittest import mock
+        from opentars_pi import busca
+        paginas = {"pages": [{"title": "Capital punishment in France", "key": "Capital_punishment_in_France"}, {"title": "France", "key": "France"}]}
+        resumos = {"Capital_punishment_in_France": "Capital punishment in France is banned.", "France": "France is a country. Its capital is Paris."}
+        with mock.patch.object(busca, "_baixar", side_effect=lambda url: json.dumps(paginas if "search" in url else {"extract": resumos[url.rsplit("/", 1)[1]]})):
+            achados = busca.wikipedia("what is the capital of france", "en")
+        self.assertEqual(achados[0]["titulo"], "France")
+        self.assertIn("Paris", achados[0]["trecho"])
+
+    def test_sem_frase_boa_avisa_que_e_fraco(self):
+        from unittest import mock
+        from opentars_pi import busca
+        paginas = {"pages": [{"title": "Outra coisa", "key": "Outra"}]}
+        with mock.patch.object(busca, "_baixar", side_effect=lambda url: json.dumps(paginas if "search" in url else {"extract": "Nada a ver com isso."})):
+            self.assertTrue(busca.wikipedia("capital mongolia ulan", "en")[0]["fraco"])
+
 
     def test_desligada_nada_sai_da_placa(self):
         from opentars_pi import busca

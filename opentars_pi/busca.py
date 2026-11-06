@@ -4,6 +4,7 @@ import json
 import re
 import urllib.parse
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 
 from . import VERSAO, pastas
 
@@ -28,34 +29,61 @@ def searxng(consulta, endereco):
             for r in dados.get("results", [])[:MAXIMO] if str(r.get("url", "")).startswith("http")]
 
 
-_VAZIAS = set("o a os as um uma de do da dos das que qual quais quem como onde quando e the of what which who how where when is are in on for to".split())
+_VAZIAS = set("o a os as um uma uns umas de do da dos das no na nos nas em que qual quais quem como onde quando quanto quanta quantos quantas e é foi são "
+              "era por para pra sobre me explica explique explicar diga fala the of what whats which who whom how where when why is are was were do does did "
+              "an in on at for to it its explain tell define please".split())
 
 
-def _palavras(texto):
-    return {p for p in re.findall(r"\w+", texto.lower()) if p not in _VAZIAS and len(p) > 1}
+def chaves(texto):
+    """As palavras que importam: 'what is the' na busca da Wikipédia trazia 'What Is a Nation?' (medido na placa, 06/11)."""
+    return [p for p in re.findall(r"\w+", texto.lower()) if p not in _VAZIAS and (len(p) > 1 or p.isdigit())]
 
 
-def melhor_frase(texto, consulta):
-    """A frase do resumo que mais divide palavras com a pergunta: a resposta costuma estar nela, não na primeira."""
+def melhor_frase(texto, consulta, assunto=""):
+    """A frase do resumo que mais divide palavras com a pergunta. As palavras do título não contam: na página France, quem responde
+    "capital of France" é a frase que fala de capital."""
     frases = [f.strip() for f in re.split(r"(?<=[.!?])\s+(?=[A-ZÀ-Ú])", texto) if f.strip()]
-    procura = _palavras(consulta)
-    return max(frases, key=lambda f: len(_palavras(f) & procura), default="")
+    procura = set(chaves(consulta))
+    procura = (procura - set(chaves(assunto))) or procura
+    return max(frases, key=lambda f: len(set(chaves(f)) & procura), default="")
+
+
+def _resumo(idioma, pagina):
+    try:
+        chave = urllib.parse.quote(pagina.get("key", ""), safe="")
+        dados = json.loads(_baixar(f"https://{idioma}.wikipedia.org/api/rest_v1/page/summary/{chave}"))
+        return None if dados.get("type") == "disambiguation" else dados.get("extract", "")
+    except (OSError, ValueError):
+        return ""
 
 
 def wikipedia(consulta, idioma="en"):
-    """A API pública da Wikipédia. O trecho vem do resumo da página, escolhido pela pergunta."""
-    url = f"https://{idioma}.wikipedia.org/w/rest.php/v1/search/page?" + urllib.parse.urlencode({"q": consulta, "limit": MAXIMO})
-    saida = []
-    for pagina in json.loads(_baixar(url)).get("pages", []):
-        chave = urllib.parse.quote(pagina.get("key", ""), safe="")
-        trecho = _limpar(pagina.get("excerpt", ""))
-        if not saida:      # só a primeira: cada página a mais é uma ida à rede numa placa lenta
-            try:
-                resumo = json.loads(_baixar(f"https://{idioma}.wikipedia.org/api/rest_v1/page/summary/{chave}")).get("extract", "")
-                trecho = melhor_frase(resumo, consulta) or trecho
-            except (OSError, ValueError):
-                pass
-        saida.append({"titulo": pagina.get("title", ""), "url": f"https://{idioma}.wikipedia.org/wiki/{chave}", "trecho": trecho[:300]})
+    """A API pública da Wikipédia. Lê o resumo das primeiras páginas e fica com a frase que melhor responde.
+    O primeiro resultado sai com 'fraco' quando nenhuma frase cobre metade das palavras da pergunta."""
+    palavras = chaves(consulta) or consulta.split()
+    url = f"https://{idioma}.wikipedia.org/w/rest.php/v1/search/page?" + urllib.parse.urlencode({"q": " ".join(palavras), "limit": 5})
+    paginas = json.loads(_baixar(url)).get("pages", [])
+    with ThreadPoolExecutor(5) as grupo:
+        resumos = list(grupo.map(lambda p: _resumo(idioma, p), paginas))
+    procura, achados = set(palavras), []
+    for pagina, resumo in zip(paginas, resumos):
+        if resumo is None:      # página de desambiguação não responde nada
+            continue
+        titulo = pagina.get("title", "")
+        limpo = re.sub(r"\s*\(.*?\)", "", titulo)
+        frase = melhor_frase(resumo, consulta, limpo) or _limpar(pagina.get("excerpt", ""))
+        cobertas = len((set(chaves(frase)) | set(chaves(limpo))) & procura)
+        # a página do assunto ganha da que só repete as palavras: "France", não "Capital punishment in France" nem "Capital (French magazine)"
+        nota = cobertas * 2 - len(set(chaves(limpo)) - procura) - (limpo != titulo)
+        o_resto = procura - set(chaves(limpo))
+        if o_resto and not o_resto & set(chaves(frase)):      # a frase só repete o título: não responde "capital da Argentina"
+            nota -= 2
+        achados.append((nota, cobertas, pagina, frase))
+    achados.sort(key=lambda a: -a[0])
+    saida = [{"titulo": p.get("title", ""), "url": f"https://{idioma}.wikipedia.org/wiki/{urllib.parse.quote(p.get('key', ''), safe='')}", "trecho": f[:300]}
+             for _, _, p, f in achados]
+    if saida:
+        saida[0]["fraco"] = achados[0][1] * 2 < len(procura)
     return saida
 
 

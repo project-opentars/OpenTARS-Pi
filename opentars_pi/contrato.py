@@ -85,6 +85,13 @@ def renderizar(mensagens):
     return "".join(saida)
 
 
+def renderizar_conversa(historico, pedido):
+    """Conversa sem ferramentas: sem prompt de sistema, como nos exemplos 'simples' do treino. O modelo fala melhor assim, e o texto
+    é curto: na placa não há prompt de 360 tokens para ler."""
+    voltas = "".join(f"<start_of_turn>user\n{u.strip()}<end_of_turn>\n<start_of_turn>model\n{r.strip()}<end_of_turn>\n" for u, r in historico)
+    return f"{voltas}<start_of_turn>user\n{pedido.strip()}<end_of_turn>\n<start_of_turn>model\n"
+
+
 def prefixo(texto_do_sistema):
     """O começo fixo do prompt: o que o motor pode guardar pronto de um pedido para o outro."""
     return renderizar([{"role": "system", "content": texto_do_sistema}]).removesuffix("<start_of_turn>model\n")

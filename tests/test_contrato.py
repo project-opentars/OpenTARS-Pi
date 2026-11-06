@@ -23,13 +23,13 @@ def ferramentas_json():
     return saida
 
 
-def molde(mensagens):
+def molde(mensagens, tools=True):
     """mensagens no formato do treino, pelo chat_template.jinja do modelo."""
     ambiente = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.join(AQUI, "fixtures")),
                                   extensions=["jinja2.ext.loopcontrols"])
     ambiente.filters.setdefault("tojson", json.dumps)
     texto = ambiente.get_template("functiongemma.jinja").render(
-        messages=mensagens, tools=ferramentas_json(), bos_token="<bos>", add_generation_prompt=True)
+        messages=mensagens, tools=ferramentas_json() if tools else None, bos_token="<bos>", add_generation_prompt=True)
     return texto[len("<bos>"):]
 
 
@@ -67,6 +67,11 @@ class TesteMolde(unittest.TestCase):
                        {"role": "tool", "name": "search_web", "content": "r"},
                        {"role": "assistant", "content": "", "chamada": ("forget", {"fact": "x"})},
                        {"role": "tool", "name": "forget", "content": "ok"}])
+
+
+    def test_conversa_sem_ferramentas(self):
+        mensagens = [{"role": "user", "content": "oi"}, {"role": "assistant", "content": "Olá!"}, {"role": "user", "content": "tudo bem?"}]
+        self.assertEqual(c.renderizar_conversa([("oi", "Olá!")], "tudo bem?"), molde(mensagens, tools=False))
 
 
 class TesteLeitura(unittest.TestCase):

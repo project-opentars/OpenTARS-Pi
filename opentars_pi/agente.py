@@ -2,11 +2,12 @@
 import re
 import urllib.parse
 
-from . import atalhos, contrato, gpio, memoria, textos
+from . import atalhos, busca, contrato, gpio, memoria, textos
 from .ferramentas import NAO_APROVOU, Ferramentas
 from .textos import t
 
 PASSOS = 5
+_PRONOME = re.compile(r"\b(it|its|there|ele|ela|dele|dela|disso|la)\b")
 _DIZ_QUE_FEZ = re.compile(r"\b(criei|criada|criado|feito|pronto|apaguei|apagado|salvei|salvo|movi|movido|instalei|instalado|renomeei|escrevi|"
                           r"done|created|deleted|saved|moved|installed|renamed|wrote|finished|success)\b", re.IGNORECASE)
 
@@ -17,10 +18,10 @@ class Agente:
         self.motor = motor
         self.aprovar = aprovar
         self.mostrar = mostrar or (lambda tipo, texto: None)
-        self.ferramentas = Ferramentas(aprovar, auto)
+        self.ferramentas = Ferramentas(aprovar, auto, ao_rodar=lambda comando: self.mostrar("comando", comando))
         self.historico = []
         self.idioma_base = textos.idioma_padrao()
-        self.ultimo_nivel = None
+        self.assunto = ""
 
     def _sistema(self):
         return contrato.sistema("", memoria.ler(), self.idioma_base)
@@ -59,7 +60,8 @@ class Agente:
         return "" if resultado.get("stdout", "").strip() else t("feito", idioma)     # a saída já apareceu
 
     def _usar_ferramenta(self, nome, argumentos):
-        self.mostrar("comando", argumentos.get("command") or argumentos.get("query") or argumentos.get("fact") or nome)
+        if nome != "execute_terminal":      # o comando aparece depois da aprovação
+            self.mostrar("comando", argumentos.get("query") or argumentos.get("fact") or nome)
         resultado = self.ferramentas.chamar(nome, argumentos)
         saida = (resultado.get("stdout") or "") + (resultado.get("stderr") or "")
         if saida.strip():
@@ -79,14 +81,26 @@ class Agente:
 
     def _pesquisar(self, consulta, idioma):
         """A resposta sai dos resultados, sem passar pelo modelo: com 270M ele diz que abriu o navegador em vez de ler (medido em 06/11)."""
+        if self.assunto and _PRONOME.search(atalhos.normalizar(consulta)):      # "e a capital dele?"
+            consulta = f"{consulta} {self.assunto}"
+        self.assunto = " ".join(busca.chaves(consulta))
         resultado = self._usar_ferramenta("search_web", {"query": consulta})
         if not resultado.get("success"):
             return t("sem_busca", idioma)
         site = lambda r: urllib.parse.urlsplit(r["url"]).hostname or r["url"]   # noqa: E731
         primeiro, *resto = resultado["resultados"]
+        if primeiro.get("fraco"):
+            return t("nao_achei", idioma, site=site(primeiro), titulo=primeiro["titulo"])
         linhas = [t("de_onde", idioma, site=site(primeiro), trecho=primeiro["trecho"] or primeiro["titulo"])]
         linhas += [t("tambem", idioma, site=site(r), titulo=r["titulo"]) for r in resto[:2]]
         return "\n".join(linhas)
+
+    def _conversar(self, pedido, idioma):
+        """Papo: sem ferramentas e sem prompt. Só voltas curtas entram: uma resposta de placa no meio atrapalha um modelo deste tamanho."""
+        self.motor.ligar()
+        voltas = [(u, r) for u, r in self.historico[-2:] if r and len(r) < 200]
+        fala = self.motor.completar(contrato.renderizar_conversa(voltas, pedido), lambda p: self.mostrar("pedaco", p), maximo=120, temperatura=0.4)
+        return self._conferir(contrato.ler_resposta(fala)[1], 0, None, idioma)
 
     def responder(self, pedido):
         """A resposta final, em texto. O que mudou na placa já aconteceu quando isto volta."""
@@ -102,6 +116,8 @@ class Agente:
             return self._guardar(pedido, self._comando(plano["comando"], idioma))
         if plano and "pesquisa" in plano:
             return self._guardar(pedido, self._pesquisar(plano["pesquisa"], idioma))
+        if plano and "conversa" in plano:
+            return self._guardar(pedido, self._conversar(pedido, idioma))
         self.motor.ligar()
         self.motor.preparar_prefixo(contrato.prefixo(self._sistema()))
         mensagens = self._mensagens(pedido, idioma)
@@ -113,6 +129,8 @@ class Agente:
             nome, argumentos = chamada
             if nome == "search_web" and argumentos.get("query"):
                 return self._guardar(pedido, self._pesquisar(argumentos["query"], idioma))
+            if nome == "execute_terminal" and not argumentos.get("command"):
+                return self._guardar(pedido, t("nao_fiz", idioma))
             chave = (nome, tuple(sorted(argumentos.items())))
             if chave in vistas:         # modelo pequeno repete a mesma chamada: para aqui, com o que já tem
                 break
@@ -121,6 +139,8 @@ class Agente:
             usou += 1
             if ultimo.get("message") == NAO_APROVOU:     # a pessoa disse não: o modelo não tenta outro caminho
                 return self._guardar(pedido, t("negado", idioma))
+            if not ultimo.get("success"):                # um modelo deste tamanho não se recupera: só pediria mais aprovações à toa
+                return self._guardar(pedido, self._conferir("", usou, ultimo, idioma))
             mensagens += [{"role": "assistant", "content": "", "chamada": chamada},
                           {"role": "tool", "name": nome, "content": contrato.resultado(ultimo)}]
         return self._guardar(pedido, self._conferir("", usou, ultimo, idioma))
