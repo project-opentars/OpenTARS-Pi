@@ -60,7 +60,7 @@ def _resumo(idioma, pagina):
 def wikipedia(consulta, idioma="en"):
     """A API pública da Wikipédia. Lê o resumo das primeiras páginas e fica com a frase que melhor responde.
     O primeiro resultado sai com 'fraco' quando nenhuma frase cobre metade das palavras da pergunta."""
-    palavras = chaves(consulta) or consulta.split()
+    palavras = list(dict.fromkeys(chaves(consulta))) or consulta.split()
     url = f"https://{idioma}.wikipedia.org/w/rest.php/v1/search/page?" + urllib.parse.urlencode({"q": " ".join(palavras), "limit": 5})
     paginas = json.loads(_baixar(url)).get("pages", [])
     with ThreadPoolExecutor(5) as grupo:
@@ -77,7 +77,7 @@ def wikipedia(consulta, idioma="en"):
         nota = cobertas * 2 - len(set(chaves(limpo)) - procura) - (limpo != titulo)
         o_resto = procura - set(chaves(limpo))
         if o_resto and not o_resto & set(chaves(frase)):      # a frase só repete o título: não responde "capital da Argentina"
-            nota -= 2
+            nota -= 1
         achados.append((nota, cobertas, pagina, frase))
     achados.sort(key=lambda a: -a[0])
     saida = [{"titulo": p.get("title", ""), "url": f"https://{idioma}.wikipedia.org/wiki/{urllib.parse.quote(p.get('key', ''), safe='')}", "trecho": f[:300]}
