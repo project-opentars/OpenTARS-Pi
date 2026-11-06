@@ -31,7 +31,7 @@ def searxng(consulta, endereco):
 
 _VAZIAS = set("o a os as um uma uns umas de do da dos das no na nos nas em que qual quais quem como onde quando quanto quanta quantos quantas e é foi são "
               "era por para pra sobre me explica explique explicar diga fala the of what whats which who whom how where when why is are was were do does did "
-              "an in on at for to it its explain tell define please".split())
+              "an in on at for to it its explain tell define please my mine i eu meu minha meus minhas you voce você".split())
 
 
 def chaves(texto):

@@ -27,9 +27,21 @@ class TesteAtalhos(unittest.TestCase):
     def test_uso_de_memoria_e_ram(self):
         self.assertIn("MB", self.fala("qual o uso de memória agora?", "pt"))
 
-    def test_pergunta_sobre_o_que_guardou_nao_vai_para_a_web(self):
+    def test_pergunta_sobre_o_que_guardou_sai_da_memoria(self):
         memoria.lembrar("o backup roda às 3 da manhã")
-        self.assertIsNone(atalhos.resolver("quando roda o backup?", "pt"))
+        self.assertIn("3 da manhã", self.fala("quando roda o backup?", "pt"))
+        memoria.lembrar("my cat is called Nina")
+        self.assertIn("Nina", self.fala("what is the name of my cat?"))
+        memoria.lembrar("the fan is on pin PC2")
+        self.assertNotIn("PC2", self.fala("how does a fan work?") or "")
+
+    def test_lembrar_sem_que(self):
+        self.assertIn("Noted", self.fala("remember my name is Enzo"))
+        self.assertIn("Enzo", self.fala("what is my name?"))
+
+    def test_temperatura_sem_lugar_e_a_da_placa(self):
+        self.assertIn("board", self.fala("what's the temperature"))
+        self.assertNotIn("fala", atalhos.resolver("what's the temperature in Lisbon?", "en"))
 
     def test_memoria_do_assistente_nao_vira_ram(self):
         self.assertIn("empty", self.fala("what do you remember?"))

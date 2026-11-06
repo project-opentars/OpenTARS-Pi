@@ -5,7 +5,7 @@ import re
 import time
 import unicodedata
 
-from . import comandos, memoria, murph, placa
+from . import busca, comandos, memoria, murph, placa
 from .textos import duracao, t
 
 _POLIDEZ = r"^(por favor,? |please,? |pode |voce pode |can you |could you |from now on,? |a partir de agora,? |de agora em diante,? )?"
@@ -22,7 +22,7 @@ _MEMORIA = re.compile(r"\b(ram|memoria|memory)\b")
 _QUANTO = re.compile(r"\b(quanta|quanto|livre|disponivel|sobrando|usada|uso|usando|how much|free|usage|used|left|available)\b")
 _DISCO = re.compile(r"\b(disco|disk|armazenamento|storage|sd card|cartao sd|espaco livre|espaco no|free space)\b")
 _TEMP = re.compile(r"\b(temperatura|temperature|temp)\b.{0,20}\b(placa|cpu|processador|sistema|board|soc|system|chip)\b|"
-                   r"\b(placa|cpu|processador|board|chip)\b.{0,25}\b(temperatura|temperature|temp|quente|hot)\b|\bhow (hot|warm)\b|\boverheat|\b(superaquec|esquentando)|^(qual a )?temperatura\??$|^temperature\??$")
+                   r"\b(placa|cpu|processador|board|chip)\b.{0,25}\b(temperatura|temperature|temp|quente|hot)\b|\bhow (hot|warm)\b|\boverheat|^(what'?s|whats|what is|qual e|qual) (the |a )?(temperature|temperatura)\??$|\b(superaquec|esquentando)|^(qual a )?temperatura\??$|^temperature\??$")
 _LIGADA = re.compile(r"\buptime\b|\b(ha )?quanto tempo\b.{0,30}\b(ligad|rodando)|\bhow long\b.{0,30}\b(running|been on|been up|up)\b")
 _IP = re.compile(r"\b(meu ip|o ip|endereco ip|ip address|my ip|the ip|ip local|ip da placa)\b|^ip\??$")
 _CPU = re.compile(r"\b(uso|carga|usage|load)\b.{0,15}\b(cpu|processador)\b|\b(cpu|processador)\b.{0,15}\b(uso|carga|usage|load)\b|\b(quantos nucleos|how many cores)\b")
@@ -113,7 +113,7 @@ def _recusa(n, idioma):
 # ---- memória ----
 _LEMBRAR = re.compile(_POLIDEZ + r"(lembra|lembre|lembrar|anota|anote|grava|grave|guarda|guarde|salva|salve|memoriza|memorize|nao esquece|nao esqueca|"
                                  r"remember|note|save|make a note|keep in mind|don'?t forget|write down)\b"
-                                 r"( ai| isso| disso| this| na memoria| to memory)?( que| that|:)\s*")
+                                 r"( ai| isso| disso| this| na memoria| to memory)?( que| that|:|(?= (my|meu|minha|eu|i)\b))\s*")
 _ESQUECER = re.compile(_POLIDEZ + r"(esquece|esqueca|esquecer|forget)\b|\b(apaga|apague|remove|remova|tira|tire|limpa|delete|clear|take)\b.{0,40}\b(memoria|memory)\b")
 _VER_MEMORIA = re.compile(r"\bo que (voce )?(lembra|guardou|sabe (de|sobre) mim)\b|\bwhat do you (remember|know about me)\b|\b(mostra|mostre|show)( a| your)? (sua )?(memoria|memory)\b|^/mem")
 
@@ -178,10 +178,15 @@ _SAUDACAO = re.compile(r"^(oi|ola|opa|e ai|bom dia|boa tarde|boa noite|hi|hello|
 _OBRIGADO = re.compile(r"^(valeu|obrigad[oa]|brigad[oa]|thanks|thank you|thx)\b.{0,20}$")
 
 
-def _sabe_de_memoria(n):
-    """A pergunta fala de algo que a pessoa mandou lembrar? Aí a resposta está no prompt, não na web."""
-    palavras = {p for p in re.findall(r"\w{4,}", n)}
-    return any(palavras & set(re.findall(r"\w{4,}", normalizar(f))) for f in memoria.ler())
+def _fato_que_responde(n):
+    """O fato guardado que responde a pergunta, ou None. A resposta sai dele: o modelo de 270M lê a memória e responde outra coisa (medido em 06/11).
+    Pede pergunta pessoal ou que o fato cubra todas as palavras, senão "how does a fan work" traria "the fan is on pin PC2"."""
+    procura = set(busca.chaves(n))
+    notas = [(len(procura & set(busca.chaves(normalizar(f)))), f) for f in memoria.ler()]
+    melhor, fato = max(notas, default=(0, None), key=lambda x: x[0])
+    if melhor and (_DE_QUEM_PEDE.search(n) or melhor == len(procura)):
+        return fato
+    return None
 
 
 def resolver(pedido, idioma):
@@ -205,11 +210,12 @@ def resolver(pedido, idioma):
     tarefa, confianca = murph.classificar(pedido)
     if tarefa == "visao" and confianca > 0.85:     # "o que é isso aqui na tela", que as regras não pegaram
         return {"fala": t("tela", idioma)}
-    if _sabe_de_memoria(n):
-        return None
     if _PAPO.search(n):
         return {"conversa": True}
     pergunta = _PERGUNTA.search(n)
+    fato = _fato_que_responde(n) if pergunta else None
+    if fato:
+        return {"fala": t("lembro", idioma, fato=fato)}
     if pergunta and _DE_QUEM_PEDE.search(n):
         return {"fala": t("nao_me_contou", idioma)}
     if pergunta or (tarefa == "busca" and confianca > 0.6):

@@ -10,6 +10,9 @@ import shlex
 _CAMINHO = r"(~?/[^\s'\"?,;]*|[\w.-]+\.[A-Za-z0-9]{1,6})"
 
 
+_PASTAS = {"documentos": "Documents", "area de trabalho": "Desktop", "imagens": "Pictures", "musicas": "Music", "home": "", "pessoal": ""}
+
+
 def _q(caminho):
     """O caminho entre aspas, mantendo o ~ fora delas para o shell expandir."""
     caminho = caminho.rstrip(".")
@@ -51,6 +54,9 @@ def plano(pedido, n):
     if a:
         destino = grupo(a, 1)
         return "mkdir -p " + _q(destino if destino.startswith(("/", "~")) else "~/" + destino)
+    a = _achar(r"\b(?:cria|crie|criar|faz|faca|make|create|new|nova)\b.{0,20}\b(?:pasta|diretorio|folder|directory)\b\s+(?:em|na|no|in|inside|under|dentro d[eao])\s+" + _CAMINHO + r"\s+(?:chamada|chamado|called|named)\s+([\w.-]+)", n)
+    if a:
+        return "mkdir -p " + _q(grupo(a, 1).rstrip("/") + "/" + grupo(a, 2))
     # copiar e mover
     a = _achar(r"\b(cp|copia|copie|copiar|copy)\s+(?:o arquivo |a pasta |the file |the folder )?" + _CAMINHO + r"\s+(?:para|pra|to|em|into)\s+(?:a pasta |the folder )?" + _CAMINHO, n)
     if a:
@@ -97,8 +103,14 @@ def plano(pedido, n):
     a = _achar(r"\b(?:le|leia|ler|read|exibe|print|display|cat|abre|abra|open)\b.{0,25}?" + _CAMINHO, n)
     if a:
         return "head -n 100 " + _q(grupo(a, 1))
+    # as pastas da pessoa, pelo nome
+    a = _achar(r"\b(?:lista|liste|listar|list|mostra|mostre|show|ver|veja|o que tem|what is in|what's in|whats in|what's inside|contents of)\b.{0,25}?\b(?:my|minha|meus|meu|a|na|da)?\s*(?:pasta )?"
+               r"(downloads|documents|documentos|desktop|area de trabalho|pictures|imagens|music|musicas|videos|home|pessoal)\b", n)
+    if a:
+        pasta = _PASTAS.get(a.group(1), a.group(1).capitalize())
+        return "ls -la ~/" + (shlex.quote(pasta) if pasta else "")
     # o sistema
-    if _achar(r"\b(quais processos|que processos|o que esta rodando|what is running|what's running|whats running|top processes|which processes)\b", n):
+    if _achar(r"\b(quais processos|que processos|o que esta rodando|what is running|what's running|whats running|top processes|which processes|show (me )?the processes|mostra os processos|lista os processos|list (the )?processes)\b", n):
         return "ps aux --sort=-%mem | head -8"
     if _achar(r"\b(tem internet|estou online|esta online|am i online|internet working|internet funcionando|testa a internet|test the internet)\b", n):
         return "ping -c 2 -W 3 1.1.1.1"
