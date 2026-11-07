@@ -1,9 +1,10 @@
 """O laço do assistente: atalhos primeiro, depois o modelo com as ferramentas, até ele responder."""
 import re
+import shlex
 import shutil
 import urllib.parse
 
-from . import atalhos, busca, contrato, gpio, memoria, pastas, textos
+from . import atalhos, busca, contrato, gpio, memoria, operacoes, passos, pastas, textos
 from .ferramentas import NAO_APROVOU, Ferramentas
 from .textos import t
 
@@ -34,6 +35,7 @@ class Agente:
         self.mostrar = mostrar or (lambda tipo, texto: None)
         self.ferramentas = Ferramentas(aprovar, auto, ao_rodar=lambda comando: self.mostrar("comando", comando))
         self.historico = []
+        self.ultimo_resultado, self.lugar = None, None      # para o passo seguinte: "salva isso", "copia para ela"
         self.idioma_base = textos.idioma_padrao()
         self.assunto = ""
 
@@ -64,13 +66,22 @@ class Agente:
         except (gpio.ErroGpio, OSError) as e:
             return t("pino_erro", idioma, erro=e)
 
-    def _comando(self, comando, idioma):
-        resultado = self._usar_ferramenta("execute_terminal", {"command": comando})
+    def _comando(self, plano, idioma):
+        """Roda o comando de uma regra. plano: {"comando", e talvez "resumo", "alvo", "nota"} (operacoes.py)."""
+        plano = plano if isinstance(plano, dict) else {"comando": plano}
+        resultado = self._usar_ferramenta("execute_terminal", {"command": plano["comando"]})
+        self.ultimo_resultado = resultado
         if resultado.get("message") == NAO_APROVOU:
             return t("negado", idioma)
-        if not resultado.get("success"):
+        nada_achado = plano.get("resumo") in ("ocorrencias", "arquivos_com") and resultado.get("exit_code") == 1 and not resultado.get("stderr", "").strip()
+        if not resultado.get("success") and not nada_achado:      # grep sem achar sai com 1: é resposta, não erro
             erro = (resultado.get("stderr") or resultado.get("message") or "?").strip().splitlines()
             return t("falhou", idioma, erro=erro[-1])
+        if plano.get("lugar"):
+            self.lugar = plano["lugar"]
+        frase = " ".join(p for p in (plano.get("nota"), operacoes.resumir(plano, resultado, idioma)) if p)
+        if frase:
+            return frase
         return "" if resultado.get("stdout", "").strip() else t("feito", idioma)     # a saída já apareceu
 
     def _usar_ferramenta(self, nome, argumentos):
@@ -126,17 +137,64 @@ class Agente:
             return self._guardar(pedido, t("idioma_ok", self.idioma_base))
         idioma = textos.detectar(pedido, self.idioma_base)
         self.ferramentas.idioma = idioma
-        plano = atalhos.resolver(pedido, idioma)
-        if plano and "fala" in plano:
-            return self._guardar(pedido, plano["fala"])
-        if plano and "pino" in plano:
-            return self._guardar(pedido, self._pino(plano["pino"], idioma))
-        if plano and "comando" in plano:
-            return self._guardar(pedido, self._comando(plano["comando"], idioma))
-        if plano and "pesquisa" in plano:
-            return self._guardar(pedido, self._pesquisar(plano["pesquisa"], idioma))
-        if plano and "conversa" in plano:
-            return self._guardar(pedido, self._conversar(pedido, idioma))
+        partes = passos.dividir(pedido, atalhos.normalizar(pedido))
+        if partes:
+            resposta = self._varios(partes, idioma)
+            if resposta is not None:
+                return self._guardar(pedido, resposta)
+        resposta = self._por_regra(atalhos.resolver(pedido, idioma), pedido, idioma)
+        return self._guardar(pedido, resposta if resposta is not None else self._pelo_modelo(pedido, idioma))
+
+    def _por_regra(self, plano, pedido, idioma):
+        """A resposta de um plano das regras, ou None quando é com o modelo."""
+        if not plano:
+            return None
+        if "fala" in plano:
+            return plano["fala"]
+        if "pino" in plano:
+            return self._pino(plano["pino"], idioma)
+        if "comando" in plano:
+            return self._comando(plano, idioma)
+        if "pesquisa" in plano:
+            return self._pesquisar(plano["pesquisa"], idioma)
+        if "conversa" in plano:
+            return self._conversar(pedido, idioma)
+        return None
+
+    def _varios(self, partes, idioma):
+        """Um passo depois do outro. Para no primeiro que falha ou que a pessoa nega. None: o primeiro passo não é de regra."""
+        falas, anterior = [], None
+        self.lugar, self.ultimo_resultado = None, None
+        for i, parte in enumerate(partes):
+            n = atalhos.normalizar(parte)
+            if i and passos.pede_contagem(n) and anterior is not None:
+                saida = (self.ultimo_resultado or {}).get("stdout") or ""
+                falas.append(t("r_sao", idioma, n=len([l for l in saida.splitlines() if l.strip()])))
+                continue
+            destino = passos.salvar_em(n) if i else None
+            if destino and anterior:
+                comeco = n.rfind(destino)
+                destino = parte[comeco:comeco + len(destino)] if comeco >= 0 else destino
+                plano = {"comando": f"{anterior} > {operacoes._q(destino)}"}
+            else:
+                parte = passos.com_lugar(parte, self.lugar) if i else parte
+                plano = atalhos.resolver(parte, idioma)
+                if i == 0 and (not plano or "conversa" in plano):
+                    return None
+            resposta = self._por_regra(plano, parte, idioma)
+            if resposta is None:
+                resposta = self._pelo_modelo(parte, idioma)
+            falas.append(resposta)
+            if plano and "comando" in plano:
+                r = self.ultimo_resultado or {}
+                if r.get("message") == NAO_APROVOU or not (r.get("success") or plano.get("resumo") in ("ocorrencias", "arquivos_com")):
+                    break
+                anterior = plano["comando"]
+                if plano["comando"].startswith("mkdir -p ") and "&&" not in plano["comando"]:
+                    self.lugar = shlex.split(plano["comando"])[-1]
+        return "\n".join(f for f in falas if f)
+
+    def _pelo_modelo(self, pedido, idioma):
         self.motor.ligar()
         self.motor.preparar_prefixo(contrato.prefixo(self._sistema()))
         mensagens = self._mensagens(pedido, idioma)
@@ -144,14 +202,14 @@ class Agente:
         for _ in range(PASSOS):
             chamada, fala = self._falar_do_modelo(mensagens, lambda p: self.mostrar("pedaco", p))
             if not chamada:
-                return self._guardar(pedido, self._conferir(fala, usou, ultimo, idioma))
+                return self._conferir(fala, usou, ultimo, idioma)
             nome, argumentos = chamada
             if nome == "search_web" and argumentos.get("query"):
-                return self._guardar(pedido, self._pesquisar(argumentos["query"], idioma))
+                return self._pesquisar(argumentos["query"], idioma)
             if nome == "execute_terminal" and not argumentos.get("command"):
-                return self._guardar(pedido, t("nao_fiz", idioma))
+                return t("nao_fiz", idioma)
             if nome == "execute_terminal" and (faltando := _programa_que_falta(argumentos["command"])):      # "sudoulp": não vale pedir aprovação do que nem existe
-                return self._guardar(pedido, t("falhou", idioma, erro=f"{faltando}: command not found"))
+                return t("falhou", idioma, erro=f"{faltando}: command not found")
             chave = (nome, tuple(sorted(argumentos.items())))
             if chave in vistas:         # modelo pequeno repete a mesma chamada: para aqui, com o que já tem
                 break
@@ -159,14 +217,14 @@ class Agente:
             ultimo = self._usar_ferramenta(nome, argumentos)
             usou += 1
             if ultimo.get("message") == NAO_APROVOU:     # a pessoa disse não: o modelo não tenta outro caminho
-                return self._guardar(pedido, t("negado", idioma))
+                return t("negado", idioma)
             if not ultimo.get("success"):                # um modelo deste tamanho não se recupera: só pediria mais aprovações à toa
-                return self._guardar(pedido, self._conferir("", usou, ultimo, idioma))
+                return self._conferir("", usou, ultimo, idioma)
             if nome == "execute_terminal" and ultimo.get("stdout", "").strip():    # a saída já apareceu; o comentário do modelo só inventava ("I have saved that...")
-                return self._guardar(pedido, "")
+                return ""
             mensagens += [{"role": "assistant", "content": "", "chamada": chamada},
                           {"role": "tool", "name": nome, "content": contrato.resultado(ultimo)}]
-        return self._guardar(pedido, self._conferir("", usou, ultimo, idioma))
+        return self._conferir("", usou, ultimo, idioma)
 
     def _conferir(self, fala, usou, ultimo, idioma):
         """O modelo não pode dizer que fez o que não fez: aqui quem manda é o resultado da ferramenta."""

@@ -78,8 +78,8 @@ TEXTOS = {
         "ligando": "Ligando o motor…", "pronto": "pronto em {s:.0f} s", "ajuda": "Peça em palavras simples. /memoria mostra o que eu lembro, /sair sai.",
     },
 }
-_MARCAS_PT = re.compile(r"[ãõçáéíóúâêô]|\b(o|a|os|as|um|uma|de|do|da|que|qual|quanto|quanta|quem|como|onde|por|para|pra|meu|minha|tem|tenho|é|e aí|oi|ola|olá|valeu|liga|desliga|abre|cria|faz|lembra|esquece|pesquisa)\b", re.IGNORECASE)
-_MARCAS_EN = re.compile(r"\b(the|a|an|of|what|which|who|how|where|is|are|my|me|do|does|can|please|hi|hello|hey|turn|open|create|make|remember|forget|search|and|in|to)\b", re.IGNORECASE)
+_MARCAS_PT = re.compile(r"[ãõçáéíóúâêô]|\b(o|a|os|as|um|uma|de|do|da|que|qual|quanto|quanta|quem|como|onde|por|para|pra|meu|minha|tem|tenho|é|e aí|oi|ola|olá|valeu|liga|desliga|abre|cria|faz|lembra|esquece|pesquisa|em|no|na|nos|nas|foi|era|isso|essa|esse|voce|você|eu|quando|porque|sim|não|nao|tá|ta|está|esta)\b", re.IGNORECASE)
+_MARCAS_EN = re.compile(r"\b(the|a|an|of|what|which|who|how|where|is|are|my|me|do|does|can|please|hi|hello|hey|turn|open|create|make|remember|forget|search|and|in|to|when|did|was|were|has|have|it|this|that|you|your|i|will|would|there|from|with|for|on|at|by)\b", re.IGNORECASE)
 
 
 def idioma_padrao():
@@ -108,3 +108,49 @@ def duracao(segundos, idioma):
     minutos = resto // 60
     d, h, m = ("d", "h", "min")
     return " ".join(p for p in (f"{dias} {d}" if dias else "", f"{horas} {h}" if horas else "", f"{minutos} {m}") if p)
+
+
+# Operações de arquivo (operacoes.py) e respostas em palavras.
+TEXTOS["en"].update({
+    "nome_corrigido": "(There is no {pedido}; I used {real}.)", "achei_em": "(Found it at {real}.)",
+    "r_achados": "Found {n} in {alvo}.", "r_nada_achado": "Nothing like that in {alvo}.", "r_sao": "That makes {n}.",
+    "nao_achei_arquivo": "I could not find {nome} here.",
+    "nao_achei_arquivo_sugestao": "I could not find {nome}. Did you mean: {sugestoes}?",
+    "apagar_parecido": "There is no {nome}. Did you mean {real}? If so, say: delete {real}",
+    "nenhum_tipo": "There are no files of that kind in {pasta}.",
+    "r_linhas": "{alvo} has {n} lines.", "r_ocorrencias": "\"{termo}\" appears {n} times in {alvo}.",
+    "r_arquivos": "{alvo} has {n} files.", "r_nenhum_arquivo": "No file here mentions \"{termo}\".",
+    "r_esta_em": "It is in: {lista}", "r_maior": "The biggest file in {alvo} is {nome} ({tamanho}).",
+    "r_menor": "The smallest file in {alvo} is {nome} ({tamanho}).", "r_tamanho": "{alvo} takes up {tamanho}.",
+})
+TEXTOS["pt"].update({
+    "nome_corrigido": "(Não existe {pedido}; usei {real}.)", "achei_em": "(Achei em {real}.)",
+    "r_achados": "Achei {n} em {alvo}.", "r_nada_achado": "Nada assim em {alvo}.", "r_sao": "São {n}.",
+    "nao_achei_arquivo": "Não achei {nome} aqui.",
+    "nao_achei_arquivo_sugestao": "Não achei {nome}. Você quis dizer: {sugestoes}?",
+    "apagar_parecido": "Não existe {nome}. Você quis dizer {real}? Se for, diga: apaga {real}",
+    "nenhum_tipo": "Não há arquivos desse tipo em {pasta}.",
+    "r_linhas": "{alvo} tem {n} linhas.", "r_ocorrencias": "\"{termo}\" aparece {n} vezes em {alvo}.",
+    "r_arquivos": "{alvo} tem {n} arquivos.", "r_nenhum_arquivo": "Nenhum arquivo aqui fala de \"{termo}\".",
+    "r_esta_em": "Está em: {lista}", "r_maior": "O maior arquivo de {alvo} é {nome} ({tamanho}).",
+    "r_menor": "O menor arquivo de {alvo} é {nome} ({tamanho}).", "r_tamanho": "{alvo} ocupa {tamanho}.",
+})
+
+TEXTOS["en"].update({
+    "folga_boa": "Plenty of room.", "folga_media": "Still fine, but getting tighter.", "folga_pouca": "That is tight: worth freeing some up.",
+    "cabe_disco": "Yes: the disk has {livre:.1f} GB free, so {pedido} fits.", "nao_cabe_disco": "No: the disk has only {livre:.1f} GB free, not enough for {pedido}.",
+    "cabe_ram": "Yes: {livre} MB of memory are free, so {pedido} fits.", "nao_cabe_ram": "No: only {livre} MB of memory are free, not enough for {pedido}.",
+    "temp_ok": "That is normal.", "temp_morna": "Warm, but within limits.", "temp_quente": "That is hot: check the cooling.",
+    "cpu_folga": "It is relaxed.", "cpu_media": "Busy, but coping.", "cpu_cheia": "It is overloaded right now.",
+    "nao_instalado": "{programa} is not installed. Install it with: sudo apt install {pacote}",
+    "htop_falta": "htop is not installed (sudo apt install htop). Here is top instead:",
+})
+TEXTOS["pt"].update({
+    "folga_boa": "Está tranquilo.", "folga_media": "Ainda dá, mas está apertando.", "folga_pouca": "Está apertado: vale liberar espaço.",
+    "cabe_disco": "Sim: o disco tem {livre:.1f} GB livres, então {pedido} cabem.", "nao_cabe_disco": "Não: o disco tem só {livre:.1f} GB livres, não cabem {pedido}.",
+    "cabe_ram": "Sim: há {livre} MB de memória livres, então {pedido} cabem.", "nao_cabe_ram": "Não: só há {livre} MB de memória livres, não cabem {pedido}.",
+    "temp_ok": "Está normal.", "temp_morna": "Está morna, mas dentro do limite.", "temp_quente": "Está quente: vale olhar a ventilação.",
+    "cpu_folga": "Está folgado.", "cpu_media": "Está ocupado, mas dando conta.", "cpu_cheia": "Está sobrecarregado agora.",
+    "nao_instalado": "O {programa} não está instalado. Para instalar: sudo apt install {pacote}",
+    "htop_falta": "O htop não está instalado (sudo apt install htop). Mostrando o top:",
+})

@@ -5,7 +5,7 @@ import re
 import time
 import unicodedata
 
-from . import busca, comandos, conta, memoria, murph, placa
+from . import busca, comandos, conta, memoria, murph, nomes, operacoes, placa
 from .textos import duracao, t
 
 _POLIDEZ = r"^(por favor,? |please,? |pode |voce pode |can you |could you |from now on,? |a partir de agora,? |de agora em diante,? )?"
@@ -25,7 +25,13 @@ _TEMP = re.compile(r"\b(temperatura|temperature|temp)\b.{0,20}\b(placa|cpu|proce
                    r"\b(placa|cpu|processador|board|chip)\b.{0,25}\b(temperatura|temperature|temp|quente|hot)\b|\bhow (hot|warm)\b|\boverheat|^(what'?s|whats|what is|qual e|qual) (the |a )?(temperature|temperatura)\??$|\b(superaquec|esquentando)|^(qual a )?temperatura\??$|^temperature\??$")
 _LIGADA = re.compile(r"\buptime\b|\b(ha )?quanto tempo\b.{0,30}\b(ligad|rodando)|\bhow long\b.{0,30}\b(running|been on|been up|up)\b")
 _IP = re.compile(r"\b(meu ip|o ip|endereco ip|ip address|my ip|the ip|ip local|ip da placa)\b|^ip\??$")
-_CPU = re.compile(r"\b(uso|carga|usage|load)\b.{0,15}\b(cpu|processador)\b|\b(cpu|processador)\b.{0,15}\b(uso|carga|usage|load)\b|\b(quantos nucleos|how many (cpu )?cores|quantos (cores|processadores)|nucleos (de cpu|do processador|tem)|cpu cores)\b")
+_AVALIA = re.compile(r"\b(acabando|acabou|cheia|cheio|lotad[oa]|pouca|pouco|suficiente|enough|running out|low|full|tranquil\w*|apertad[oa]|"
+                     r"sobrecarregad[oa]|ocupad[oa]|busy|pesad[oa]|heavy|alta|alto|high|ok|bem|fine|quente|hot|fria|frio|cold|aguenta|handle)\b")
+_TAMANHO = re.compile(r"(\d+(?:[.,]\d+)?)\s*(tb|gb|g|giga\w*|mb|m|mega\w*|kb)\b")
+_CABE = re.compile(r"\b(da pra|da para|cabe|caberia|cabem|consigo|posso|tem espaco|tem lugar|sobra espaco|is there (?:enough )?(?:room|space|memory)|"
+                   r"enough (?:space|room|memory|ram)|can i (?:download|fit|store|save|run|keep)|fits?|would fit|aguenta|can it (?:run|handle))\b")
+_USA_RAM = re.compile(r"\b(ram|memoria|memory|rodar|roda|run|running|programa|program|processo|process|app|aplicativo|servico|service)\b")
+_CPU = re.compile(r"\b(uso|carga|usage|load)\b.{0,15}\b(cpu|processador)\b|\b(cpu|processador)\b.{0,15}\b(uso|carga|usage|load|ocupad[oa]|busy|sobrecarregad[oa]|pesad[oa])\b|\b(quantos nucleos|how many (cpu )?cores|quantos (cores|processadores)|nucleos (de cpu|do processador|tem)|cpu cores)\b")
 _WIFI = re.compile(r"\b(wi-?fi|wi fi|wireless|rede sem fio)\b")
 _QUE_PLACA = re.compile(r"\b(que|qual|which|what)\b.{0,12}\b(placa|board|computador|computer|hardware)\b.{0,12}\b(e|esta|essa|is|this)\b|"
                         r"\b(modelo|model)\b.{0,20}\b(placa|board|computador|computer)\b|\b(distro|distribuicao|sistema operacional|operating system)\b")
@@ -36,18 +42,46 @@ _ESTADO = re.compile(r"\b(status|estado|como esta)\b.{0,15}\b(placa|board|sistem
                      r"^status\??$|^estado\??$|\bhow is the (board|system)\b")
 
 
+def _folga(livre, total, idioma):
+    """O que os números querem dizer, para quem perguntou se está acabando."""
+    parte = livre / total if total else 1
+    return t("folga_boa" if parte > 0.3 else "folga_media" if parte > 0.1 else "folga_pouca", idioma)
+
+
+def _capacidade(n, idioma):
+    """'dá pra baixar um arquivo de 2 GB?', 'aguenta um programa de 500 MB?': compara com o que está livre e responde sim ou não."""
+    tamanho = _TAMANHO.search(n)
+    if not tamanho or not _CABE.search(n):
+        return None
+    valor = float(tamanho.group(1).replace(",", "."))
+    unidade = tamanho.group(2)[0]
+    mb = valor * {"t": 1024 * 1024, "g": 1024, "m": 1, "k": 1 / 1024}[unidade]
+    if _USA_RAM.search(n) and not re.search(r"\b(baixar|download|salvar|save|guardar|store|disco|disk|cartao|sd)\b", n):
+        total, livre = placa.memoria()
+        return t("cabe_ram" if mb < livre * 0.9 else "nao_cabe_ram", idioma, livre=livre, pedido=f"{tamanho.group(1)} {tamanho.group(2).upper()}")
+    total, livre = placa.disco()
+    return t("cabe_disco" if mb < livre * 1024 * 0.95 else "nao_cabe_disco", idioma, livre=livre, pedido=f"{tamanho.group(1)} {tamanho.group(2).upper()}")
+
+
 def _estado(n, idioma):
     if _DA_ASSISTENTE.search(n):
         return None
-    if _MEMORIA.search(n) and _QUANTO.search(n):
+    capacidade = _capacidade(n, idioma)
+    if capacidade:
+        return capacidade
+    if _MEMORIA.search(n) and (_QUANTO.search(n) or _AVALIA.search(n)):
         total, livre = placa.memoria()
-        return t("mem", idioma, total=total, livre=livre, usada=total - livre)
+        texto = t("mem", idioma, total=total, livre=livre, usada=total - livre)
+        return texto + " " + _folga(livre, total, idioma) if _AVALIA.search(n) else texto
     if _DISCO.search(n):
         total, livre = placa.disco()
-        return t("disco", idioma, total=total, livre=livre, usado=total - livre)
-    if _TEMP.search(n):
+        texto = t("disco", idioma, total=total, livre=livre, usado=total - livre)
+        return texto + " " + _folga(livre, total, idioma) if _AVALIA.search(n) else texto
+    if _TEMP.search(n) or (re.search(r"\b(placa|board|cpu|processador)\b", n) and re.search(r"\b(quente|hot|fria|frio|cold|esquent\w*|warm)\b", n)):
         temp = placa.temperatura()
-        return t("temp", idioma, temp=temp) if temp is not None else t("sem_temp", idioma)
+        if temp is None:
+            return t("sem_temp", idioma)
+        return t("temp", idioma, temp=temp) + " " + t("temp_ok" if temp < 60 else "temp_morna" if temp < 75 else "temp_quente", idioma)
     if _LIGADA.search(n):
         return t("ligada", idioma, tempo=duracao(placa.ligada_ha(), idioma))
     if _IP.search(n):
@@ -59,7 +93,8 @@ def _estado(n, idioma):
             return t("sem_wifi", idioma)
         return t("wifi", idioma, iface=rede[0], ip=placa.ip_local() or "?") if rede[1] else t("wifi_fora", idioma)
     if _CPU.search(n):
-        return t("cpu", idioma, nucleos=os.cpu_count(), carga=os.getloadavg()[0])
+        nucleos, carga = os.cpu_count() or 1, os.getloadavg()[0]
+        return t("cpu", idioma, nucleos=nucleos, carga=carga) + " " + t("cpu_folga" if carga < 0.7 * nucleos else "cpu_media" if carga < nucleos else "cpu_cheia", idioma)
     if _QUE_PLACA.search(n):
         return t("placa", idioma, modelo=placa.modelo(), sistema=placa.sistema())
     if _ESTADO.search(n):
@@ -119,7 +154,7 @@ def _recusa(n, idioma):
     if _COMPLETO.search(n):
         return t("completo", idioma)
     aberto = _ABRIR.search(n)
-    if aberto and not os.path.exists(os.path.expanduser("~/" + aberto.group(4))):
+    if aberto and not nomes.resolver(aberto.group(4))[0]:
         return t("tela", idioma)
     return None
 
@@ -135,7 +170,14 @@ _ESQUECER_TUDO = re.compile(r"^(esquece|esqueca|esquecer|forget)\s+(tudo|everyth
 _VER_MEMORIA = re.compile(r"\bo que (voce )?(lembra|guardou|sabe (de|sobre) mim)\b|\bwhat do you (remember|know about me)\b|\b(mostra|mostre|show)( a| your)? (sua )?(memoria|memory)\b|^/mem")
 
 
+_PINO_FATO = re.compile(r"^(?!.*\b(liga|ligue|desliga|desligue|turn|switch|acende|acenda|apaga|apague|le|leia|read)\b).*\b(esta|fica|is|are|vai|sits)\s+"
+                        r"(?:ligad[oa]\s+|conectad[oa]\s+|connected\s+|wired\s+|plugged\s+)?(?:no|na|on|at|in|to|into)\s+(?:o\s+|the\s+)?(?:pino|pin|gpio)\s*(p[a-k]\d{1,2}|\d{1,3})\b")
+
+
 def _memoria(pedido, n, idioma):
+    if _PINO_FATO.search(n):             # "a bomba está no pino PC9": é para lembrar, e depois "liga a bomba" acha o pino
+        fato = pedido.strip().rstrip(".!")
+        return t("anotado", idioma, fato=fato) if memoria.lembrar(fato) else None
     if _VER_MEMORIA.search(n):
         fatos = memoria.ler()
         return t("memoria", idioma, fatos="\n".join("- " + f for f in fatos)) if fatos else t("memoria_vazia", idioma)
@@ -228,9 +270,12 @@ def resolver(pedido, idioma):
     fala = _memoria(pedido, n, idioma) or _estado(n, idioma) or _recusa(n, idioma) or conta.resolver(n, idioma)
     if fala:
         return {"fala": fala}
-    comando = comandos.plano(pedido, n)
+    operacao = operacoes.plano(pedido, n, idioma)
+    if operacao:
+        return operacao if isinstance(operacao, dict) else {"comando": operacao}
+    comando = comandos.plano(pedido, n, idioma)
     if comando:
-        return {"comando": comando}
+        return comando if isinstance(comando, dict) else {"comando": comando}
     achado = _PESQUISA.search(n)
     if achado:
         return {"pesquisa": (pedido.strip() if len(pedido.strip()) == len(n) else n)[achado.end():].strip(" ?.")}

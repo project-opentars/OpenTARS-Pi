@@ -8,7 +8,9 @@ import re
 import shlex
 import shutil
 
-_CAMINHO = r"(~?/[^\s'\"?,;]*|[\w.-]+\.[A-Za-z0-9]{1,6})"
+from .textos import t
+
+_CAMINHO = r"(~?/[^\s'\"?,;]*|(?:[\w.-]+/)+[\w.-]+|[\w.-]+\.[A-Za-z0-9]{1,6})"
 
 
 _PASTAS = {"documentos": "Documents", "area de trabalho": "Desktop", "imagens": "Pictures", "musicas": "Music", "home": "", "pessoal": ""}
@@ -46,11 +48,16 @@ def _programa(linha):
     return _SO_TELA.get(partes[0], linha)
 
 
-def plano(pedido, n):
+def plano(pedido, n, idioma="pt"):
     """O comando para o pedido, ou None. pedido: como a pessoa escreveu. n: normalizado, do mesmo tamanho quando possível."""
     original = pedido.strip() if len(pedido.strip()) == len(n) else n
     a = _RODAR.match(n)
     if a and (comando := _programa(original[a.start(1):a.end(1)])):
+        programa = original[a.start(1):a.end(1)].split()[0]
+        if not shutil.which(programa):          # dizer como instalar vale mais que "command not found"
+            if programa in _SO_TELA:
+                return {"comando": comando, "nota": t("htop_falta", idioma)}
+            return {"fala": t("nao_instalado", idioma, programa=programa, pacote=programa)}
         return comando
     if re.fullmatch(r"[a-z0-9_.-]+( +(-{1,2}[\w-]+|[/~.][^\s]*))+", n) and shutil.which(n.split()[0]):    # "df -h": já é um comando
         return original

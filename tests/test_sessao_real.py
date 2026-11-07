@@ -106,8 +106,8 @@ class TesteSessao(unittest.TestCase):
         r = atalhos.resolver
         self.assertEqual(r("quais usuários existem nessa placa", "pt"), {"comando": "ls /home"})
         self.assertEqual(r("mostra as últimas 5 linhas do log do sistema", "pt"), {"comando": "journalctl -n 5 --no-pager"})
-        self.assertEqual(r("qual o tamanho da pasta Downloads", "pt"), {"comando": "du -sh ~/Downloads"})
-        self.assertEqual(r("procura arquivos .py na minha home", "pt"), {"comando": "find ~ -name '*.py' -not -path '*/.*' 2>/dev/null | head -50"})
+        self.assertEqual(r("qual o tamanho da pasta Downloads", "pt")["comando"], "du -sh ~/Downloads")
+        self.assertEqual(r("procura arquivos .py na minha home", "pt")["comando"], "find ~ -iname '*.py' -not -path '*/.*' 2>/dev/null | head -50")
         self.assertEqual(r("apaga tudo da pasta /tmp", "pt"), {"comando": "rm -rf -- /tmp/*"})
         self.assertEqual(seguranca.nivel("rm -rf -- /tmp/*"), "perigoso")
         self.assertIsNone(r("apaga tudo da pasta /", "pt"), "a raiz não vira regra")

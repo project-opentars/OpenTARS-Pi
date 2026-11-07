@@ -5,7 +5,10 @@ from opentars_pi import atalhos, comandos
 
 
 def plano(pedido):
-    return comandos.plano(pedido, atalhos.normalizar(pedido))
+    """O comando que sai das regras (as operações novas primeiro, como no app)."""
+    n = atalhos.normalizar(pedido)
+    r = atalhos.operacoes.plano(pedido, n) or comandos.plano(pedido, n)
+    return r["comando"] if isinstance(r, dict) and "comando" in r else r
 
 
 class TesteComandos(unittest.TestCase):
@@ -16,12 +19,12 @@ class TesteComandos(unittest.TestCase):
             "what's in /tmp": "ls -la /tmp",
             "mostra o conteúdo de /etc/hostname": "head -n 100 /etc/hostname",
             "show me /etc/os-release": "head -n 100 /etc/os-release",
-            "conta as linhas de /etc/passwd": "wc -l /etc/passwd",
-            "how many lines does /etc/passwd have?": "wc -l /etc/passwd",
-            "quantos arquivos tem em /etc?": "ls -1 /etc | wc -l",
+            "conta as linhas de /etc/passwd": "wc -l < /etc/passwd",
+            "how many lines does /etc/passwd have?": "wc -l < /etc/passwd",
+            "quantos arquivos tem em /etc?": "find /etc -maxdepth 1 -type f | wc -l",
             "how big is /var/log?": "du -sh /var/log",
             "how much space does /var/log use?": "du -sh /var/log",
-            "find all .txt files in /usr/share/doc": "find /usr/share/doc -name '*.txt' 2>/dev/null | head -50",
+            "find all .txt files in /usr/share/doc": "find /usr/share/doc -iname '*.txt' -not -path '*/.*' 2>/dev/null | head -50",
             "mostra as 5 últimas linhas de /var/log/syslog": "tail -n 5 /var/log/syslog",
             "show the first 3 lines of /etc/passwd": "head -n 3 /etc/passwd",
             "cria a pasta /tmp/fotos": "mkdir -p /tmp/fotos",
@@ -40,7 +43,7 @@ class TesteComandos(unittest.TestCase):
             "apaga o arquivo /tmp/velho.txt": "rm /tmp/velho.txt",
             "delete the file /tmp/old.log": "rm /tmp/old.log",
             "find files named *.conf in /etc": "find /etc -name '*.conf' 2>/dev/null | head -50",
-            "procura arquivos .log em /var/log": "find /var/log -name '*.log' 2>/dev/null | head -50",
+            "procura arquivos .log em /var/log": "find /var/log -iname '*.log' -not -path '*/.*' 2>/dev/null | head -50",
             "cria um arquivo /tmp/nota.txt com o texto oi": "printf '%s\\n' oi > /tmp/nota.txt",
             "write bye to /tmp/x.txt": "printf '%s\\n' bye > /tmp/x.txt",
             "escreve ola mundo num arquivo chamado oi.txt em /tmp" if False else "write hello world to /tmp/hi.txt": "printf '%s\\n' 'hello world' > /tmp/hi.txt",
