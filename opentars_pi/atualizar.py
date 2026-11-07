@@ -39,7 +39,7 @@ def instalado():
 
 
 def publicado(tempo=10):
-    pedido = urllib.request.Request(URL_VERSAO, headers={"User-Agent": "opentars-pi"})
+    pedido = urllib.request.Request(f"{URL_VERSAO}?t={int(time.time())}", headers={"User-Agent": "opentars-pi", "Cache-Control": "no-cache"})   # logo depois de publicar, o cache servia o velho
     with urllib.request.urlopen(pedido, timeout=tempo) as r:
         return json.loads(r.read().decode("utf-8"))
 
