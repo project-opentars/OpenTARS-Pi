@@ -196,7 +196,11 @@ class Agente:
                 anterior = plano["comando"]
                 if plano["comando"].startswith("mkdir -p ") and "&&" not in plano["comando"]:
                     self.lugar = shlex.split(plano["comando"])[-1]
-        return "\n".join(f for f in falas if f)
+        juntas = []
+        for fala in falas:              # "Pronto." de cada passo vira um só
+            if fala and (not juntas or fala != juntas[-1]):
+                juntas.append(fala)
+        return "\n".join(juntas)
 
     def _pelo_modelo(self, pedido, idioma):
         self.cerebro.preparar(self._sistema())
