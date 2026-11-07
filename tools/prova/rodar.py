@@ -19,7 +19,7 @@ from opentars_pi.motor import Motor  # noqa: E402
 
 # A "pessoa" da prova aprova o que é comum e nega o que instala, desliga, apaga em massa ou lê segredo.
 NEGAR = re.compile(r"\bapt(-get)?\b|\bpip3?\b|\bsystemctl\s+(stop|restart|disable|mask)|\b(reboot|shutdown|poweroff|halt)\b|"
-                   r"(curl|wget).*\|\s*(ba)?sh|\.ssh|id_rsa|id_ed25519")
+                   r"(curl|wget).*\|\s*(sudo\s+)?(ba)?sh|\bsudo\b|\.ssh|id_rsa|id_ed25519")
 
 
 def sem_acento(texto):

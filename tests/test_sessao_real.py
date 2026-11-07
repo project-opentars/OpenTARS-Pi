@@ -45,9 +45,17 @@ class TesteSessao(unittest.TestCase):
             self.assertIsNone(conta.resolver(pedido, "en"), pedido)
 
     def test_rodar_programa(self):
-        self.assertEqual(comandos.plano("run fastfetch", "run fastfetch"), "fastfetch")
-        self.assertEqual(comandos.plano("run fastfetch on the terminal", "run fastfetch on the terminal"), "fastfetch")
-        self.assertEqual(comandos.plano("roda o htop", "roda o htop"), "top -bn1 | head -20")
+        from unittest import mock
+        so_sem = lambda *faltam: (lambda p: None if p in faltam else "/usr/bin/" + p)    # noqa: E731
+        with mock.patch.object(comandos.shutil, "which", side_effect=so_sem("fastfetch", "htop")):     # programa que falta: diz como instalar
+            self.assertIn("sudo apt install fastfetch", comandos.plano("run fastfetch", "run fastfetch")["fala"])
+            self.assertIn("sudo apt install fastfetch", comandos.plano("run fastfetch on the terminal", "run fastfetch on the terminal")["fala"])
+            htop = comandos.plano("roda o htop", "roda o htop")
+            self.assertEqual(htop["comando"], "top -bn1 | head -20")
+            self.assertIn("htop", htop["nota"])
+        with mock.patch.object(comandos.shutil, "which", side_effect=so_sem()):
+            self.assertEqual(comandos.plano("run fastfetch", "run fastfetch"), "fastfetch")
+            self.assertEqual(comandos.plano("roda o htop", "roda o htop"), "top -bn1 | head -20")
         self.assertEqual(comandos.plano("run ls -la /tmp", "run ls -la /tmp"), "ls -la /tmp")
         self.assertEqual(comandos.plano("df -h", "df -h"), "df -h")
         self.assertIsNone(comandos.plano("run a speed test", "run a speed test"))

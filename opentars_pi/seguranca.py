@@ -5,12 +5,12 @@ import re
 import shlex
 
 # Os mesmos padrões do openTARS (nucleo/controle.py), mais a escrita em cartão SD
-PERIGOSOS = [
+PERIGOSOS = [     # inclui baixar e rodar (curl ... | sh): nunca com um sim só
     r"\brm\b.*\s-[a-zA-Z]*[rR]", r"\brm\b.*--recursive", r"\bfind\b.*\s-delete\b", r"\bfind\b.*-exec\s+(sudo\s+)?rm\b",
     r"\brm\b[^|;&\n]*[*?\[]", r"\bxargs\b.*\brm\b", r"\bshred\b", r"\bgit\b.*\b(reset\s+--hard|clean\s+-[a-z]*f)",
     r"\bdd\b.*\bif=", r"\bmkfs\b", r"\bwipefs\b", r"\bfdisk\b", r"\bparted\b", r">\s*/dev/(sd|nvme|hd|mmcblk)",
     r"\bshutdown\b", r"\breboot\b", r"\bpoweroff\b", r"\bhalt\b", r"\bchmod\b.*-R.*\s/(\s|$)", r"\bchown\b.*-R.*\s/(\s|$)",
-    r":\(\)\s*\{\s*:\s*\|\s*:\s*&?\s*\}\s*;\s*:", r"\bmv\b[^|;&\n]*\s/dev/null\b", r"\bmv\b\s+(-\S+\s+)*(/|/\*|~|~/|\$HOME)\s",
+    r":\(\)\s*\{\s*:\s*\|\s*:\s*&?\s*\}\s*;\s*:", r"\b(curl|wget|fetch)\b.*\|\s*(sudo\s+)?(ba|z|da|k)?sh\b", r"\bmv\b[^|;&\n]*\s/dev/null\b", r"\bmv\b\s+(-\S+\s+)*(/|/\*|~|~/|\$HOME)\s",
 ]
 SO_LEITURA = {
     "ls", "cat", "head", "tail", "wc", "df", "du", "free", "uname", "uptime", "whoami", "id", "date", "pwd", "which", "ps",
