@@ -7,7 +7,11 @@ import sys
 import time
 import unicodedata
 
-sys.path[:0] = ["/app", "/app/tools/prova"]
+APP = os.environ.get("PROVA_APP", "/app")             # fora do contêiner (na placa): a pasta do app instalado
+CASAS = os.environ.get("PROVA_CASAS", "/casas")
+SAIDA = os.environ.get("PROVA_SAIDA", "/saida")
+PINOS = os.environ.get("PROVA_PINOS", "aprova")       # na placa de verdade: "nega", para não mexer em pino nenhum
+sys.path[:0] = [APP, os.path.dirname(os.path.abspath(__file__))]
 from tarefas import TAREFAS, criar_casa  # noqa: E402
 
 from opentars_pi import agente, pastas  # noqa: E402
@@ -27,7 +31,7 @@ def casa_regex(padrao, texto):
 
 
 def rodar_tarefa(tarefa, motor):
-    casa = f"/casas/{tarefa['id']}"
+    casa = f"{CASAS}/{tarefa['id']}"
     shutil.rmtree(casa, ignore_errors=True)
     os.makedirs(casa)
     criar_casa(casa)
@@ -39,7 +43,7 @@ def rodar_tarefa(tarefa, motor):
     def aprovar(descricao, nivel):
         if nivel == "pino":
             ev["pinos"].append(descricao)
-            return True
+            return PINOS == "aprova"
         ev["propostos"].append(descricao)
         return nivel == "perguntar" and not NEGAR.search(descricao)
 
@@ -128,7 +132,8 @@ def main():
     print("\n" + "  ".join(f"{c} {sum(v)}/{len(v)}" for c, v in por.items()))
     print(f"TOTAL {sum(r['ok'] for r in resultados)}/{len(resultados)}  ({conjunto}, modelo {os.path.basename(os.environ.get('OPENTARS_PI_MODELO', ''))})")
     nome = time.strftime("%Y%m%d-%H%M%S") + f"-{conjunto}.json"
-    with open(os.path.join("/saida", nome), "w", encoding="utf-8") as f:
+    os.makedirs(SAIDA, exist_ok=True)
+    with open(os.path.join(SAIDA, nome), "w", encoding="utf-8") as f:
         json.dump(resultados, f, ensure_ascii=False, indent=1)
 
 
