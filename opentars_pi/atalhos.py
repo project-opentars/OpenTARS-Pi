@@ -21,7 +21,7 @@ def normalizar(texto):
 _DA_ASSISTENTE = re.compile(r"\b(sua memoria|your memory|na memoria|da memoria|in memory|from memory|to memory)\b")
 _MEMORIA = re.compile(r"\b(ram|memoria|memory)\b")
 _QUANTO = re.compile(r"\b(quanta|quanto|livre|disponivel|sobrando|usada|uso|usando|how much|free|usage|used|left|available)\b")
-_DISCO = re.compile(r"\b(disco|disk|armazenamento|storage|sd card|cartao sd|espaco livre|espaco no|free space)\b")
+_DISCO = re.compile(r"\b(disco|disk|armazenamento|storage|sd card|cartao sd|cartao de memoria|cartao|memory card|espaco livre|espaco no|free space)\b")
 _TEMP = re.compile(r"\b(temperatura|temperature|temp)\b.{0,20}\b(placa|cpu|processador|sistema|board|soc|system|chip)\b|"
                    r"\b(placa|cpu|processador|board|chip)\b.{0,25}\b(temperatura|temperature|temp|quente|hot)\b|\bhow (hot|warm)\b|\boverheat|^(what'?s|whats|what is|qual e|qual) (the |a )?(temperature|temperatura)\??$|\b(superaquec|esquentando)|^(qual a )?temperatura\??$|^temperature\??$")
 _LIGADA = re.compile(r"\buptime\b|\b(ha )?quanto tempo\b.{0,30}\b(ligad|rodando)|\bhow long\b.{0,30}\b(running|been on|been up|up)\b")
@@ -32,7 +32,7 @@ _TAMANHO = re.compile(r"(\d+(?:[.,]\d+)?)\s*(tb|gb|g|giga\w*|mb|m|mega\w*|kb)\b"
 _CABE = re.compile(r"\b(da pra|da para|cabe|caberia|cabem|consigo|posso|tem espaco|tem lugar|sobra espaco|is there (?:enough )?(?:room|space|memory)|"
                    r"enough (?:space|room|memory|ram)|can i (?:download|fit|store|save|run|keep)|fits?|would fit|aguenta|can it (?:run|handle))\b")
 _USA_RAM = re.compile(r"\b(ram|memoria|memory|rodar|roda|run|running|programa|program|processo|process|app|aplicativo|servico|service)\b")
-_CPU = re.compile(r"\b(uso|carga|usage|load)\b.{0,15}\b(cpu|processador)\b|\b(cpu|processador)\b.{0,15}\b(uso|carga|usage|load|ocupad[oa]|busy|sobrecarregad[oa]|pesad[oa])\b|\b(quantos nucleos|how many (cpu )?cores|quantos (cores|processadores)|nucleos (de cpu|do processador|tem)|cpu cores)\b")
+_CPU = re.compile(r"\b(uso|carga|usage|load|busy|ocupad[oa])\b.{0,15}\b(cpu|processador|processor)\b|\b(cpu|processador|processor)\b.{0,15}\b(uso|carga|usage|load|ocupad[oa]|busy|sobrecarregad[oa]|pesad[oa])\b|\b(quantos nucleos|how many (cpu )?cores|quantos (cores|processadores)|nucleos (de cpu|do processador|tem)|cpu cores)\b")
 _WIFI = re.compile(r"\b(wi-?fi|wi fi|wireless|rede sem fio)\b")
 _QUE_PLACA = re.compile(r"\b(que|qual|which|what)\b.{0,12}\b(placa|board|computador|computer|hardware)\b.{0,12}\b(e|esta|essa|is|this)\b|"
                         r"\b(modelo|model)\b.{0,20}\b(placa|board|computador|computer)\b|\b(distro|distribuicao|sistema operacional|operating system)\b")
@@ -78,7 +78,7 @@ def _estado(n, idioma):
     capacidade = _capacidade(n, idioma)
     if capacidade:
         return capacidade
-    if _MEMORIA.search(n) and (_QUANTO.search(n) or _AVALIA.search(n)):
+    if _MEMORIA.search(n) and (_QUANTO.search(n) or _AVALIA.search(n)) and not re.search(r"\b(cartao|card)\b", n):     # "cartão de memória" é o disco
         total, livre = placa.memoria()
         texto = t("mem", idioma, total=total, livre=livre, usada=total - livre)
         return texto + " " + _folga(livre, total, idioma) if _AVALIA.search(n) else texto

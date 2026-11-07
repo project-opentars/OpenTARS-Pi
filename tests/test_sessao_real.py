@@ -92,7 +92,7 @@ class TesteSessao(unittest.TestCase):
         self.assertIn("português", a.responder("fala em português"))
 
     def test_serie_de_07_11(self):
-        self.assertEqual(atalhos.resolver("cria uma pasta chamada fotos na minha home", "pt"), {"comando": "mkdir -p ~/fotos"})
+        self.assertEqual(atalhos.resolver("cria uma pasta chamada fotos na minha home", "pt")["comando"], "mkdir -p ~/fotos")
         self.assertEqual(atalhos.resolver("search for the word error in app.log", "en"), {"comando": "grep -n -- error app.log | head -50"})
         self.assertEqual(atalhos.resolver("what kernel is running here", "en"), {"comando": "uname -r"})
         self.assertEqual(atalhos.resolver("quais portas estão abertas", "pt"), {"comando": "ss -tuln"})

@@ -55,6 +55,7 @@ class Ferramentas:
 
     def terminal(self, a):
         comando = re.sub(r'"~/', '"$HOME/', str(a.get("command") or "").strip())    # entre aspas o shell não expande o ~, e o modelo escreve assim
+        comando = re.sub(r"'~/", "~/'", comando)                                    # '~/x' criava uma pasta chamada "~"
         if not comando:
             return {"success": False, "message": "ERROR: empty command."}
         nivel = seguranca.nivel(comando)

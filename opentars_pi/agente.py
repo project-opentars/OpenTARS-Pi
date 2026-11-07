@@ -158,7 +158,7 @@ class Agente:
     def _varios(self, partes, idioma):
         """Um passo depois do outro. Para no primeiro que falha ou que a pessoa nega. None: o primeiro passo não é de regra."""
         falas, anterior = [], None
-        self.lugar, self.ultimo_resultado, self.ultimo_comando = None, None, None
+        self.lugar, self.ultimo_resultado, self.ultimo_comando, self.alvo = None, None, None, None
         for i, parte in enumerate(partes):
             n = atalhos.normalizar(parte)
             if i and passos.pede_contagem(n) and anterior is not None:
@@ -179,10 +179,16 @@ class Agente:
                 plano = atalhos.resolver(parte, idioma)
                 if i == 0 and (not plano or "conversa" in plano):
                     return None
+                if i and self.alvo and (not plano or "conversa" in plano or "pesquisa" in plano):
+                    junto = atalhos.resolver(f"{parte} {'de' if idioma == 'pt' else 'of'} {self.alvo}", idioma)     # "mostra as 3 primeiras": do arquivo de antes
+                    if junto and "comando" in junto:
+                        plano = junto
             resposta = self._por_regra(plano, parte, idioma)
             if resposta is None:
                 resposta = self._pelo_modelo(parte, idioma)
             falas.append(resposta)
+            if plano and plano.get("alvo"):
+                self.alvo = plano["alvo"]
             if plano and "comando" in plano:
                 r = self.ultimo_resultado or {}
                 if r.get("message") == NAO_APROVOU or not (r.get("success") or plano.get("resumo") in ("ocorrencias", "arquivos_com")):

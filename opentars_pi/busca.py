@@ -114,14 +114,23 @@ def _r4(texto):
 _INTERVALO = re.compile(r"\b(1[0-9]{3}|20[0-9]{2})\)?\s*[–-]\s*(?:\d{1,2}\s+\w+\s+)?(1[0-9]{3}|20[0-9]{2})\b")
 
 
-def _tem_relacao(frase, raizes_rel, titulo=""):
+_SUPERLATIVOS = {"maior", "larg", "bigg", "menor", "smal", "exte", "long", "compr"}
+
+
+def _tem_relacao(frase, raizes_rel, titulo="", assunto4=frozenset()):
     """Quantas raízes da relação a frase tem, sem contar as que só repetem o título ("Discover America" não descobriu nada)."""
     do_titulo = set(chaves(titulo))
     tokens = re.findall(r"[\wÀ-ú'-]+", frase)
     minusculas = " ".join(p for i, p in enumerate(tokens) if i == 0 or not p[:1].isupper())     # "Murder, She Wrote" é nome, não "escreveu"
     palavras = [p for p in chaves(minusculas) if p not in do_titulo]
     grupos = getattr(raizes_rel, "grupos", [frozenset([r]) for r in raizes_rel])
-    achadas = sum(1 for grupo in grupos if any(p.startswith(r) for r in grupo for p in palavras))
+    achadas = 0
+    for grupo in grupos:
+        if grupo & _SUPERLATIVOS:        # "maior" só conta colado no assunto: "o maior oceano", não "a maior parte"
+            achadas += any(p.startswith(r) and i + 1 < len(palavras) and any(q[:4] in assunto4 for q in palavras[i + 1:i + 3])
+                           for r in grupo for i, p in enumerate(palavras))
+        else:
+            achadas += any(p.startswith(r) for r in grupo for p in palavras)
     if not achadas and raizes_rel & {"term", "end", "come", "star", "cai", "qued"} and _INTERVALO.search(frase):
         achadas = 1                      # "(1939 – 1945)": o intervalo diz quando começou e quando acabou
     return achadas
@@ -142,7 +151,7 @@ def _titulo_e_outro_nome(titulo, consulta):
 
 def _nota_da_frase(frase, consulta, tipo, raizes_rel, assunto, titulo=""):
     """(nota, responde?). Responde quando tem o tipo de resposta que a pergunta quer junto com a relação pedida."""
-    rel = _tem_relacao(frase, raizes_rel, titulo)
+    rel = _tem_relacao(frase, raizes_rel, titulo, {_ROMANOS.get(p, p)[:4] for p in chaves(consulta)})
     if rel and re.search(r"\b(segund[oa]|terceir[oa]|quart[oa]|second|third|fourth)\s+(maior|menor|mais|largest|biggest|smallest|longest|highest)\b", frase.lower()):
         rel -= 1                         # "o segundo maior planeta anão" não é o maior
     nota = len(_r4(frase) & {_ROMANOS.get(p, p)[:4] for p in assunto}) + 2 * rel

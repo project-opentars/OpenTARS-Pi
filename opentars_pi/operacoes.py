@@ -54,8 +54,10 @@ def _rel(real):
 
 
 def _limpar_alvo(texto):
-    texto = re.sub(r"^(?:" + _PASTA + r"|" + _ARQ + r")", "", texto.strip(), flags=re.IGNORECASE)
+    texto = re.sub(r"^(?:dentro d[aeo]s?|inside(?: of)?|into|para dentro d[aeo])\s+", "", texto.strip(), flags=re.IGNORECASE)
+    texto = re.sub(r"^(?:" + _PASTA + r"|" + _ARQ + r")", "", texto, flags=re.IGNORECASE)
     texto = re.sub(r"^(?:o|a|os|as|the|my|meu|minha|um|uma)\s+", "", texto, flags=re.IGNORECASE)
+    texto = re.sub(r"\s+(?:folder|directory|dir|pasta|file|arquivo)$", "", texto, flags=re.IGNORECASE)     # "the logs folder"
     return texto.strip(" '\"?.!,")
 
 
@@ -159,7 +161,8 @@ def _contar_arquivos(f, idioma):
 
 
 def _qual_arquivo(f, idioma):
-    a = f.busca(r"\b(?:(?:em |no )?(?:qual|que) arquivo|which file|what file|onde (?:esta|fica) (?:escrit[oa]|anotad[oa]|guardad[oa]))\s+"
+    a = f.busca(r"\b(?:(?:em |no )?(?:qual|que) arquivo|which file|what file|onde (?:esta|fica) (?:escrit[oa]|anotad[oa]|guardad[oa])|(?:tem |ha |existe )?algum arquivo|(?:is there )?any file)\s+"
+                r"(?:(?:falando|que fala|mencionando|que menciona|que tem|com|sobre|about|mentioning|that mentions|with|containing|that has)\s+)?"
                 r"(?:(?:esta|tem|fala|contem|menciona|cita|aparece|has|contains|mentions|talks|says|is|esta escrit[oa]|foi escrit[oa])\s+)?"
                 r"(?:(?:escrit[oa]|de|sobre|about|anotad[oa])\s+)?(?:a |o |as |os |the )?(.+?)" + _FIM)
     if not a:
@@ -214,6 +217,8 @@ def _linhas_com(f, idioma):
 
 def _ultimas(f, idioma):
     a = f.busca(r"\b(?:(?:as )?ultimas linhas|(?:the )?last lines|o final|the end|tail)\b" + _DE + _ARTIGO + r"(?:arquivo |file )?(\S+?)" + _FIM)
+    if f.busca(r"\b(write|escreve|escreva|add|adiciona|append|acrescenta|put|coloca|insere)\b"):
+        return None                      # "write X at the end of" é para escrever
     if not a or re.search(r"\d", f.n[:a.start(1)]):       # "as 5 últimas linhas" é com a regra que lê o número
         return None
     real, nota = _arquivo_ou_substituto(f.g(a, 1), idioma)
@@ -277,6 +282,18 @@ def _por_extensao(f, idioma):
     if not pasta:
         return None
     return _resultado(f"find {_q(_rel(pasta))} -iname '*.{a.group(1)}' -not -path '*/.*' 2>/dev/null | head -50", idioma, "achados", _rel(pasta), nota)
+
+
+def _mkdir_dentro(f, idioma):
+    a = f.busca(r"\b(?:cria|crie|criar|faz|faca|make|create)\s+(?:a |uma |the |an? )?(?:nova |new )?(?:pasta|folder|directory|diretorio)\s+(?:chamada\s+|called\s+|named\s+)?([\w.-]+)\s+"
+                r"(?:dentro d[aeo]s?|inside(?: of)?|in|em|na|no|under)\s+(?:a pasta |the folder |my |minha )?(\S+?)" + _FIM)
+    if not a:
+        return None
+    pai = nomes.exato(_limpar_alvo(f.g(a, 2)))
+    if not pai or not os.path.isdir(pai):
+        return None                      # pai que não existe ou caminho absoluto: as regras antigas
+    destino = _rel(pai) + "/" + f.g(a, 1)
+    return _resultado(f"mkdir -p {_q(destino)}", idioma, lugar=destino)
 
 
 def _mkdir(f, idioma):
@@ -388,7 +405,7 @@ _DINAMICO = {"data de hoje": "date '+%d/%m/%Y'", "data": "date '+%d/%m/%Y'", "da
 
 
 def _acrescentar(f, idioma):
-    a = f.busca(r"\b(?:adiciona|adicione|acrescenta|acrescente|coloca|coloque|poe|ponha|append|add|insere|insira|escreve|escreva)\s+(?:a linha |uma linha |the line |a line |o texto |the text )?"
+    a = f.busca(r"\b(?:adiciona|adicione|acrescenta|acrescente|coloca|coloque|poe|ponha|append|add|insere|insira|escreve|escreva|write|put)\s+(?:a linha |uma linha |the line |a line |o texto |the text )?"
                 r"(.+?)\s+(?:no fim d[eoa]|no final d[eoa]|ao final d[eoa]|ao fim d[eoa]|at the end of|to the end of|to|into|em|no|na)\s+" + _ARTIGO + r"(?:arquivo |file )?(\S+?)" + _FIM)
     if not a:
         return None
@@ -427,9 +444,18 @@ def _copiar_mover(f, idioma):
         programa = "mv" if a.group(1).startswith(("mov", "mova", "lev")) else "cp"
         globs = " ".join(f"{_q(_rel(origem))}/*.{e}" for e in presentes)
         return _resultado(f"mkdir -p {_q(destino)} && {programa} {globs} {_q(destino)}/", idioma, nota=nota, lugar=destino)
-    a = f.busca(r"\b(copia|copie|copiar|copy|move|mova|mover|leva|leve)\s+" + _ARTIGO + r"(?:arquivo |pasta |file |folder )?(\S+?)\s+(?:para|pra|pro|to|into|em)\s+(.+?)" + _FIM)
+    a = f.busca(r"\b(copia|copie|copiar|copy|move|mova|mover|leva|leve|duplica|duplique|duplicate|faz uma copia de|faca uma copia de|make a copy of)\s+" + _ARTIGO
+                + r"(?:arquivo |pasta |file |folder )?(\S+?)\s+(?:para|pra|pro|to|into|em|como|as|com o nome|named|called)\s+(.+?)" + _FIM)
     if not a:
         return None
+    if re.match(r"(dupl|faz uma|faca uma|make a)", a.group(1)) or re.search(r"\s(como|as|com o nome|named|called)\s", f.n[a.end(2):a.start(3) + 1]):
+        origem, nota = _fonte(f.g(a, 2))
+        if not origem:
+            return None
+        destino = _limpar_alvo(f.g(a, 3))
+        if "/" not in destino:                 # a cópia fica ao lado do original
+            destino = os.path.join(os.path.dirname(_rel(origem)), destino)
+        return _resultado(f"cp -r {_q(_rel(origem))} {_q(destino)}", idioma, nota=nota)
     origem, nota = _fonte(f.g(a, 2))
     if not origem:
         return None                # nome que não existe: as regras antigas mostram o erro de verdade
@@ -549,8 +575,8 @@ def _gpio(f, idioma):
     return None
 
 
-OPERACOES = (_gpio, _versao, _descompactar, _trocar, _recentes, _linhas_de_codigo, _ocorrencias, _contar_linhas, _contar_arquivos, _qual_arquivo, _maior_menor, _so_pastas, _escondidos, _linhas_com, _ultimas, _por_extensao, _tamanho_por_pasta, _tamanho,
-             _mkdir, _executavel, _compactar, _script, _criar_com_texto, _acrescentar, _copiar_mover, _renomear, _apagar_parecido, _ver)
+OPERACOES = (_gpio, _versao, _descompactar, _trocar, _recentes, _linhas_de_codigo, _ocorrencias, _contar_linhas, _contar_arquivos, _qual_arquivo, _maior_menor, _so_pastas, _escondidos, _linhas_com, _acrescentar, _ultimas, _por_extensao, _tamanho_por_pasta, _tamanho,
+             _mkdir_dentro, _mkdir, _executavel, _compactar, _script, _criar_com_texto, _copiar_mover, _renomear, _apagar_parecido, _ver)
 
 
 def plano(pedido, n, idioma="pt"):
