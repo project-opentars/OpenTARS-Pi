@@ -1,0 +1,96 @@
+"""O que saiu errado na primeira sessão real na placa (06/11), para não voltar."""
+import unittest
+
+import _util  # noqa: F401
+from opentars_pi import agente, atalhos, comandos, conta, contrato, memoria, pastas
+
+
+class Motor:
+    def __init__(self, respostas):
+        self.respostas = list(respostas)
+        self.prompts = []
+
+    def ligar(self):
+        pass
+
+    def preparar_prefixo(self, _):
+        pass
+
+    def completar(self, prompt, ao_pedaco=None, **_):
+        self.prompts.append(prompt)
+        return self.respostas.pop(0)
+
+
+def chamada(comando):
+    return f"<start_function_call>call:execute_terminal{{command:<escape>{comando}<escape>}}<end_function_call>"
+
+
+class TesteSessao(unittest.TestCase):
+    def setUp(self):
+        pastas.MEMORIA.unlink(missing_ok=True)
+        pastas.CONFIG.unlink(missing_ok=True)
+
+    def plano(self, pedido, idioma="en"):
+        return atalhos.resolver(pedido, idioma) or {}
+
+    def test_contas(self):
+        for pedido, certo in (("what is the square root of 128", "11.313708"), ("2+2", "4"), ("15% of 200", "30"), ("half of 90", "45"), ("what's 7 times 6?", "42"), ("calculate (3+4)*2", "14")):
+            self.assertEqual(self.plano(pedido).get("fala"), certo, pedido)
+        self.assertEqual(self.plano("qual a raiz quadrada de 2", "pt").get("fala"), "1,414214")
+        self.assertEqual(self.plano("quanto é 12 vezes 8", "pt").get("fala"), "96")
+        self.assertEqual(self.plano("o dobro de 21", "pt").get("fala"), "42")
+
+    def test_o_que_nao_e_conta(self):
+        for pedido in ("2026-11-06", "12/10/2026", "192.168.1.1", "version 5.2", "pi 5", "9**9**9", "10 / 0"):
+            self.assertIsNone(conta.resolver(pedido, "en"), pedido)
+
+    def test_rodar_programa(self):
+        self.assertEqual(comandos.plano("run fastfetch", "run fastfetch"), "fastfetch")
+        self.assertEqual(comandos.plano("run fastfetch on the terminal", "run fastfetch on the terminal"), "fastfetch")
+        self.assertEqual(comandos.plano("roda o htop", "roda o htop"), "top -bn1 | head -20")
+        self.assertEqual(comandos.plano("run ls -la /tmp", "run ls -la /tmp"), "ls -la /tmp")
+        self.assertEqual(comandos.plano("df -h", "df -h"), "df -h")
+        self.assertIsNone(comandos.plano("run a speed test", "run a speed test"))
+        self.assertIsNone(comandos.plano("start the backup now", "start the backup now"))
+
+    def test_processos(self):
+        self.assertIn("%mem", self.plano("what processes are using ram").get("comando", ""))
+        self.assertIn("%mem", self.plano("what processes are using ram on the board").get("comando", ""))
+        self.assertIn("%cpu", self.plano("which processes use the most cpu").get("comando", ""))
+
+    def test_perguntas_sobre_o_produto_nao_vao_para_a_busca(self):
+        self.assertIn("run fastfetch", self.plano("what are your capabilities").get("fala", ""))
+        self.assertIn("270", self.plano("what is gargantua pi").get("fala", ""))
+        self.assertIn("código aberto", self.plano("o que é o opentars", "pt").get("fala", ""))
+        self.assertIn("Enzo", self.plano("who made you").get("fala", ""))
+
+    def test_perguntas_sobre_a_placa_nao_vao_para_a_busca(self):
+        for pedido in ("what is this board", "what board do you run"):
+            self.assertIn("Memory:", self.plano(pedido).get("fala", ""), pedido)
+
+    def test_hello_world_sem_linguagem(self):
+        self.assertEqual(self.plano("make me a hello world script").get("fala"), 'print("Hello, world!")')
+
+    def test_depois_da_saida_o_modelo_nao_comenta(self):
+        motor = Motor([chamada("echo oi"), "I have saved that you can use the swap command"])
+        a = agente.Agente(motor, lambda *_: True)
+        a._usar_ferramenta = lambda nome, argumentos: {"success": True, "stdout": "oi\n"}
+        mensagens = a._mensagens("say hi", "en")
+        self.assertTrue(contrato.renderizar(mensagens))
+        atalhos_resolver, atalhos.resolver = atalhos.resolver, lambda *_: None
+        try:
+            self.assertEqual(a.responder("say hi with the terminal"), "")
+        finally:
+            atalhos.resolver = atalhos_resolver
+        self.assertEqual(len(motor.prompts), 1)
+
+    def test_trocar_de_idioma(self):
+        a = agente.Agente(Motor([]), lambda *_: True)
+        a.idioma_base = "pt"
+        self.assertIn("English", a.responder("back to english"))
+        self.assertEqual(a.idioma_base, "en")
+        self.assertIn("português", a.responder("fala em português"))
+
+
+if __name__ == "__main__":
+    unittest.main()

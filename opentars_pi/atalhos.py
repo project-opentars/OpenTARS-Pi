@@ -5,7 +5,7 @@ import re
 import time
 import unicodedata
 
-from . import busca, comandos, memoria, murph, placa
+from . import busca, comandos, conta, memoria, murph, placa
 from .textos import duracao, t
 
 _POLIDEZ = r"^(por favor,? |please,? |pode |voce pode |can you |could you |from now on,? |a partir de agora,? |de agora em diante,? )?"
@@ -27,8 +27,9 @@ _LIGADA = re.compile(r"\buptime\b|\b(ha )?quanto tempo\b.{0,30}\b(ligad|rodando)
 _IP = re.compile(r"\b(meu ip|o ip|endereco ip|ip address|my ip|the ip|ip local|ip da placa)\b|^ip\??$")
 _CPU = re.compile(r"\b(uso|carga|usage|load)\b.{0,15}\b(cpu|processador)\b|\b(cpu|processador)\b.{0,15}\b(uso|carga|usage|load)\b|\b(quantos nucleos|how many cores)\b")
 _QUE_PLACA = re.compile(r"\b(que|qual|which|what)\b.{0,12}\b(placa|board|computador|computer|hardware)\b.{0,12}\b(e|esta|essa|is|this)\b|"
-                        r"\b(modelo|model)\b.{0,20}\b(placa|board|computador|computer)\b")
+                        r"\b(modelo|model)\b.{0,20}\b(placa|board|computador|computer)\b|\b(distro|distribuicao|sistema operacional|operating system)\b")
 _HORA = re.compile(r"\b(que horas|what time|horas sao)\b")
+_OUTRO_LUGAR = re.compile(r"\b(in|em|no|na|nos|at)\s+(?!(this|the|esta|essa|aqui|here|placa|board)\b)[a-z]{3,}\??$")
 _DATA = re.compile(r"\b(que dia|qual a data|que data|what day|what's the date|whats the date|what is the date|today's date)\b")
 _ESTADO = re.compile(r"\b(status|estado|como esta)\b.{0,15}\b(placa|board|sistema|system)\b|\b(placa|board|sistema|system)\b.{0,10}\b(status|estado)\b|"
                      r"^status\??$|^estado\??$|\bhow is the (board|system)\b")
@@ -57,6 +58,8 @@ def _estado(n, idioma):
         return t("placa", idioma, modelo=placa.modelo(), sistema=placa.sistema())
     if _ESTADO.search(n):
         return estado_completo(idioma)
+    if _OUTRO_LUGAR.search(n):       # "what time is it in tokyo": isso é com a busca
+        return None
     if _HORA.search(n):
         return time.strftime("%H:%M")
     if _DATA.search(n):
@@ -72,22 +75,27 @@ def estado_completo(idioma):
 
 
 # Código: o modelo de 270M não sustenta. O script de "imprime a data" saiu `echo "21 28 31 30..."` (medido em 06/11).
-_PEDE_CODIGO = re.compile(r"\b(escreve|escreva|escrever|write|cria|crie|criar|create|make|faz|faca|fazer|gera|gere|generate|programa|programe|code)\b.{0,40}"
-                          r"\b(codigo|script|programa|program|code|funcao|function|app|aplicativo|site|website|hello world|ola mundo)\b")
 _OLA_MUNDO = {"python": 'print("Hello, world!")', "bash": 'echo "Hello, world!"', "shell": 'echo "Hello, world!"', "javascript": 'console.log("Hello, world!");',
               "node": 'console.log("Hello, world!");', "c": '#include <stdio.h>\n\nint main(void) {\n    puts("Hello, world!");\n    return 0;\n}'}
 
 
 def _codigo(n, idioma):
     if re.search(r"\b(hello world|ola mundo)\b", n):
-        for linguagem, exemplo in _OLA_MUNDO.items():
-            if re.search(rf"\b{linguagem}\b", n):
-                return exemplo
+        return next((exemplo for linguagem, exemplo in _OLA_MUNDO.items() if re.search(rf"\b{linguagem}\b", n)), _OLA_MUNDO["python"])
     return t("codigo", idioma)
 
 
-_QUEM = re.compile(r"\b(quem (e|es) (voce|tu)|qual (e )?o seu nome|como voce se chama|who are you|what are you|what is your name|what's your name|"
-                   r"o que voce (faz|sabe fazer|consegue fazer)|what can you do)\b")
+# ---- sobre o próprio produto: a busca devolvia uma página qualquer da Wikipédia ----
+_SOBRE = (("sobre_murph", r"\bmurph\b"),
+          ("sobre_autor", r"\b(criou|criador|desenvolveu|quem fez|made you|made this|created|creator|built|developer|author|autor)\b"),
+          ("sobre_local", r"\b(offline|nuvem|cloud|internet|privad\w*|private|privacy|dados|data|sem rede|espiona\w*|spy)\b"),
+          ("sobre_modelo", r"\b(gargantua|modelo|model|parametros|parameters|llm)\b"),
+          ("sobre_opentars", r"\bopen ?tars\b"),
+          ("sobre_ajuda", r"\b(ajuda|help|capabilit\w*|skills?|features?|comandos|commands|pode fazer|can you do|consegue|sabe fazer|como (te )?us\w+|how (to|do i) use|exemplos?|examples?|funcoes|funcionalidades|recursos|what can i)\b"))
+
+
+def _sobre(n, idioma):
+    return next((t(chave, idioma) for chave, padrao in _SOBRE if re.search(padrao, n)), t("quem", idioma))
 
 
 # ---- o que a placa não faz ----
@@ -172,10 +180,12 @@ _PESQUISA = re.compile(_POLIDEZ + r"(pesquisa|pesquise|pesquisar|procura|procure
 # O modelo de 270M inventa fatos ("a capital da Mongólia é Tóquio", medido em 06/11): pergunta sobre o mundo vai para a busca.
 _PERGUNTA = re.compile(r"^(quem|qual|quais|quando|onde|quanto|quanta|quantos|quantas|como|por que|porque|pra que|o que|oque|"
                        r"what|what's|whats|who|who's|which|when|where|why|how|is|are|does|did|do|can|explain|explique|explica|define|defina|me explica)\b")
-_PAPO = re.compile(r"\b(tudo bem|tudo bom|como vai|como voce esta|como esta voce|how are you|how's it going|what'?s up|e ai|ta bem)\b")
 _DE_QUEM_PEDE = re.compile(r"\b(meu|minha|meus|minhas|my|mine)\b|\b(onde eu|where do i) (moro|live|trabalho|work)\b")
 _SAUDACAO = re.compile(r"^(oi|ola|opa|e ai|bom dia|boa tarde|boa noite|hi|hello|hey|good (morning|afternoon|evening))\b[\s!.,]*(tudo bem|gargantua|there)?[\s!?.]*$")
 _OBRIGADO = re.compile(r"^(valeu|obrigad[oa]|brigad[oa]|thanks|thank you|thx)\b.{0,20}$")
+_COMO_FAZ = re.compile(r"^(how (do|can|to|should) |como (eu |faco|fazer|posso|se )|what('s| is) the (best )?way to )")
+_COM_VOCE = re.compile(r"\b(voce|tu|te|teu|tua|seu|sua|you|your|yourself)\b")
+CONFIANCA_MINIMA = 0.45
 
 
 def _fato_que_responde(n):
@@ -190,11 +200,12 @@ def _fato_que_responde(n):
 
 
 def resolver(pedido, idioma):
-    """{'fala': texto}, {'pino': (...)}, {'comando': shell}, {'pesquisa': consulta}, {'conversa': True} ou None (o modelo com as ferramentas)."""
+    """{'fala': texto}, {'pino': (...)}, {'comando': shell}, {'pesquisa': consulta}, {'conversa': True} ou None (o modelo com as ferramentas).
+    As regras cuidam do que precisa sair exato (pinos, memória, contas, caminhos); o resto a Murph separa pela intenção."""
     n = normalizar(pedido)
     if pino := _pino(n):
         return {"pino": pino}
-    fala = _memoria(pedido, n, idioma) or _estado(n, idioma) or _recusa(n, idioma) or (t("quem", idioma) if _QUEM.search(n) else None)
+    fala = _memoria(pedido, n, idioma) or _estado(n, idioma) or _recusa(n, idioma) or conta.resolver(n, idioma)
     if fala:
         return {"fala": fala}
     comando = comandos.plano(pedido, n)
@@ -207,19 +218,32 @@ def resolver(pedido, idioma):
         return {"fala": t("oi", idioma)}
     if _OBRIGADO.search(n):
         return {"fala": t("de_nada", idioma)}
-    tarefa, confianca = murph.classificar(pedido)
-    if tarefa == "visao" and confianca > 0.85:     # "o que é isso aqui na tela", que as regras não pegaram
-        return {"fala": t("tela", idioma)}
-    if _PAPO.search(n):
-        return {"conversa": True}
     pergunta = _PERGUNTA.search(n)
     fato = _fato_que_responde(n) if pergunta else None
     if fato:
         return {"fala": t("lembro", idioma, fato=fato)}
-    if pergunta and _DE_QUEM_PEDE.search(n):
+    classe, confianca = murph.classificar(pedido)
+    if confianca < CONFIANCA_MINIMA:
+        classe = "mundo" if pergunta else "comando"
+    if pergunta and _DE_QUEM_PEDE.search(n) and classe in ("mundo", "sobre", "papo"):
         return {"fala": t("nao_me_contou", idioma)}
-    if pergunta or (tarefa == "busca" and confianca > 0.6):
+    if classe == "comando" and _COMO_FAZ.search(n):     # quer aprender, não que rode: "how do I install docker?"
         return {"pesquisa": pedido.strip(" ?.")}
-    if _PEDE_CODIGO.search(n) or (tarefa == "codigo" and confianca > 0.8):
+    if classe == "placa":
+        return {"fala": estado_completo(idioma)}
+    if classe == "sobre":
+        fala = _sobre(n, idioma)
+        if fala != t("quem", idioma) or _COM_VOCE.search(n) or not pergunta:
+            return {"fala": fala}
+        return {"pesquisa": pedido.strip(" ?.")}       # "quem pintou a mona lisa" não é sobre mim
+    if classe == "tela":
+        return {"fala": t("tela", idioma)}
+    if classe == "conta":
+        return {"fala": t("conta_nao", idioma)}
+    if classe == "codigo":
         return {"fala": _codigo(n, idioma)}
-    return {"conversa": True} if tarefa in ("simples", "geral") else None
+    if classe == "papo":
+        return {"conversa": True}
+    if classe == "mundo":
+        return {"pesquisa": pedido.strip(" ?.")}
+    return None

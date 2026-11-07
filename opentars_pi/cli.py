@@ -161,6 +161,10 @@ def comando_busca(args):
         pastas.salvar_config(busca=True, searxng=None)
         print("Web search is on (Wikipedia).")
     elif valor.startswith(("http://", "https://")):
+        try:
+            busca.searxng("test", valor)
+        except (OSError, ValueError) as e:      # um endereço de exemplo colado aqui deixava toda pesquisa esperando à toa
+            sys.exit(f"No SearXNG answered at {valor} ({e}). Nothing changed.")
         pastas.salvar_config(busca=True, searxng=valor)
         print(f"Web search goes to your SearXNG: {valor}")
     else:

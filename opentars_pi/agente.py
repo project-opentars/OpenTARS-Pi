@@ -2,12 +2,14 @@
 import re
 import urllib.parse
 
-from . import atalhos, busca, contrato, gpio, memoria, textos
+from . import atalhos, busca, contrato, gpio, memoria, pastas, textos
 from .ferramentas import NAO_APROVOU, Ferramentas
 from .textos import t
 
 PASSOS = 5
 _PRONOME = re.compile(r"\b(it|its|there|ele|ela|dele|dela|disso|la)\b")
+_TROCA_IDIOMA = re.compile(r"^(?:(?:back|switch|go back|change|volta|voltar|muda|mudar|troca|trocar)(?: to| para| pra| pro| o idioma para)?|(?:speak|talk|answer|reply|fala|fale|responde|responda)(?: in| em)?|in|em)\s+"
+                           r"(english|ingles|portuguese|portugues)(?: please| por favor)?[.!]?$")
 _DIZ_QUE_FEZ = re.compile(r"\b(criei|criada|criado|feito|pronto|apaguei|apagado|salvei|salvo|movi|movido|instalei|instalado|renomeei|escrevi|"
                           r"done|created|deleted|saved|moved|installed|renamed|wrote|finished|success)\b", re.IGNORECASE)
 
@@ -105,6 +107,11 @@ class Agente:
     def responder(self, pedido):
         """A resposta final, em texto. O que mudou na placa já aconteceu quando isto volta."""
         pedido = pedido.strip()
+        troca = _TROCA_IDIOMA.search(atalhos.normalizar(pedido))
+        if troca:
+            self.idioma_base = "pt" if troca.group(1).startswith("portugu") else "en"
+            pastas.salvar_config(idioma=self.idioma_base)
+            return self._guardar(pedido, t("idioma_ok", self.idioma_base))
         idioma = textos.detectar(pedido, self.idioma_base)
         self.ferramentas.idioma = idioma
         plano = atalhos.resolver(pedido, idioma)
@@ -141,6 +148,8 @@ class Agente:
                 return self._guardar(pedido, t("negado", idioma))
             if not ultimo.get("success"):                # um modelo deste tamanho não se recupera: só pediria mais aprovações à toa
                 return self._guardar(pedido, self._conferir("", usou, ultimo, idioma))
+            if nome == "execute_terminal" and ultimo.get("stdout", "").strip():    # a saída já apareceu; o comentário do modelo só inventava ("I have saved that...")
+                return self._guardar(pedido, "")
             mensagens += [{"role": "assistant", "content": "", "chamada": chamada},
                           {"role": "tool", "name": nome, "content": contrato.resultado(ultimo)}]
         return self._guardar(pedido, self._conferir("", usou, ultimo, idioma))

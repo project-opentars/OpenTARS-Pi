@@ -6,6 +6,7 @@ em 8 de 20 pedidos. Aqui o comando sai certo e na hora; ele passa pela mesma apr
 import os
 import re
 import shlex
+import shutil
 
 _CAMINHO = r"(~?/[^\s'\"?,;]*|[\w.-]+\.[A-Za-z0-9]{1,6})"
 
@@ -29,9 +30,29 @@ def _achar(padrao, n):
     return re.search(padrao, n)
 
 
+_RODAR = re.compile(r"^(?:please |por favor |pode |can you |could you )?(?:run|execute|exec|launch|start|roda|rode|rodar|executa|executar|inicia|inicie)\s+(?:o |a |the )?(?:comando |command |programa |program )?"
+                    r"(.+?)(?:\s+(?:on|in|no|na|pelo|pela)\s+(?:o |a |the |this |esta |este )?(?:terminal|shell|console|board|placa))?[.!?]?$")
+_SO_TELA = {"top": "top -bn1 | head -20", "htop": "top -bn1 | head -20", "btop": "top -bn1 | head -20"}     # interativos não têm tela aqui
+
+
+def _programa(linha):
+    """O comando, se a linha é mesmo um programa desta máquina. "run a speed test" não é; "run fastfetch" sempre é tentado, para a falta dele aparecer."""
+    partes = linha.split()
+    if not partes or (len(partes) > 1 and not shutil.which(partes[0])) or partes[0].startswith("-"):
+        return None
+    if len(partes) > 1 and not any(p.startswith(("-", "/", "~", ".")) or "=" in p for p in partes[1:]):
+        return None             # "start a timer" ou "run the tests": frase, não comando
+    return _SO_TELA.get(partes[0], linha)
+
+
 def plano(pedido, n):
     """O comando para o pedido, ou None. pedido: como a pessoa escreveu. n: normalizado, do mesmo tamanho quando possível."""
     original = pedido.strip() if len(pedido.strip()) == len(n) else n
+    a = _RODAR.match(n)
+    if a and (comando := _programa(original[a.start(1):a.end(1)])):
+        return comando
+    if re.fullmatch(r"[a-z0-9_.-]+( +(-{1,2}[\w-]+|[/~.][^\s]*))+", n) and shutil.which(n.split()[0]):    # "df -h": já é um comando
+        return original
 
     def grupo(achado, numero):
         return original[achado.start(numero):achado.end(numero)]
@@ -110,8 +131,8 @@ def plano(pedido, n):
         pasta = _PASTAS.get(a.group(1), a.group(1).capitalize())
         return "ls -la ~/" + (shlex.quote(pasta) if pasta else "")
     # o sistema
-    if _achar(r"\b(quais processos|que processos|o que esta rodando|what is running|what's running|whats running|top processes|which processes|show (me )?the processes|mostra os processos|lista os processos|list (the )?processes)\b", n):
-        return "ps aux --sort=-%mem | head -8"
+    if _achar(r"\b(processos?|processes|what is running|what's running|whats running|o que esta rodando|programas rodando)\b", n) and not _achar(r"\b(mata|mate|matar|kill|encerra|encerre|para|pare|stop)\b", n):
+        return "ps aux --sort=-%" + ("cpu" if _achar(r"\b(cpu|processador)\b", n) else "mem") + " | head -8"
     if _achar(r"\b(tem internet|estou online|esta online|am i online|internet working|internet funcionando|testa a internet|test the internet)\b", n):
         return "ping -c 2 -W 3 1.1.1.1"
     a = _achar(r"^(?:ping|pinga)\s+([\w.-]+)", n)

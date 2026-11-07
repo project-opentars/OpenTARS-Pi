@@ -1,0 +1,1385 @@
+{"frase": "quanto RAM está livre?", "classe": "placa"}
+{"frase": "Quanta memória está sendo usada agora?", "classe": "placa"}
+{"frase": "ram livre 64mb?", "classe": "placa"}
+{"frase": "qual é o uso de memória?", "classe": "placa"}
+{"frase": "memória livre?", "classe": "placa"}
+{"frase": "quanto está usado agora?", "classe": "placa"}
+{"frase": "quantidade de ram disponível?", "classe": "placa"}
+{"frase": "quão cheio está o heap?", "classe": "placa"}
+{"frase": "mem livre em mb?", "classe": "placa"}
+{"frase": "qual a porcentagem de RAM em uso?", "classe": "placa"}
+{"frase": "qual a quantidade de memória livre agora?", "classe": "placa"}
+{"frase": "memória livre em percentual?", "classe": "placa"}
+{"frase": "how much free space left on the sd card?", "classe": "placa"}
+{"frase": "Could you tell me the disk usage?", "classe": "placa"}
+{"frase": "sd card space: ?", "classe": "placa"}
+{"frase": "i need more storage, please free some space", "classe": "placa"}
+{"frase": "disk usage report now", "classe": "placa"}
+{"frase": "how many free GB left?", "classe": "placa"}
+{"frase": "can you show me the output of df -h", "classe": "placa"}
+{"frase": "Please check the remaining space on the SD card and clean up temp files.", "classe": "placa"}
+{"frase": "what's the current free space in megabytes?", "classe": "placa"}
+{"frase": "free space?", "classe": "placa"}
+{"frase": "can you show me the disk usage, please?", "classe": "placa"}
+{"frase": "give me a quick summary of available storage.", "classe": "placa"}
+{"frase": "how much ram is free?", "classe": "placa"}
+{"frase": "memory usage status please", "classe": "placa"}
+{"frase": "tell me free memory 256mb?", "classe": "placa"}
+{"frase": "is there any memory left?", "classe": "placa"}
+{"frase": "ram free?", "classe": "placa"}
+{"frase": "how much used ram right now?", "classe": "placa"}
+{"frase": "can you report memory status?", "classe": "placa"}
+{"frase": "free memory?", "classe": "placa"}
+{"frase": "memory usage?", "classe": "placa"}
+{"frase": "what's the current RAM?", "classe": "placa"}
+{"frase": "how much is free memory?", "classe": "placa"}
+{"frase": "show me memory usage.", "classe": "placa"}
+{"frase": "quanto espaço livre na sd?", "classe": "placa"}
+{"frase": "tem memória livre?", "classe": "placa"}
+{"frase": "Qual o espaço livre em disco?", "classe": "placa"}
+{"frase": "espaco livre ?", "classe": "placa"}
+{"frase": "quantos bytes livres na memória?", "classe": "placa"}
+{"frase": "qual é o espaço disponível?", "classe": "placa"}
+{"frase": "quero saber a memória livre  agora", "classe": "placa"}
+{"frase": "espaco livre no sd?", "classe": "placa"}
+{"frase": "diga  quantidade de espaço livre?", "classe": "placa"}
+{"frase": "qual a quantidade de disco livre?", "classe": "placa"}
+{"frase": "memória livre em disco?", "classe": "placa"}
+{"frase": "tem espaço livre na placa?", "classe": "placa"}
+{"frase": "is my rpi overheating?", "classe": "placa"}
+{"frase": "what's the current temp of the CPU?", "classe": "placa"}
+{"frase": "check board temp  please", "classe": "placa"}
+{"frase": "is it 90c or 100c?", "classe": "placa"}
+{"frase": "i think the cpu temp is too high", "classe": "placa"}
+{"frase": "how hot is the orange pi right now?", "classe": "placa"}
+{"frase": "temp check", "classe": "placa"}
+{"frase": "why is the board so hot??", "classe": "placa"}
+{"frase": "the CPU is at 85 degrees, is that ok?", "classe": "placa"}
+{"frase": "please read the temperature logs", "classe": "placa"}
+{"frase": "is the device overheating? I feel hot", "classe": "placa"}
+{"frase": "temp status?", "classe": "placa"}
+{"frase": "a temperatura está alta?", "classe": "placa"}
+{"frase": "qual a temperatura da CPU agora?", "classe": "placa"}
+{"frase": "pode me dizer se o board está superaqueitando?", "classe": "placa"}
+{"frase": "temperatura 75 celsius ok?", "classe": "placa"}
+{"frase": "temperatura acima de 70° não é normal, né?", "classe": "placa"}
+{"frase": "temperatura 68°C parece bom?", "classe": "placa"}
+{"frase": "qual a temperatura do ar?", "classe": "placa"}
+{"frase": "temperatura do board 78c 0s?", "classe": "placa"}
+{"frase": "a CPU tá 65? ok", "classe": "placa"}
+{"frase": "temperatura: 72 c é bom?", "classe": "placa"}
+{"frase": "temperatura acima de 80? não?", "classe": "placa"}
+{"frase": "qual a temperatura do processador agora?", "classe": "placa"}
+{"frase": "how long have we been up?", "classe": "placa"}
+{"frase": "please give me uptime.", "classe": "placa"}
+{"frase": "what's the current uptime?", "classe": "placa"}
+{"frase": "hi, can you check uptime?", "classe": "placa"}
+{"frase": "uptime?", "classe": "placa"}
+{"frase": "its up how long?", "classe": "placa"}
+{"frase": "up for how long?", "classe": "placa"}
+{"frase": "how many hours?", "classe": "placa"}
+{"frase": "uptime, thanks.", "classe": "placa"}
+{"frase": "how long board running?", "classe": "placa"}
+{"frase": "i want the uptime in seconds.", "classe": "placa"}
+{"frase": "give me uptime now.", "classe": "placa"}
+{"frase": "quanto tempo tá ligado?", "classe": "placa"}
+{"frase": "durou quanto tempo?", "classe": "placa"}
+{"frase": "já faz 48h?", "classe": "placa"}
+{"frase": "já está em funcionamento por 3 dias?", "classe": "placa"}
+{"frase": "quanto tempo a placa tá ligada?", "classe": "placa"}
+{"frase": "qual o uptime?", "classe": "placa"}
+{"frase": "tá funcionando há quanto?", "classe": "placa"}
+{"frase": "quanto tempo já está em uso?", "classe": "placa"}
+{"frase": "a placa tá ligada há quanto tempo?", "classe": "placa"}
+{"frase": "quanto tempo a placa está em funcionamento?", "classe": "placa"}
+{"frase": "por quanto tempo a placa tá ligada?", "classe": "placa"}
+{"frase": "quanto tempo a placa está ligada?", "classe": "placa"}
+{"frase": "what's my IP address?", "classe": "placa"}
+{"frase": "please give me the ip address of the board", "classe": "placa"}
+{"frase": "my ip address? i need it right now", "classe": "placa"}
+{"frase": "i need to know 192.168.1.x", "classe": "placa"}
+{"frase": "tell me the ip address of this device", "classe": "placa"}
+{"frase": "ip addr", "classe": "placa"}
+{"frase": "could you list the ip address please", "classe": "placa"}
+{"frase": "the ip address is 10.0.0.5", "classe": "placa"}
+{"frase": "pls what is the ip address of this raspberry pi", "classe": "placa"}
+{"frase": "ipaddress?", "classe": "placa"}
+{"frase": "the board's ip address is 172.16.0.2", "classe": "placa"}
+{"frase": "what i.p. address does this board have?", "classe": "placa"}
+{"frase": "qual é o ip", "classe": "placa"}
+{"frase": "meu ip aqui?", "classe": "placa"}
+{"frase": "por favor mostre o ip do board", "classe": "placa"}
+{"frase": "exibir ip do raspberry", "classe": "placa"}
+{"frase": "qual ip está configurado?", "classe": "placa"}
+{"frase": "qual é o ip atual do sistema?", "classe": "placa"}
+{"frase": "ip?", "classe": "placa"}
+{"frase": "mostre ip sem comentários", "classe": "placa"}
+{"frase": "me uip?", "classe": "placa"}
+{"frase": "qual o ip do dispositivo?", "classe": "placa"}
+{"frase": "mostre-ip-do-board", "classe": "placa"}
+{"frase": "qual é o endereço IP?", "classe": "placa"}
+{"frase": "how many cpu cores does this board have", "classe": "placa"}
+{"frase": "cpu load 90% now?", "classe": "placa"}
+{"frase": "can you tell me cpu utilization at 1min interval", "classe": "placa"}
+{"frase": "hey can you report the cpu core count quickly", "classe": "placa"}
+{"frase": "load is high, what is the average usage?", "classe": "placa"}
+{"frase": "cpu cores 4 not 2 as i thought", "classe": "placa"}
+{"frase": "please give me a quick summary of current cpu load", "classe": "placa"}
+{"frase": "what is the cpu busy percentage now?", "classe": "placa"}
+{"frase": "cpu cores: ? i see no info", "classe": "placa"}
+{"frase": "can you list cpu core status with timestamps", "classe": "placa"}
+{"frase": "cpu load in real time please", "classe": "placa"}
+{"frase": "tell me cpu core count and load percentage in one line", "classe": "placa"}
+{"frase": "quantos núcleos de CPU tem o board?", "classe": "placa"}
+{"frase": "qual é a carga média do CPU agora?", "classe": "placa"}
+{"frase": "me mostre a porcentagem de uso do processador em tempo real", "classe": "placa"}
+{"frase": "o cpu está sobrecarregado, quer algo a fazer?", "classe": "placa"}
+{"frase": "CPU cores? load?", "classe": "placa"}
+{"frase": "custa muito a bateria quando o CPU fica em 80%?", "classe": "placa"}
+{"frase": "por favor, mostre o gráfico do uso do CPU", "classe": "placa"}
+{"frase": "quero saber se o board tá travando por causa do CPU", "classe": "placa"}
+{"frase": "cpu load 90%? preciso de ajuda", "classe": "placa"}
+{"frase": "quantos cores do CPU 4 cores?", "classe": "placa"}
+{"frase": "o cpu tá estável?", "classe": "placa"}
+{"frase": "qual o uso do cpu em segundos?", "classe": "placa"}
+{"frase": "what board are you on", "classe": "placa"}
+{"frase": "Which board am I running on?", "classe": "placa"}
+{"frase": "tell me which hardware i have", "classe": "placa"}
+{"frase": "Which model is this?", "classe": "placa"}
+{"frase": "i'm on a raspi 4, right?", "classe": "placa"}
+{"frase": "what board do you run on", "classe": "placa"}
+{"frase": "whatis my board? i need details", "classe": "placa"}
+{"frase": "could you specify which device you’re on", "classe": "placa"}
+{"frase": "which board am i using right now", "classe": "placa"}
+{"frase": "tell me the board this AI is running on", "classe": "placa"}
+{"frase": "what model is this? i want the specs", "classe": "placa"}
+{"frase": "give me the exact board info please", "classe": "placa"}
+{"frase": "Qual placa é essa?", "classe": "placa"}
+{"frase": "Qual hardware estou usando?", "classe": "placa"}
+{"frase": "Quero saber qual é o modelo da minha Raspberry Pi.", "classe": "placa"}
+{"frase": "Me diga a placa que você está rodando.", "classe": "placa"}
+{"frase": "que board eu tenho aqui?", "classe": "placa"}
+{"frase": "me fale qual placa você usa.", "classe": "placa"}
+{"frase": "Qual a versão do Orange Pi?", "classe": "placa"}
+{"frase": "I need info on the board.", "classe": "placa"}
+{"frase": "Qual placa estou rodando?", "classe": "placa"}
+{"frase": "Qual modelo de computador eu tenho?", "classe": "placa"}
+{"frase": "Me informe qual é a placa em uso.", "classe": "placa"}
+{"frase": "Qual placa você executa?", "classe": "placa"}
+{"frase": "what OS does this board run", "classe": "placa"}
+{"frase": "which distro is on this Pi?", "classe": "placa"}
+{"frase": "tell me the operating system", "classe": "placa"}
+{"frase": "os?", "classe": "placa"}
+{"frase": "I need to know which distro is installed", "classe": "placa"}
+{"frase": "can you say what OS you’re using", "classe": "placa"}
+{"frase": "which system is running on this board right now", "classe": "placa"}
+{"frase": "hey, what OS is this running", "classe": "placa"}
+{"frase": "i want to know the OS you have on board", "classe": "placa"}
+{"frase": "what distro is this?", "classe": "placa"}
+{"frase": "Could you specify the operating system?", "classe": "placa"}
+{"frase": "tell me the exact distro name on this board.", "classe": "placa"}
+{"frase": "Qual sistema operacional roda no Orange Pi?", "classe": "placa"}
+{"frase": "Qual distro está instalada no Raspberry Pi?", "classe": "placa"}
+{"frase": "Quero saber a versão do OS do meu board.", "classe": "placa"}
+{"frase": "o que vem pré‑instalado no Orange Pi?", "classe": "placa"}
+{"frase": "qual distro eu deveria usar no Raspberry Pi?", "classe": "placa"}
+{"frase": "instalei o Ubuntu na Orange Pi, tem alguma diferença?", "classe": "placa"}
+{"frase": "poderia me informar o sistema que está no seu Orange Pi?", "classe": "placa"}
+{"frase": "Estou usando o Raspberry Pi, qual é o OS por padrão?", "classe": "placa"}
+{"frase": "Qual distro o Orange Pi vem com?", "classe": "placa"}
+{"frase": "Preciso saber a versão do OS no Raspberry Pi que você usa.", "classe": "placa"}
+{"frase": "Qual sistema roda no board?", "classe": "placa"}
+{"frase": "me diga que distro está no Orange Pi.", "classe": "placa"}
+{"frase": "what time is it now", "classe": "placa"}
+{"frase": "tell me the date", "classe": "placa"}
+{"frase": "time", "classe": "placa"}
+{"frase": "please show the current time, i need to know when i should go to bed", "classe": "placa"}
+{"frase": "is it 3 pm or 4? I'm confused", "classe": "placa"}
+{"frase": "current time?", "classe": "placa"}
+{"frase": "can you give me the date right now", "classe": "placa"}
+{"frase": "what is the exact timestamp on this board?", "classe": "placa"}
+{"frase": "hey time, i want it", "classe": "placa"}
+{"frase": "tell me the date and time", "classe": "placa"}
+{"frase": "when is the clock now", "classe": "placa"}
+{"frase": "time? please", "classe": "placa"}
+{"frase": "qual é a hora agora", "classe": "placa"}
+{"frase": "diga-me a data de hoje", "classe": "placa"}
+{"frase": "hora", "classe": "placa"}
+{"frase": "em português, que horas são?", "classe": "placa"}
+{"frase": "há quanto tempo desde 01/01/2000?", "classe": "placa"}
+{"frase": "qual data hoje 12 de março 2026", "classe": "placa"}
+{"frase": "qual a hora agora?", "classe": "placa"}
+{"frase": "hora?", "classe": "placa"}
+{"frase": "qual a hora no fuso horário de Brasília?", "classe": "placa"}
+{"frase": "qual a data hoje? e a hora?", "classe": "placa"}
+{"frase": "qual a hora no meu fuso horário?", "classe": "placa"}
+{"frase": "data hora", "classe": "placa"}
+{"frase": "qual a hora?  Provided 12 lines.qual é a hora agora", "classe": "placa"}
+{"frase": "what's the current CPU usage", "classe": "placa"}
+{"frase": "cpu is at 87% and temp 82c", "classe": "placa"}
+{"frase": "how's the memory? 512mb free?", "classe": "placa"}
+{"frase": "is the pi still online?", "classe": "placa"}
+{"frase": "hey, reboot? it froze", "classe": "placa"}
+{"frase": "status? no response", "classe": "placa"}
+{"frase": "can you give me the disk space?", "classe": "placa"}
+{"frase": "is there a battery backup?", "classe": "placa"}
+{"frase": "do i have a backup running?", "classe": "placa"}
+{"frase": "why is the fan not spinning?", "classe": "placa"}
+{"frase": "please shut down safely", "classe": "placa"}
+{"frase": "cpu temp is 92c, overheating?", "classe": "placa"}
+{"frase": "Qual a temperatura do processador?", "classe": "placa"}
+{"frase": "ok está quente?", "classe": "placa"}
+{"frase": "estado do arduino?", "classe": "placa"}
+{"frase": "a placa está com 5V estáveis?", "classe": "placa"}
+{"frase": "status da memória RAM", "classe": "placa"}
+{"frase": "o arduino está ligado e responde?", "classe": "placa"}
+{"frase": "quais são os logs de erro?", "classe": "placa"}
+{"frase": "qual a taxa de erro no sensor?", "classe": "placa"}
+{"frase": "por favor diga se a conexão wifi está ok", "classe": "placa"}
+{"frase": "está com 80% de bateria?", "classe": "placa"}
+{"frase": "a placa não tem travado?", "classe": "placa"}
+{"frase": "temperatura 70°C?", "classe": "placa"}
+{"frase": "who are you", "classe": "sobre"}
+{"frase": "assistant what is your name?", "classe": "sobre"}
+{"frase": "hey you, i need to know who you are", "classe": "sobre"}
+{"frase": "can you tell me your name please", "classe": "sobre"}
+{"frase": "you are a tiny ai on a pi", "classe": "sobre"}
+{"frase": "what's your name?", "classe": "sobre"}
+{"frase": "i don't know who you are", "classe": "sobre"}
+{"frase": "tell me your name and purpose", "classe": "sobre"}
+{"frase": "who am i talking to right now?", "classe": "sobre"}
+{"frase": "you are a tiny terminal ai on the Orange Pi what is your name?", "classe": "sobre"}
+{"frase": "who is this and what do you call yourself", "classe": "sobre"}
+{"frase": "what name do you use?", "classe": "sobre"}
+{"frase": "qual é o seu nome?", "classe": "sobre"}
+{"frase": "quem é você?", "classe": "sobre"}
+{"frase": "o que você faz?", "classe": "sobre"}
+{"frase": "qual é seu nome e função?", "classe": "sobre"}
+{"frase": "qual o seu nome?", "classe": "sobre"}
+{"frase": "me diga seu nome e quem você é", "classe": "sobre"}
+{"frase": "o que você faz? seu nome?", "classe": "sobre"}
+{"frase": "qual seu nome e o que pode fazer", "classe": "sobre"}
+{"frase": "seu nome?", "classe": "sobre"}
+{"frase": "quem é o seu desenvolvedor?", "classe": "sobre"}
+{"frase": "qual é sua função?", "classe": "sobre"}
+{"frase": "qual nome você possui?", "classe": "sobre"}
+{"frase": "what can you do", "classe": "sobre"}
+{"frase": "tell me a joke or a quick fact about the moon", "classe": "sobre"}
+{"frase": "how do i set the timer for 15 minutes to brew coffee", "classe": "sobre"}
+{"frase": "hey can you play my playlist from the last week and set the volume low", "classe": "sobre"}
+{"frase": "could you please explain the difference between a quantum computer and a regular one in simple terms", "classe": "sobre"}
+{"frase": "what skills do you have  i want to know what commands you understand", "classe": "sobre"}
+{"frase": "give me a quick summary of today's news  i need it in bullet points", "classe": "sobre"}
+{"frase": "list all the features that make you useful for coding  and debugging", "classe": "sobre"}
+{"frase": "can you read my favorite book chapter aloud please  i want the audio only", "classe": "sobre"}
+{"frase": "tell me how to get a wifi password from the router  i can't see the admin page", "classe": "sobre"}
+{"frase": "can you be polite and respond to my questions in full sentences", "classe": "sobre"}
+{"frase": "show me all the ways i can interact with you  i want a command cheat sheet", "classe": "sobre"}
+{"frase": "o que você consegue fazer", "classe": "sobre"}
+{"frase": "quero saber as funções deste assistente", "classe": "sobre"}
+{"frase": "dê-me uma lista de comandos disponíveis, por favor", "classe": "sobre"}
+{"frase": "como faço pra pedir uma previsão do tempo amanhã?", "classe": "sobre"}
+{"frase": "qual linguagem eu preciso usar pra programar nele?", "classe": "sobre"}
+{"frase": "poderá me ajudar a escrever um e‑mail para o chefe?", "classe": "sobre"}
+{"frase": "ajuda, preciso abrir o terminal e executar um script", "classe": "sobre"}
+{"frase": "qual é a diferença entre \"restart\" e \"shutdown\"?", "classe": "sobre"}
+{"frase": "diga-me como acessar os arquivos no SD card", "classe": "sobre"}
+{"frase": "obrigado pelo suporte, mas não entendi o comando \"grep", "classe": "sobre"}
+{"frase": "pode me explicar como usar a API do github com python?", "classe": "sobre"}
+{"frase": "por favor mostre um exemplo de comando em português?", "classe": "sobre"}
+{"frase": "what is openTARS Pi?", "classe": "sobre"}
+{"frase": "i need help with openTARS configuration", "classe": "sobre"}
+{"frase": "can you explain the difference between openTARS and openTARS Pi?", "classe": "sobre"}
+{"frase": "pls give me a quick guide to installing openTARS Pi on my Orange Pi", "classe": "sobre"}
+{"frase": "openTARS Pi is a great project but i am stuck on the power supply issue", "classe": "sobre"}
+{"frase": "is there a way to add voice recognition to openTARS?", "classe": "sobre"}
+{"frase": "tell me the prerequisites for running openTARS on a raspberry pi", "classe": "sobre"}
+{"frase": "i would like to know how to enable the camera support in openTARS Pi", "classe": "sobre"}
+{"frase": "does openTARS Pi support python3?", "classe": "sobre"}
+{"frase": "how do i get the latest firmware for openTARS Pi?", "classe": "sobre"}
+{"frase": "i can't get openTARS to connect to my home WiFi", "classe": "sobre"}
+{"frase": "please explain the advantages of openTARS Pi over the original openTARS.", "classe": "sobre"}
+{"frase": "o que é openTARS Pi?", "classe": "sobre"}
+{"frase": "openTARS openTARS Pi", "classe": "sobre"}
+{"frase": "me explica a diferença entre openTARS e openTARS Pi", "classe": "sobre"}
+{"frase": "openTARS Pi para quem não sabe nada de hardware?", "classe": "sobre"}
+{"frase": "quero saber quais placas são compatíveis com openTARS Pi, por favor", "classe": "sobre"}
+{"frase": "qual a versão mais recente do openTARS Pi?", "classe": "sobre"}
+{"frase": "openTARS Pi é gratuito?", "classe": "sobre"}
+{"frase": "não entendi que é openTARS Pi, pode mandar tutorial?", "classe": "sobre"}
+{"frase": "o openTARS Pi tem suporte oficial?", "classe": "sobre"}
+{"frase": "com que linguagem programo o openTARS Pi?", "classe": "sobre"}
+{"frase": "openTARS Pi e openTARS são a mesma coisa?", "classe": "sobre"}
+{"frase": "como instalar openTARS Pi em um Orange Pi?", "classe": "sobre"}
+{"frase": "what is gargantua pi", "classe": "sobre"}
+{"frase": "tell me about the AI model used in gargantua", "classe": "sobre"}
+{"frase": "gargantua is huge, but how many parameters does it have?", "classe": "sobre"}
+{"frase": "hey can you explain how big the model is in gigabytes", "classe": "sobre"}
+{"frase": "what AI model is gargantua running on? give me the version", "classe": "sobre"}
+{"frase": "how big is gargantua pi in terms of storage?", "classe": "sobre"}
+{"frase": "is gargantua a neural network? if so what architecture?", "classe": "sobre"}
+{"frase": "gargantua pi size? 2gb? 5gb?", "classe": "sobre"}
+{"frase": "can you give me the parameter count for gargantua", "classe": "sobre"}
+{"frase": "please describe the AI model in gargantua pi in detail", "classe": "sobre"}
+{"frase": "what is the model size of gargantua? i need the exact figure", "classe": "sobre"}
+{"frase": "how many layers does gargantua pi have?Done.what is gargantua pi", "classe": "sobre"}
+{"frase": "how many layers does gargantua pi have?", "classe": "sobre"}
+{"frase": "qual é o gargantua pi?", "classe": "sobre"}
+{"frase": "gargantua pi modelo de inteligência artificial?", "classe": "sobre"}
+{"frase": "qual a arquitetura do gargantua?", "classe": "sobre"}
+{"frase": "quanto pesa o gargantua?", "classe": "sobre"}
+{"frase": "quais são os recursos do gargantua?", "classe": "sobre"}
+{"frase": "gargantua pi 2?", "classe": "sobre"}
+{"frase": "modelagem do gargantua: transformer grande ou não?", "classe": "sobre"}
+{"frase": "diz a quantidade de parâmetros do gargantua pi", "classe": "sobre"}
+{"frase": "qual a capacidade do gargantua?", "classe": "sobre"}
+{"frase": "gargantua pi tamanho em cm?", "classe": "sobre"}
+{"frase": "o gargantua pi roda em RPi?", "classe": "sobre"}
+{"frase": "qual a versão do modelo do gargantua?", "classe": "sobre"}
+{"frase": "who made this AI?", "classe": "sobre"}
+{"frase": "i think it was created by a small startup in berlin.", "classe": "sobre"}
+{"frase": "who is the genius behind this?", "classe": "sobre"}
+{"frase": "a person named jason?", "classe": "sobre"}
+{"frase": "who's the maker, please?", "classe": "sobre"}
+{"frase": "created by a group at openAI?", "classe": "sobre"}
+{"frase": "i heard a friend said it was built by a hackathon team.", "classe": "sobre"}
+{"frase": "who made it? i need to thank them.", "classe": "sobre"}
+{"frase": "the creator? someone named alex?", "classe": "sobre"}
+{"frase": "did someone named emily develop it?", "classe": "sobre"}
+{"frase": "i want to know who wrote the code.", "classe": "sobre"}
+{"frase": "who is the wizard that built this thing?", "classe": "sobre"}
+{"frase": "quem criou isso", "classe": "sobre"}
+{"frase": "desculpa mas pode dizer quem desenvolveu o assistente?", "classe": "sobre"}
+{"frase": "quem é o cara que montou esse robô?", "classe": "sobre"}
+{"frase": "quais são os desenvolvedores?", "classe": "sobre"}
+{"frase": "criador do assitente?", "classe": "sobre"}
+{"frase": "quem programou essa bexiga?", "classe": "sobre"}
+{"frase": "quem deu vida a essa IA?", "classe": "sobre"}
+{"frase": "o que quem fez esse mini pc?", "classe": "sobre"}
+{"frase": "qual a empresa responsável?", "classe": "sobre"}
+{"frase": "quem fez isso? sem respostas?", "classe": "sobre"}
+{"frase": "qual é o nome do desenvolvedor?", "classe": "sobre"}
+{"frase": "qual é o nome do criador?", "classe": "sobre"}
+{"frase": "can this run offline", "classe": "sobre"}
+{"frase": "Will it be private?", "classe": "sobre"}
+{"frase": "send data to cloud?", "classe": "sobre"}
+{"frase": "i need it to work when no internet", "classe": "sobre"}
+{"frase": "does it upload anything?", "classe": "sobre"}
+{"frase": "do you keep logs?", "classe": "sobre"}
+{"frase": "i dont want my data in the cloud", "classe": "sobre"}
+{"frase": "is it secure offline?", "classe": "sobre"}
+{"frase": "what if no wifi?", "classe": "sobre"}
+{"frase": "pls tell me about privacy policy", "classe": "sobre"}
+{"frase": "does it store anything?", "classe": "sobre"}
+{"frase": "is this fully offline?", "classe": "sobre"}
+{"frase": "consegue trabalhar offline?  <|constrain|>assistant", "classe": "sobre"}
+{"frase": "o que acontece se eu falar algo em voz? isso vai ficar no cloud?   assistant", "classe": "sobre"}
+{"frase": "funciona sem conexão, por favor?   assistant", "classe": "sobre"}
+{"frase": "sua privacidade é garantida, não vai mandar nada pra internet?   assistant", "classe": "sobre"}
+{"frase": "você vai armazenar os dados? não?   assistant", "classe": "sobre"}
+{"frase": "eu preciso de segurança, o que você faz com as minhas frases?   assistant", "classe": "sobre"}
+{"frase": "offline ou online?   assistant", "classe": "sobre"}
+{"frase": "é verdade que tudo fica só no aparelho, sem subir pra nuvem?   assistant", "classe": "sobre"}
+{"frase": "eu quero saber se o ai envia para a cloud quando não tem wifi   assistant", "classe": "sobre"}
+{"frase": "o ai funciona sem rede?   assistant", "classe": "sobre"}
+{"frase": "sem conexão, tudo no local, certo?   assistant", "classe": "sobre"}
+{"frase": "what is Murph?", "classe": "sobre"}
+{"frase": "how does the assistant decide what to do?", "classe": "sobre"}
+{"frase": "can you explain the process of Murph in detail?", "classe": "sobre"}
+{"frase": "tell me what Murph is, i need a quick answer", "classe": "sobre"}
+{"frase": "how does it pick which action to take when i ask a question?", "classe": "sobre"}
+{"frase": "help me understand murph’s decision making algorithm", "classe": "sobre"}
+{"frase": "murph decides by reading the entire sentence and then??", "classe": "sobre"}
+{"frase": "do you decide the best next step or is it random?", "classe": "sobre"}
+{"frase": "what does murph stand for?", "classe": "sobre"}
+{"frase": "how does the assistant figure out what i want?", "classe": "sobre"}
+{"frase": "i want to know the logic behind murph’s choices, explain please", "classe": "sobre"}
+{"frase": "murph, please tell me how the assistant chooses what to do", "classe": "sobre"}
+{"frase": "o que é murph", "classe": "sobre"}
+{"frase": "quem decidiu o que faço?", "classe": "sobre"}
+{"frase": "explique o algoritmo em poucas palavras", "classe": "sobre"}
+{"frase": "qual a origem do termo murph?", "classe": "sobre"}
+{"frase": "qual a lógica do seu comportamento?", "classe": "sobre"}
+{"frase": "murmur?", "classe": "sobre"}
+{"frase": "me diga se murph é uma sigla", "classe": "sobre"}
+{"frase": "por que você faz isso?", "classe": "sobre"}
+{"frase": "muito obrigado, você é útil", "classe": "sobre"}
+{"frase": "qual é a base de dados?", "classe": "sobre"}
+{"frase": "como você escolhe uma ação?", "classe": "sobre"}
+{"frase": "o que acontece se eu mandar algo estranho?", "classe": "sobre"}
+{"frase": "help me get started", "classe": "sobre"}
+{"frase": "can i get a quick intro how to use this?", "classe": "sobre"}
+{"frase": "what commands do i need to run first", "classe": "sobre"}
+{"frase": "can you show me a sample interaction please", "classe": "sobre"}
+{"frase": "i need guidance on setting up the assistant", "classe": "sobre"}
+{"frase": "what's the best way to ask questions", "classe": "sobre"}
+{"frase": "please explain the basics of using the terminal ai", "classe": "sobre"}
+{"frase": "how do i load new models?", "classe": "sobre"}
+{"frase": "setup guide would be great thanks", "classe": "sobre"}
+{"frase": "give me a step by step tutorial on the board", "classe": "sobre"}
+{"frase": "i m looking for a quick start guide", "classe": "sobre"}
+{"frase": "can you help me troubleshoot initial errors?", "classe": "sobre"}
+{"frase": "como usar este assistente", "classe": "sobre"}
+{"frase": "por favor me ajude a iniciar", "classe": "sobre"}
+{"frase": "qual comando para fazer isso?", "classe": "sobre"}
+{"frase": "basta digitar comando aqui", "classe": "sobre"}
+{"frase": "obrigado, me explique passo a passo", "classe": "sobre"}
+{"frase": "qndo posso testar a voz?", "classe": "sobre"}
+{"frase": "dê um tutorial resumido", "classe": "sobre"}
+{"frase": "quero saber como ativar o modo offline", "classe": "sobre"}
+{"frase": "sem pontuação apenas diga algo", "classe": "sobre"}
+{"frase": "mude para modo inglês agora", "classe": "sobre"}
+{"frase": "como faço para salvar o histórico?", "classe": "sobre"}
+{"frase": "pode me dar exemplos de perguntas?", "classe": "sobre"}
+{"frase": "list processes using most memory", "classe": "comando"}
+{"frase": "show cpu usage top 5 processes", "classe": "comando"}
+{"frase": "which processes are hogging RAM?", "classe": "comando"}
+{"frase": "ps aux | sort -nk +4 | head", "classe": "comando"}
+{"frase": "give me a quick summary of memory usage per proc", "classe": "comando"}
+{"frase": "what's using the most cpu right now", "classe": "comando"}
+{"frase": "ps -eo pid,cmd,%cpu,%mem --sort=-%mem | head -n 10", "classe": "comando"}
+{"frase": "cpu & memory breakdown for all running tasks please", "classe": "comando"}
+{"frase": "show me the processes sorted by memory usage in descending order", "classe": "comando"}
+{"frase": "i need the top 3 memory hogs", "classe": "comando"}
+{"frase": "show memory usage of each process in a table", "classe": "comando"}
+{"frase": "what processes are using more than 50% cpu?", "classe": "comando"}
+{"frase": "quais processos rodando?", "classe": "comando"}
+{"frase": "quero ver os que mais consomem memória", "classe": "comando"}
+{"frase": "lista os processos que mais usam cpu", "classe": "comando"}
+{"frase": "mostre processos em tempo real", "classe": "comando"}
+{"frase": "qual o consumo de memória do sistema?", "classe": "comando"}
+{"frase": "quais processos estão em alto uso de cpu?", "classe": "comando"}
+{"frase": "me mostra os processos com maior memória em uso?", "classe": "comando"}
+{"frase": "processos que estão mais pesados?", "classe": "comando"}
+{"frase": "quais processos usam mais cpu?", "classe": "comando"}
+{"frase": "procuro lista de processos que consomem memória", "classe": "comando"}
+{"frase": "mostre os top 5 que mais usam cpu e memória", "classe": "comando"}
+{"frase": "quais processos mais consomem memória e cpu?", "classe": "comando"}
+{"frase": "run fastfetch", "classe": "comando"}
+{"frase": "please launch htop now", "classe": "comando"}
+{"frase": "neofetch -c?", "classe": "comando"}
+{"frase": "btop; show me memory usage", "classe": "comando"}
+{"frase": "lsblk -f", "classe": "comando"}
+{"frase": "sensors", "classe": "comando"}
+{"frase": "i need to start python3 script", "classe": "comando"}
+{"frase": "launch fastfetch  again", "classe": "comando"}
+{"frase": "what's sensors output?", "classe": "comando"}
+{"frase": "start btop please", "classe": "comando"}
+{"frase": "run python3 -m pip install", "classe": "comando"}
+{"frase": "show me lsblk details", "classe": "comando"}
+{"frase": "executa fastfetch agora", "classe": "comando"}
+{"frase": "por favor, dê um htop", "classe": "comando"}
+{"frase": "quero ver o lsblk de tudo?", "classe": "comando"}
+{"frase": "btop? comando", "classe": "comando"}
+{"frase": "sensors? por favor", "classe": "comando"}
+{"frase": "python3 script.py", "classe": "comando"}
+{"frase": "faça fastfetch e depois htop", "classe": "comando"}
+{"frase": "btop!", "classe": "comando"}
+{"frase": "executar lsblk sem opções", "classe": "comando"}
+{"frase": "sensors: erro?", "classe": "comando"}
+{"frase": "como faço python3 -m venv", "classe": "comando"}
+{"frase": "inicie fastfetch agora mesmo", "classe": "comando"}
+{"frase": "show me all usb devices", "classe": "comando"}
+{"frase": "list /dev/disk/by-id", "classe": "comando"}
+{"frase": "what partitions are mounted on /mnt?", "classe": "comando"}
+{"frase": "list disk partitions, please", "classe": "comando"}
+{"frase": "show me the mounted filesystems", "classe": "comando"}
+{"frase": "show /proc/mounts", "classe": "comando"}
+{"frase": "list usb devices with -l", "classe": "comando"}
+{"frase": "ls -l /dev/sd*", "classe": "comando"}
+{"frase": "display disks and partitions", "classe": "comando"}
+{"frase": "show /dev/disk/by-path", "classe": "comando"}
+{"frase": "tell me what disks are connected to usb", "classe": "comando"}
+{"frase": "quero ver os dispositivos usb", "classe": "comando"}
+{"frase": "listar discos e partições", "classe": "comando"}
+{"frase": "que dispositivos estão conectados via USB?", "classe": "comando"}
+{"frase": "lsblk -o NAME,SIZE,TYPE,MOUNTPOINT", "classe": "comando"}
+{"frase": "qual é o caminho das partições montadas?", "classe": "comando"}
+{"frase": "show usb devices", "classe": "comando"}
+{"frase": "mostrar /dev/disk/by-id", "classe": "comando"}
+{"frase": "diga quais drives estão montados", "classe": "comando"}
+{"frase": "part -l", "classe": "comando"}
+{"frase": "qual partição do pendrive tem 32GB?", "classe": "comando"}
+{"frase": "mount | grep usb", "classe": "comando"}
+{"frase": "ver tudo, tudo sem filtros", "classe": "comando"}
+{"frase": "```bash", "classe": "comando"}
+{"frase": "sudo fdisk -l", "classe": "comando"}
+{"frase": "```", "classe": "comando"}
+{"frase": "show interfaces", "classe": "comando"}
+{"frase": "list wifi networks", "classe": "comando"}
+{"frase": "what ports are open?", "classe": "comando"}
+{"frase": "scan tcp ports 1-1000", "classe": "comando"}
+{"frase": "tell me active connections", "classe": "comando"}
+{"frase": "interfaces -a", "classe": "comando"}
+{"frase": "wifi scan", "classe": "comando"}
+{"frase": "open ports", "classe": "comando"}
+{"frase": "netstat -an | grep ESTABLISHED", "classe": "comando"}
+{"frase": "wifi list ssids", "classe": "comando"}
+{"frase": "show all interfaces with ip addresses", "classe": "comando"}
+{"frase": "what are the listening connections on this machine?", "classe": "comando"}
+{"frase": "quais redes wifi disponíveis?", "classe": "comando"}
+{"frase": "list ports opened", "classe": "comando"}
+{"frase": "ver conexão ative", "classe": "comando"}
+{"frase": "por favor mostre as interfaces de rede", "classe": "comando"}
+{"frase": "wifi ssids", "classe": "comando"}
+{"frase": "detalhe as portas escutas", "classe": "comando"}
+{"frase": "conexões ativas", "classe": "comando"}
+{"frase": "mostrar tcp conns", "classe": "comando"}
+{"frase": "exiba os sockets abertos", "classe": "comando"}
+{"frase": "qual é a interface que está conectada à internet?", "classe": "comando"}
+{"frase": "lista de conexões abertas.", "classe": "comando"}
+{"frase": "list packages installed", "classe": "comando"}
+{"frase": "is python3 present?", "classe": "comando"}
+{"frase": "check if vim is installed", "classe": "comando"}
+{"frase": "do i have node?", "classe": "comando"}
+{"frase": "grep python in dpkg -l", "classe": "comando"}
+{"frase": "show me all packages apt list --installed", "classe": "comando"}
+{"frase": "do you know if ffmpeg is on this system", "classe": "comando"}
+{"frase": "i want to check if curl is installed", "classe": "comando"}
+{"frase": "list all installed packages that start with \"lib", "classe": "comando"}
+{"frase": "which packages are currently installed?", "classe": "comando"}
+{"frase": "is there a package called git?", "classe": "comando"}
+{"frase": "display all installed packages in alphabetical order", "classe": "comando"}
+{"frase": "Como posso listar todos os pacotes instalados?", "classe": "comando"}
+{"frase": "Preciso saber se o python3 está instalado, por favor.", "classe": "comando"}
+{"frase": "echo \"verificar pacotes\" | grep -i node", "classe": "comando"}
+{"frase": "lista de pacotes instalados?", "classe": "comando"}
+{"frase": "Qual o comando para saber se o git está no sistema?", "classe": "comando"}
+{"frase": "verifica se o ffmpeg está instalado", "classe": "comando"}
+{"frase": "Existe algo para mostrar tudo que está instalado?", "classe": "comando"}
+{"frase": "show package list", "classe": "comando"}
+{"frase": "instalar ou não o curl?", "classe": "comando"}
+{"frase": "Qual comando mostra pacotes?", "classe": "comando"}
+{"frase": "checa se o vim está instalado.", "classe": "comando"}
+{"frase": "quero a lista de pacotes com apt list --installed", "classe": "comando"}
+{"frase": "start myservice", "classe": "comando"}
+{"frase": "please stop the vpn service", "classe": "comando"}
+{"frase": "restart sshd, can you do that?", "classe": "comando"}
+{"frase": "is systemd running?", "classe": "comando"}
+{"frase": "stop ssh", "classe": "comando"}
+{"frase": "what is status of apache2 ?", "classe": "comando"}
+{"frase": "sudo systemctl start my-service", "classe": "comando"}
+{"frase": "stop myservice", "classe": "comando"}
+{"frase": "restart    myservice", "classe": "comando"}
+{"frase": "check status of  nginx", "classe": "comando"}
+{"frase": "please start mysqld", "classe": "comando"}
+{"frase": "stop myservice?", "classe": "comando"}
+{"frase": "ligar serviço mysql", "classe": "comando"}
+{"frase": "pode parar o samba?", "classe": "comando"}
+{"frase": "reinicie o serviço dps das 23h, por favor", "classe": "comando"}
+{"frase": "verificar status de sshd", "classe": "comando"}
+{"frase": "sshS?  status", "classe": "comando"}
+{"frase": "restart do apache?", "classe": "comando"}
+{"frase": "pausar o banco, urgentíssimo", "classe": "comando"}
+{"frase": "desliga a rede agora", "classe": "comando"}
+{"frase": "ssh status?  preciso saber", "classe": "comando"}
+{"frase": "acenda o cron agora, obrigado", "classe": "comando"}
+{"frase": "restart do networkd", "classe": "comando"}
+{"frase": "status da unidade ãõpõ?", "classe": "comando"}
+{"frase": "update the system please", "classe": "comando"}
+{"frase": "apt install vim", "classe": "comando"}
+{"frase": "Could you run apt-get update for me?", "classe": "comando"}
+{"frase": "apt upgrade -y", "classe": "comando"}
+{"frase": "install python3-pip now", "classe": "comando"}
+{"frase": "apt-get install htop", "classe": "comando"}
+{"frase": "update now", "classe": "comando"}
+{"frase": "i need to update apt sources", "classe": "comando"}
+{"frase": "apt install nano -y", "classe": "comando"}
+{"frase": "please upgrade the system", "classe": "comando"}
+{"frase": "apt-get upgrade", "classe": "comando"}
+{"frase": "install curl without sudo", "classe": "comando"}
+{"frase": "atualizar sistema agora", "classe": "comando"}
+{"frase": "instale o pacote vim", "classe": "comando"}
+{"frase": "quero atualizar o apt, pode fazer?", "classe": "comando"}
+{"frase": "instale python3-pip, por favor", "classe": "comando"}
+{"frase": "sudo apt-get update && sudo apt-get upgrade -y", "classe": "comando"}
+{"frase": "instale a libpng-dev", "classe": "comando"}
+{"frase": "quais pacotes estão disponíveis?", "classe": "comando"}
+{"frase": "instalando o ffmpeg", "classe": "comando"}
+{"frase": "update e upgrade", "classe": "comando"}
+{"frase": "instalaria o nginx mas não sei o comando", "classe": "comando"}
+{"frase": "o que acontece se eu digitar apt-get upgrade?", "classe": "comando"}
+{"frase": "instale o curl agora mesmo.", "classe": "comando"}
+{"frase": "show dmesg last 20 lines", "classe": "comando"}
+{"frase": "please read the journal for the current boot session", "classe": "comando"}
+{"frase": "what are the kernel messages for the last boot?", "classe": "comando"}
+{"frase": "dmesg | grep -i error", "classe": "comando"}
+{"frase": "give me the boot logs from the last 2 days, please", "classe": "comando"}
+{"frase": "print journalctl -b -p err -n 50", "classe": "comando"}
+{"frase": "show logs from when the system rebooted yesterday", "classe": "comando"}
+{"frase": "list all dmesg entries that contain “usb”", "classe": "comando"}
+{"frase": "could you show me the full dmesg?", "classe": "comando"}
+{"frase": "journalctl -u networking.service 2> /dev/null", "classe": "comando"}
+{"frase": "give me the boot messages in reverse order", "classe": "comando"}
+{"frase": "dmesg | head", "classe": "comando"}
+{"frase": "ver logs do sistema", "classe": "comando"}
+{"frase": "dmesg? 5", "classe": "comando"}
+{"frase": "exibir journal completo sem filtros", "classe": "comando"}
+{"frase": "quero ver os logs do kernel desde o boot", "classe": "comando"}
+{"frase": "mostre os últimos 50 linhas de dmesg", "classe": "comando"}
+{"frase": "poderia mandar o arquivo /var/log/syslog", "classe": "comando"}
+{"frase": "qual a diferença entre journalctl -b e dmesg", "classe": "comando"}
+{"frase": "ajuda, não consigo encontrar /etc/rsyslog.conf", "classe": "comando"}
+{"frase": "exibir logs do serviço ssh no último boot", "classe": "comando"}
+{"frase": "mostra tudo em formato json", "classe": "comando"}
+{"frase": "por favor, liste os erros de boot dos últimos 3 ciclos", "classe": "comando"}
+{"frase": "como visualizar o journal em tempo real sem scroll?", "classe": "comando"}
+{"frase": "kill process 1234 please", "classe": "comando"}
+{"frase": "kill -9 5678?", "classe": "comando"}
+{"frase": "kill process 9876 because it froze", "classe": "comando"}
+{"frase": "kill the damn process right now", "classe": "comando"}
+{"frase": "killproc 1122", "classe": "comando"}
+{"frase": "kill 4455 process", "classe": "comando"}
+{"frase": "can you kill process 9988 for me?", "classe": "comando"}
+{"frase": "kill -9 4455", "classe": "comando"}
+{"frase": "please terminate process 1234", "classe": "comando"}
+{"frase": "kill 9999", "classe": "comando"}
+{"frase": "kill process 7777 and stop it now", "classe": "comando"}
+{"frase": "kill -9 7777", "classe": "comando"}
+{"frase": "feche o processo 42", "classe": "comando"}
+{"frase": "killar o processo que está travado, por favor", "classe": "comando"}
+{"frase": "como faço pra matar o processo que não responde?", "classe": "comando"}
+{"frase": "matar o processo 9999", "classe": "comando"}
+{"frase": "quero encerrar o processo 1234, por gentileza", "classe": "comando"}
+{"frase": "processo 555 está consumindo memória, termine", "classe": "comando"}
+{"frase": "stop o processo que está dando erro", "classe": "comando"}
+{"frase": "kille o processo 777", "classe": "comando"}
+{"frase": "encerrar 888", "classe": "comando"}
+{"frase": "matar esse processo, já", "classe": "comando"}
+{"frase": "processo 1010 não responde, acione kill", "classe": "comando"}
+{"frase": "kill the process 222", "classe": "comando"}
+{"frase": "reboot", "classe": "comando"}
+{"frase": "please shutdown the pi now", "classe": "comando"}
+{"frase": "reboot board?", "classe": "comando"}
+{"frase": "turn it off", "classe": "comando"}
+{"frase": "could you reboot it please", "classe": "comando"}
+{"frase": "shut down the system", "classe": "comando"}
+{"frase": "reboot 1 2 3", "classe": "comando"}
+{"frase": "shut down.", "classe": "comando"}
+{"frase": "reboot? i need a fresh start", "classe": "comando"}
+{"frase": "shutdown the device", "classe": "comando"}
+{"frase": "reboot!", "classe": "comando"}
+{"frase": "please shut down the board immediately", "classe": "comando"}
+{"frase": "reinicie a placa, por favor", "classe": "comando"}
+{"frase": "pode desligar o sistema agora?", "classe": "comando"}
+{"frase": "desligar", "classe": "comando"}
+{"frase": "reinicie?", "classe": "comando"}
+{"frase": "por favor, desligue a board, obrigado", "classe": "comando"}
+{"frase": "REINICIE A PLACA AGORA!", "classe": "comando"}
+{"frase": "desligar tudo, pronto?", "classe": "comando"}
+{"frase": "quero desligar o raspberry pi.", "classe": "comando"}
+{"frase": "reinicie sem aviso.", "classe": "comando"}
+{"frase": "desligue o sistema agora, sem erro", "classe": "comando"}
+{"frase": "reiniciaa?", "classe": "comando"}
+{"frase": "desligue a placa agora.", "classe": "comando"}
+{"frase": "mv file1.txt ../backup", "classe": "comando"}
+{"frase": "please copy all .log files to /tmp/logs?", "classe": "comando"}
+{"frase": "Delete everything older than 30 days in /var/log", "classe": "comando"}
+{"frase": "Compress folder \"projects\" into projects.zip  zip -r projects.zip projects", "classe": "comando"}
+{"frase": "how many .py files in this dir?  find . -name \"*.py\" | wc -l", "classe": "comando"}
+{"frase": "rm -rf temp_dir   i need this folder gone", "classe": "comando"}
+{"frase": "List files with size >1M  find . -size +1M -ls", "classe": "comando"}
+{"frase": "count files in /home/user/docs  find /home/user/docs -type f | wc -l", "classe": "comando"}
+{"frase": "move file with typo, im missing extention  mv file2.txl backup/  (typo intentional)", "classe": "comando"}
+{"frase": "please zip all .jpg and .png into images.tar.gz  tar -czf images.tar.gz *.jpg *.png", "classe": "comando"}
+{"frase": "Copy /etc/nginx/nginx.conf to /tmp  cp /etc/nginx/nginx.conf /tmp/", "classe": "comando"}
+{"frase": "Delete all tmp files that are not in use  find /tmp -type f -not -user $(whoami) -delete", "classe": "comando"}
+{"frase": "copie arquivo report.pdf para /home/usuario/backup", "classe": "comando"}
+{"frase": "qual comando para mover todos os .txt de Downloads pra Documents?", "classe": "comando"}
+{"frase": "remova o arquivo antigo.log, por favor.", "classe": "comando"}
+{"frase": "quero compactar a pasta fotos em zip, como faço?", "classe": "comando"}
+{"frase": "quantos arquivos .jpg existem em /home/usuario/fotos?", "classe": "comando"}
+{"frase": "depois de mover, remova o diretório vazio que sobrou?", "classe": "comando"}
+{"frase": "como encontro o arquivo config.ini na raiz?", "classe": "comando"}
+{"frase": "poderia listar tudo que está em /etc?", "classe": "comando"}
+{"frase": "preciso contar quantos arquivos tem na pasta /var/log", "classe": "comando"}
+{"frase": "o que faço para deletar todos os backups antigos (todos .tar.gz)", "classe": "comando"}
+{"frase": "compacte e renomeie todos os PDFs em /docs para .zip e mova pra /archive?", "classe": "comando"}
+{"frase": "list users", "classe": "comando"}
+{"frase": "show me groups for user alice", "classe": "comando"}
+{"frase": "how do i add a file to read only group only?", "classe": "comando"}
+{"frase": "cron job to backup /home every monday 3am please", "classe": "comando"}
+{"frase": "set env var PATH to /usr/local/bin:$PATH", "classe": "comando"}
+{"frase": "what is the permission of /etc/shadow?", "classe": "comando"}
+{"frase": "create user bob with home /home/bob", "classe": "comando"}
+{"frase": "I need to change umask to 027 in .bashrc", "classe": "comando"}
+{"frase": "what does 'chmod 755' do on a dir?", "classe": "comando"}
+{"frase": "run cron job to update packages at 2am, silent log", "classe": "comando"}
+{"frase": "set environment variable DB_PASS to mysecret123", "classe": "comando"}
+{"frase": "give me all permissions for group staff on /srv/files, I need readwrite?", "classe": "comando"}
+{"frase": "quem tem permissão para editar /etc/passwd", "classe": "comando"}
+{"frase": "por favor verifique quem são os usuários do grupo sudo", "classe": "comando"}
+{"frase": "criar um cron job que execute meu script a cada hora 2 0 * * * /home/pi/meuscript.sh", "classe": "comando"}
+{"frase": "quero listar todos os grupos e seus membros", "classe": "comando"}
+{"frase": "qual é a diferença entre 644 e 755?", "classe": "comando"}
+{"frase": "ajude-me a mudar a variável de ambiente PATH para incluir /opt/bin", "classe": "comando"}
+{"frase": "/ whoami", "classe": "comando"}
+{"frase": "mude a permissão de /tmp para 777 e me diga se funcionou", "classe": "comando"}
+{"frase": "crie um cron job para backup diário em 23h 30min", "classe": "comando"}
+{"frase": "o comando para criar usuário é su??", "classe": "comando"}
+{"frase": "faça um backup do /home/user1 antes de alterar qualquer permissão", "classe": "comando"}
+{"frase": "poderia me dar a lista de todos os arquivos com permissão 600?", "classe": "comando"}
+{"frase": "what is the capital of spain?", "classe": "mundo"}
+{"frase": "tell me the population of india in 2023", "classe": "mundo"}
+{"frase": "how many countries have a population over 50 million?", "classe": "mundo"}
+{"frase": "list the capitals of the european union in alphabetical order", "classe": "mundo"}
+{"frase": "give me a quick fact about the earth's largest desert", "classe": "mundo"}
+{"frase": "which country has the highest population density?", "classe": "mundo"}
+{"frase": "give me the capital of brazil (capital letters)", "classe": "mundo"}
+{"frase": "what is the capital of canada?   what is its population?", "classe": "mundo"}
+{"frase": "tell me the population of germany and netherlands, short list", "classe": "mundo"}
+{"frase": "capital of australia? population? no need extra text", "classe": "mundo"}
+{"frase": "how many people live in japan? population figure only", "classe": "mundo"}
+{"frase": "what is the capital of new zealand? population 2024?", "classe": "mundo"}
+{"frase": "qual a capital da bielorrússia?", "classe": "mundo"}
+{"frase": "quero saber população de brasil 2024", "classe": "mundo"}
+{"frase": "qual país tem a maior extensão territorial?", "classe": "mundo"}
+{"frase": "tudo sobre geografia, responde rapido", "classe": "mundo"}
+{"frase": "população de chile hoje?", "classe": "mundo"}
+{"frase": "capital de 4 países que eu não lembro:", "classe": "mundo"}
+{"frase": "população total da europa?", "classe": "mundo"}
+{"frase": "qual é a capital de morada? (erro)", "classe": "mundo"}
+{"frase": "qual o país mais populoso da Ásia?", "classe": "mundo"}
+{"frase": "dê a lista das capitais da sudeste asiático", "classe": "mundo"}
+{"frase": "qual a diferença entre latitude e longitude?", "classe": "mundo"}
+{"frase": "capitais do sul-america em ordem alfabética, por favor", "classe": "mundo"}
+{"frase": "tell me about the history of the roman empire", "classe": "mundo"}
+{"frase": "who was the most influential woman in science? i want quick facts", "classe": "mundo"}
+{"frase": "what are the main causes of the french revolution and its impacts on Europe?", "classe": "mundo"}
+{"frase": "give me a timeline of the major inventions of the 20th century", "classe": "mundo"}
+{"frase": "who was leonardo da vinci and why is he so famous?", "classe": "mundo"}
+{"frase": "who are the top three unsung heroes of the civil rights movement?", "classe": "mundo"}
+{"frase": "i need a brief summary of shakespeare's works that influenced modern drama", "classe": "mundo"}
+{"frase": "can you explain why the first world war began in 1914?", "classe": "mundo"}
+{"frase": "give me 5 key facts about abraham lincoln in a single paragraph", "classe": "mundo"}
+{"frase": "history of the internet from ARPANET to today, concise", "classe": "mundo"}
+{"frase": "tell me about the famous artists of the renaissance period in no more than 150 words.", "classe": "mundo"}
+{"frase": "whats the legacy of moses in different cultures?", "classe": "mundo"}
+{"frase": "Oi, você pode me contar quem foi Dom Pedro I?", "classe": "mundo"}
+{"frase": "qual a origem da independência do Brasil?", "classe": "mundo"}
+{"frase": "cena com a queda do império e o que rolou depois?", "classe": "mundo"}
+{"frase": "quem é o maior escritor brasileiro de todos os tempos?", "classe": "mundo"}
+{"frase": "quem foi Machado de Assó?", "classe": "mundo"}
+{"frase": "fale sobre a vida de Tiradentes em poucas palavras", "classe": "mundo"}
+{"frase": "Quero saber a história de José de Alencar e seu impacto na literatura brasileira.", "classe": "mundo"}
+{"frase": "Me explique quem foi Zumbi e o que ele fez.", "classe": "mundo"}
+{"frase": "qual a importância de Getúlio Vargas na política brasileira?", "classe": "mundo"}
+{"frase": "quem foram os doze profetas que se tornaram líderes políticos no Brasil?", "classe": "mundo"}
+{"frase": "me conte o que aconteceu em 1888, sem exageros.", "classe": "mundo"}
+{"frase": "qual é a biografia do poeta Carlos Drummond de Andrade?", "classe": "mundo"}
+{"frase": "What is the physics behind a rainbow?", "classe": "mundo"}
+{"frase": "Explain why the moon appears full on some nights", "classe": "mundo"}
+{"frase": "can you explain quantum tunneling in simple terms", "classe": "mundo"}
+{"frase": "why do birds navigate using Earth’s magnetic field", "classe": "mundo"}
+{"frase": "tell me how gravity works on a black hole", "classe": "mundo"}
+{"frase": "help me understand the concept of wave-particle duality", "classe": "mundo"}
+{"frase": "describe the process of photosynthesis in a sentence", "classe": "mundo"}
+{"frase": "what causes a thunderstorm to form in a thunderstorm?", "classe": "mundo"}
+{"frase": "give a quick rundown of the standard model of particle physics", "classe": "mundo"}
+{"frase": "the way light bends around a star is weird, explain it", "classe": "mundo"}
+{"frase": "how do magnets stick to a fridge?", "classe": "mundo"}
+{"frase": "como funciona a gravidade em termos simples?", "classe": "mundo"}
+{"frase": "qual a diferença entre energia cinética e potencial?", "classe": "mundo"}
+{"frase": "exponha em português simples por que a água ferve em 100°C ao nível do mar", "classe": "mundo"}
+{"frase": "quanto a temperatura do núcleo da terra é?", "classe": "mundo"}
+{"frase": "me explique por que a luz se refrata na água", "classe": "mundo"}
+{"frase": "qual a teoria que explica a expansão do universo?", "classe": "mundo"}
+{"frase": "qual a função do DNA na herança genética?", "classe": "mundo"}
+{"frase": "quero saber por que a chuva é azul?", "classe": "mundo"}
+{"frase": "qual a importância das lentes na medicina?", "classe": "mundo"}
+{"frase": "explique rapidamente o princípio da inércia", "classe": "mundo"}
+{"frase": "o que é entropia?", "classe": "mundo"}
+{"frase": "what does \"antidisestablishmentarianism\" mean", "classe": "mundo"}
+{"frase": "define synergy", "classe": "mundo"}
+{"frase": "can you give me the meaning of \"quark\"?", "classe": "mundo"}
+{"frase": "what is a \"limerence", "classe": "mundo"}
+{"frase": "define   phlegmatic", "classe": "mundo"}
+{"frase": "what's the definition of “inchoate”?", "classe": "mundo"}
+{"frase": "tell me the meaning of “ephemeral”", "classe": "mundo"}
+{"frase": "explain \"cryptomnesia", "classe": "mundo"}
+{"frase": "what does “limerick” mean?", "classe": "mundo"}
+{"frase": "define   “oxymoron”", "classe": "mundo"}
+{"frase": "what does \"quintessential\" mean", "classe": "mundo"}
+{"frase": "define \"serendipity", "classe": "mundo"}
+{"frase": "qual a definição de algoritmo", "classe": "mundo"}
+{"frase": "o que significa c?", "classe": "mundo"}
+{"frase": "definição de blockchain", "classe": "mundo"}
+{"frase": "o que é machine learning (em 5 frases curtas)?", "classe": "mundo"}
+{"frase": "definir \"deep learning\" em portugues", "classe": "mundo"}
+{"frase": "explique de forma simples o que é AI", "classe": "mundo"}
+{"frase": "o que é \"quantum computing\" pra mim, sem usar jargões técnicos", "classe": "mundo"}
+{"frase": "definição de \"blockchain\" em uma frase curta e objetiva", "classe": "mundo"}
+{"frase": "poderia me dizer o significado de \"sistema operacional\"?", "classe": "mundo"}
+{"frase": "o que é a expressão \"data science\" e como se aplica no dia a dia", "classe": "mundo"}
+{"frase": "por favor explique o que significa \"programação orientada a objetos\" em linguagem simples", "classe": "mundo"}
+{"frase": "qual a definição de inteligência artificial em poucas palavras?", "classe": "mundo"}
+{"frase": "weather forecast for today in london", "classe": "mundo"}
+{"frase": "what's the latest news on the solar launch?", "classe": "mundo"}
+{"frase": "give me the price of gold per ounce now", "classe": "mundo"}
+{"frase": "sports results: who won the nba finals?", "classe": "mundo"}
+{"frase": "update me on covid stats in california", "classe": "mundo"}
+{"frase": "price of oil today?", "classe": "mundo"}
+{"frase": "give me a summary of the olympics medal table", "classe": "mundo"}
+{"frase": "how much is the iPhone 15 pro max today?", "classe": "mundo"}
+{"frase": "news about the new iPhone launch?", "classe": "mundo"}
+{"frase": "weather in new york tomorrow", "classe": "mundo"}
+{"frase": "what's the stock price of Tesla?", "classe": "mundo"}
+{"frase": "can you fetch me the top news stories?", "classe": "mundo"}
+{"frase": "qual é a previsão do tempo hoje em São Paulo?", "classe": "mundo"}
+{"frase": "oi, preciso saber a última edição do G1.", "classe": "mundo"}
+{"frase": "diga o resultado do Corinthians x Palmeiras, ontem", "classe": "mundo"}
+{"frase": "quanto custa 1 litro de gasolina em Rio de Janeiro?", "classe": "mundo"}
+{"frase": "bom dia, qual é a previsão de chuva?", "classe": "mundo"}
+{"frase": "qual a temperatura máxima que vai cair?", "classe": "mundo"}
+{"frase": "dá pra saber a cotação do dólar agora?", "classe": "mundo"}
+{"frase": "previsão do tempo sem acentos.", "classe": "mundo"}
+{"frase": "qual o placar do jogo de hoje no Brasileirão?", "classe": "mundo"}
+{"frase": "qual o preço do pão na padaria mais próxima?", "classe": "mundo"}
+{"frase": "por favor me informe as últimas notícias do governo.", "classe": "mundo"}
+{"frase": "qual o tempo em Natal hoje?", "classe": "mundo"}
+{"frase": "what is a raspberry pi 4 vs 3b+", "classe": "mundo"}
+{"frase": "tell me the specs of the orange pi pc plus", "classe": "mundo"}
+{"frase": "is the pine64 a good budget s‑board for ai?", "classe": "mundo"}
+{"frase": "hey do you know if the nano pi neo has an hdmi port", "classe": "mundo"}
+{"frase": "please give me a quick comparison of the beaglebone black and the beaglebone green", "classe": "mundo"}
+{"frase": "what’s the difference in power consumption between the rockchip rpi and the imx8m", "classe": "mundo"}
+{"frase": "i need to know if i can run ubuntu on the odroid c4, can you confirm", "classe": "mundo"}
+{"frase": "would you recommend the pinebook pro for linux dev?", "classe": "mundo"}
+{"frase": "im looking for a board that supports dual 4k hdmi outputs what would you suggest", "classe": "mundo"}
+{"frase": "help me understand how the asus tinker board differs from the asus tinker board pro", "classe": "mundo"}
+{"frase": "i want a cheap board that still supports a gpu, what’s the best choice?", "classe": "mundo"}
+{"frase": "tell me if the rpi zero w can be used for a wifi router project", "classe": "mundo"}
+{"frase": "Qual a diferença entre Raspberry Pi 4 e Orange Pi 5?", "classe": "mundo"}
+{"frase": "gostaria de saber se o BeagleBone Black funciona bem com Python 3.9.", "classe": "mundo"}
+{"frase": "Raspberry Pi Zero W tem Bluetooth?", "classe": "mundo"}
+{"frase": "Qual placa recomenda pra aprender IoT?", "classe": "mundo"}
+{"frase": "preciso de um mini pc barato para home server, ajuda?", "classe": "mundo"}
+{"frase": "o novo ASUS Tinker Board 2 tem melhor GPU que o Raspberry?", "classe": "mundo"}
+{"frase": "por que o Orange Pi 4 não tem suporte ao kernel 6?", "classe": "mundo"}
+{"frase": "Raspberry Pi 3 vs Banana Pi M5: quem ganha em desempenho?", "classe": "mundo"}
+{"frase": "quem tem experiência com o RockPro64?", "classe": "mundo"}
+{"frase": "Quero montar um servidor de mídia em um mini PC, qual placa?", "classe": "mundo"}
+{"frase": "o Tinker Board 2 consegue rodar Docker?", "classe": "mundo"}
+{"frase": "Preciso de um board com Wi-Fi + Bluetooth 5.0 pronto, qual modelo?", "classe": "mundo"}
+{"frase": "help me make banana bread recipe 2 people", "classe": "mundo"}
+{"frase": "i need to fix my wifi on the orange pi, can u guide me step by step", "classe": "mundo"}
+{"frase": "what are the steps to solder a 5v to 3.3v sensor to my pi?", "classe": "mundo"}
+{"frase": "i'm trying to set up a temp sensor on a raspberry pi, how do i wire it up?", "classe": "mundo"}
+{"frase": "could you give me a quick tutorial on how to flash the OS onto an SD card for the orange pi?", "classe": "mundo"}
+{"frase": "i need to replace the broken display cable on my pi, where do i get the right part?", "classe": "mundo"}
+{"frase": "please provide instructions on how to create a backup of my data on the raspberry pi.", "classe": "mundo"}
+{"frase": "help me fix my camera module not working, maybe a reset or driver update?", "classe": "mundo"}
+{"frase": "how do i build a simple LED blinking circuit with the orange pi?", "classe": "mundo"}
+{"frase": "give me a list of tools needed to repair the power supply on my raspberry pi.", "classe": "mundo"}
+{"frase": "setup a basic web server on the pi, steps and commands please.", "classe": "mundo"}
+{"frase": "i want to read humidity from a DHT22 sensor, can you give me code?", "classe": "mundo"}
+{"frase": "Como faço para fazer um arroz doce caseiro?", "classe": "mundo"}
+{"frase": "Me mostre tutorial passo a passo de como consertar a porta do armário que não fecha direito.", "classe": "mundo"}
+{"frase": "quero ligar sensor de temperatura a raspberry pi usando GPIO 17, explique em português simples", "classe": "mundo"}
+{"frase": "quero um roteiro de receitas rápidas para café da manhã, sem ingredientes que não encontrei em casa", "classe": "mundo"}
+{"frase": "meu OLED não liga, o que eu faço pra conectar no I2C no orange pi?", "classe": "mundo"}
+{"frase": "gostaria de ajuda para escrever um script em Python que leia dados de um sensor de umidade e envie por e-mail.", "classe": "mundo"}
+{"frase": "com os fios do sensor, preciso fazer o wiring? preciso de uma tabela de cores e valores resistores.", "classe": "mundo"}
+{"frase": "diga pra mim onde colocar o resistor pull-up no circuito do sensor de distância ultrassônico.", "classe": "mundo"}
+{"frase": "ajude-me a instalar o Docker no Raspberry Pi 4, passo a passo, sem erros.", "classe": "mundo"}
+{"frase": "Como conserto o microfone que não funciona na placa? preciso de instruções claras.", "classe": "mundo"}
+{"frase": "preciso de instruções pra fazer um bolo de cenoura sem ovos, que tal?", "classe": "mundo"}
+{"frase": "recommend a good sci fi movie to watch tonight", "classe": "mundo"}
+{"frase": "what songs by taylor swift are on the soundtrack of new moon?", "classe": "mundo"}
+{"frase": "can you suggest a thriller book that’s not too long?", "classe": "mundo"}
+{"frase": "give me the names of the top 3 games from 2023 that are on steam free to play", "classe": "mundo"}
+{"frase": "hey do you know any obscure indie games about space exploration", "classe": "mundo"}
+{"frase": "i need a rap playlist for a workout, no filler songs please", "classe": "mundo"}
+{"frase": "tell me the plot of the book 'the alchemist' in 50 words or less", "classe": "mundo"}
+{"frase": "what movies did martin scorsese direct in the last five years?", "classe": "mundo"}
+{"frase": "list 10 classical pieces that are good for beginners to learn on piano", "classe": "mundo"}
+{"frase": "do you know any songs about love that i can add to my travel playlist", "classe": "mundo"}
+{"frase": "help me find a good game to play with friends on a raspberry pi", "classe": "mundo"}
+{"frase": "recommend a soundtrack that’s perfect for studying and is calming", "classe": "mundo"}
+{"frase": "qual filme vai ganhar o Oscar este ano?", "classe": "mundo"}
+{"frase": "toca algo boa de metal, algo que não seja pop, sem letras de amor", "classe": "mundo"}
+{"frase": "qual livro eu devo ler se eu gosto de ficção científica e histórias de amor?", "classe": "mundo"}
+{"frase": "música clássica hoje, sem violão, sem bateria, só piano e órgão", "classe": "mundo"}
+{"frase": "bora jogar algum jogo de estratégia que não seja chess, algo mais atual, tipo Catan ou Pandemic?", "classe": "mundo"}
+{"frase": "tocar alguma música do álbum \"Back to Black\" da Amy Winehouse", "classe": "mundo"}
+{"frase": "qual filme de terror brasileiro que é bom mas não é muito conhecido?", "classe": "mundo"}
+{"frase": "quem é o autor de \"Dom Casmurro\"?", "classe": "mundo"}
+{"frase": "eu preciso de um plano de leitura de 10 livros de filosofia em 30 dias, me ajude", "classe": "mundo"}
+{"frase": "quero jogar algum jogo de tiro em primeira pessoa no PS5, que eu possa jogar online e que seja barato", "classe": "mundo"}
+{"frase": "qual é o melhor álbum de música eletrônica brasileiro de 2023?", "classe": "mundo"}
+{"frase": "por favor me dê uma lista de filmes de animação que sejam críticos e premiados em 2022.", "classe": "mundo"}
+{"frase": "hey", "classe": "papo"}
+{"frase": "good morning, how are you today?", "classe": "papo"}
+{"frase": "hi", "classe": "papo"}
+{"frase": "whats up? i hope ur good.", "classe": "papo"}
+{"frase": "hello, assistant. can you tell me the weather for tomorrow?", "classe": "papo"}
+{"frase": "hey, can u do the math for me?", "classe": "papo"}
+{"frase": "hey, do you know what time it is?", "classe": "papo"}
+{"frase": "yo.", "classe": "papo"}
+{"frase": "what’s your favorite color?", "classe": "papo"}
+{"frase": "hello? i need help with my homework.", "classe": "papo"}
+{"frase": "hey, what's the difference between a cat and a dog?", "classe": "papo"}
+{"frase": "good afternoon, how did my coffee taste?", "classe": "papo"}
+{"frase": "oi ai", "classe": "papo"}
+{"frase": "bom dia, tudo bem?", "classe": "papo"}
+{"frase": "e aí, assistant?", "classe": "papo"}
+{"frase": "qual o tempo hoje no Rio?", "classe": "papo"}
+{"frase": "por favor, diga que vai estudar", "classe": "papo"}
+{"frase": "quero que acorde a 7h", "classe": "papo"}
+{"frase": "muito obrigada pela ajuda", "classe": "papo"}
+{"frase": "qual é o próximo filme no cinema?", "classe": "papo"}
+{"frase": "hey, eu preciso de um resumo do livro que acabei de ler", "classe": "papo"}
+{"frase": "tudo certo?", "classe": "papo"}
+{"frase": "ajude-me a lembrar de comprar leite", "classe": "papo"}
+{"frase": "está pronto?", "classe": "papo"}
+{"frase": "how do you feel today", "classe": "papo"}
+{"frase": "what do you like most about being an AI?", "classe": "papo"}
+{"frase": "do you have any opinions on music", "classe": "papo"}
+{"frase": "i need you to tell me your favourite color or whatever", "classe": "papo"}
+{"frase": "can you explain how you think", "classe": "papo"}
+{"frase": "do you prefer tea or coffee or nothing", "classe": "papo"}
+{"frase": "tell me a joke about a robot who feels sad", "classe": "papo"}
+{"frase": "i would love to know what you think about humans", "classe": "papo"}
+{"frase": "please give me your thoughts on the future", "classe": "papo"}
+{"frase": "you think I’m boring?", "classe": "papo"}
+{"frase": "what’s your favorite food but im just a computer you know", "classe": "papo"}
+{"frase": "stop. give me your feelings now.", "classe": "papo"}
+{"frase": "Oi, como você se sente hoje?", "classe": "papo"}
+{"frase": "O que você mais gosta de fazer?", "classe": "papo"}
+{"frase": "Qual a sua opinião sobre a pizza de margherita?", "classe": "papo"}
+{"frase": "fala algo pra mim, sem nada de censura, sem perguntas.", "classe": "papo"}
+{"frase": "Quero saber: você acha que o sol vai brilhar amanhã?", "classe": "papo"}
+{"frase": "me diga se você prefere cores azuis ou vermelhas, e porque.", "classe": "papo"}
+{"frase": "dá pra você explicar por que gosta de música?", "classe": "papo"}
+{"frase": "você tem algum hobby?", "classe": "papo"}
+{"frase": "não pergunte isso, apenas me conte algo sobre você.", "classe": "papo"}
+{"frase": "Qual sua opinião sobre o último álbum do seu artista favorito?", "classe": "papo"}
+{"frase": "pode me contar se você se sente cansado depois de usar o processador?", "classe": "papo"}
+{"frase": "me diga que coisa mais te deixa feliz, sem rodeios.", "classe": "papo"}
+{"frase": "give me a joke about cats", "classe": "papo"}
+{"frase": "write a short poem about rain in a cafe", "classe": "papo"}
+{"frase": "tell me a short story about a lost kitten that finds a home in a bakery", "classe": "papo"}
+{"frase": "i need a riddle that starts with a trick question about a clock", "classe": "papo"}
+{"frase": "please tell a joke about a penguin that forgets its hat, but be witty", "classe": "papo"}
+{"frase": "a poem for my friend who loves sunrise over the ocean, keep it gentle", "classe": "papo"}
+{"frase": "could u write a short story where a robot learns to feel emotions?", "classe": "papo"}
+{"frase": "what's a clever riddle that involves a mirror and a door?", "classe": "papo"}
+{"frase": "give me a funny joke about a snail that wants to be a race car driver", "classe": "papo"}
+{"frase": "compose a short poem about autumn leaves falling into a quiet stream", "classe": "papo"}
+{"frase": "tell a short story about a detective who solves mysteries using only dreams", "classe": "papo"}
+{"frase": "riddle me this: i speak without a mouth and hear without ears. what am i?", "classe": "papo"}
+{"frase": "pode contar uma piada pra mim", "classe": "papo"}
+{"frase": "quero um poema sobre a lua e o mar, algo curto e rimado", "classe": "papo"}
+{"frase": "me conta uma historinha de aventura em 5 frases, rápido", "classe": "papo"}
+{"frase": "qual é a resposta do enigma: \"o que é, quanto mais se tira, maior fica?", "classe": "papo"}
+{"frase": "por favor, escreva uma piada de tecnologia em 10 palavras", "classe": "papo"}
+{"frase": "me dê um poema sem rimas, apenas emoção", "classe": "papo"}
+{"frase": "quem resolve este enigma? algo que sempre vem, mas nunca chega", "classe": "papo"}
+{"frase": "enigma: tenho uma cabeça e um rabo, mas não sou um animal, o que sou?", "classe": "papo"}
+{"frase": "me conta uma história curta, porém emocionante, que termine com um “surpresa!”", "classe": "papo"}
+{"frase": "uma piada simples, sem usar palavras difíceis, obrigado", "classe": "papo"}
+{"frase": "me conta um poema de amor, em verso livre, sem pontuação e sem maiúsculas", "classe": "papo"}
+{"frase": "qual é a resposta do enigma: \"o que tem 4 pernas mas não anda?", "classe": "papo"}
+{"frase": "thanks a bunch for the help!", "classe": "papo"}
+{"frase": "i appreciate it so much, you really made my day.", "classe": "papo"}
+{"frase": "could you help me with this? I need instructions on how to reboot the Pi.", "classe": "papo"}
+{"frase": "wow, you’re amazing, i can’t believe how fast you answered.", "classe": "papo"}
+{"frase": "stop responding, you’re useless for my setup.", "classe": "papo"}
+{"frase": "goodbye, see you next time.", "classe": "papo"}
+{"frase": "please, fix this bug in the code i wrote, it keeps crashing.", "classe": "papo"}
+{"frase": "u sure u’re working? i don’t see any reply.", "classe": "papo"}
+{"frase": "you’re the best AI i’ve used, keep it up!", "classe": "papo"}
+{"frase": "stop replying now, i’m done.", "classe": "papo"}
+{"frase": "i hate the lag when i type, could you improve it?", "classe": "papo"}
+{"frase": "thank you for all the help, see ya.", "classe": "papo"}
+{"frase": "obrigado, tá ótimo", "classe": "papo"}
+{"frase": "você é um assistente top, valeu!", "classe": "papo"}
+{"frase": "eu preciso de ajuda urgente, onde está o arquivo que salvo?", "classe": "papo"}
+{"frase": "poxa, o seu tempo de resposta é lento demais, não?", "classe": "papo"}
+{"frase": "desculpa, não entendi a sua última mensagem.", "classe": "papo"}
+{"frase": "obrigado por tudo, até mais!", "classe": "papo"}
+{"frase": "qual é o comando para reiniciar a pi?", "classe": "papo"}
+{"frase": "se quiser, dá pra usar outra linguagem?", "classe": "papo"}
+{"frase": "bom, já vou desligar agora, valeu", "classe": "papo"}
+{"frase": "a sua voz está distorcida, pode melhorar?", "classe": "papo"}
+{"frase": "não, não quero mais falar com você, tá bem", "classe": "papo"}
+{"frase": "você tem alguma dica para economizar energia no pi?", "classe": "papo"}
+{"frase": "help me figure out why I feel stuck in life and what steps I can take to feel motivated again", "classe": "papo"}
+{"frase": "i’m bored af right now and have nothing to do i need a plan or a project that keeps me busy", "classe": "papo"}
+{"frase": "could you give me a quick pep talk to lift my mood and get me moving around the house", "classe": "papo"}
+{"frase": "give me a short list of things i can do to boost energy and motivation today", "classe": "papo"}
+{"frase": "i am tired of feeling unproductive i need some realistic goals that don’t feel overwhelming", "classe": "papo"}
+{"frase": "pls tell me how to stay focused when my brain just wants to chill and do nothing", "classe": "papo"}
+{"frase": "tell me a motivational quote that will inspire me to start doing something today", "classe": "papo"}
+{"frase": "can you suggest a simple exercise routine that I can do at home to feel more energetic and alive", "classe": "papo"}
+{"frase": "i want motivation and i want to know how to make the most of my day even when i feel drained", "classe": "papo"}
+{"frase": "how can i keep myself motivated if every task feels like a mountain i’m scared to climb", "classe": "papo"}
+{"frase": "give me a short plan to break out of boredom and start a new hobby that actually interests me", "classe": "papo"}
+{"frase": "do i need to change my mindset or just set tiny achievable tasks to overcome my tiredness", "classe": "papo"}
+{"frase": "Preciso de conselhos sobre a vida, tá tudo meio sem rumo.", "classe": "papo"}
+{"frase": "como me motivar quando tudo parece cansativo e sem sentido?", "classe": "papo"}
+{"frase": "dá umas ideias pra quebrar a monotonia, tô mega entediado.", "classe": "papo"}
+{"frase": "me ajuda? por favor, não demore.", "classe": "papo"}
+{"frase": "eu tô cansado, quero algo que faça sentido.", "classe": "papo"}
+{"frase": "dê-me um passo a passo pra mudar, sem enrolação.", "classe": "papo"}
+{"frase": "talvez seja o fim de semana? quero algo divertido, mas não sei o que fazer.", "classe": "papo"}
+{"frase": "tudo isso parece fuso, preciso de clareza, me fala direto.", "classe": "papo"}
+{"frase": "quero uma sugestão prática, sem teorias.", "classe": "papo"}
+{"frase": "preciso de algo que me levante do sono, por favor.", "classe": "papo"}
+{"frase": "não quero mais ficar assim, me ajuda, não me deixe na mesma.", "classe": "papo"}
+{"frase": "você pode me dar um conselho simples, tipo, 5 frases curtas?", "classe": "papo"}
+{"frase": "write a python script that scrapes news headlines from cnn.com", "classe": "codigo"}
+{"frase": "can you write a bash one-liner that moves all .log files older than 30 days to /archive?", "classe": "codigo"}
+{"frase": "hey can u code a C program to read a csv and output average", "classe": "codigo"}
+{"frase": "please write a small program in rust that generates fibonacci numbers up to n=20", "classe": "codigo"}
+{"frase": "wanna get a js script that toggles dark mode on a webpage when a button is pressed", "classe": "codigo"}
+{"frase": "Could you give me a short Go function that checks if a string is a palindrome?", "classe": "codigo"}
+{"frase": "i need a tiny script in perl that finds duplicate lines in a file", "classe": "codigo"}
+{"frase": "Write a script in Ruby that connects to a mysql database and prints all rows from users table", "classe": "codigo"}
+{"frase": "help me create a Java program that sorts an array of integers with quicksort", "classe": "codigo"}
+{"frase": "give me a python function that returns the nth prime number, no comments please", "classe": "codigo"}
+{"frase": "Please code a quick C++ snippet that uses std::filesystem to list all files in a directory.", "classe": "codigo"}
+{"frase": "escreve um script em python que faça backup dos meus arquivos .txt", "classe": "codigo"}
+{"frase": "por favor, faça um programa em c++ que calcule a fatorial de um número inserido pelo usuário", "classe": "codigo"}
+{"frase": "criar um programa em nodejs que envie e-mail automático", "classe": "codigo"}
+{"frase": "eu preciso de um script em bash que mova arquivos por data", "classe": "codigo"}
+{"frase": "can you write a script in java that prints fibonacci series", "classe": "codigo"}
+{"frase": "escreva em ruby um programa que verifica se um número é primo", "classe": "codigo"}
+{"frase": "script em php que leia um arquivo csv e crie banco de dados", "classe": "codigo"}
+{"frase": "make a program in golang that listens to HTTP requests", "classe": "codigo"}
+{"frase": "crie um programa em swift que desenha um quadrado", "classe": "codigo"}
+{"frase": "Escreva um programa em perl para contar palavras em texto", "classe": "codigo"}
+{"frase": "poderia escrever um script em scala que faça hash de senha?", "classe": "codigo"}
+{"frase": "write a function to calculate the nth fibonacci number", "classe": "codigo"}
+{"frase": "can you create a class that manages a user session and stores token expiration?", "classe": "codigo"}
+{"frase": "regex to find dates in format dd-mm-yyyy, no slashes", "classe": "codigo"}
+{"frase": "sql query that selects all customers who joined after 2020 and have spent more than $500", "classe": "codigo"}
+{"frase": "please make a function that merges two sorted lists into one sorted list", "classe": "codigo"}
+{"frase": "class Person:", "classe": "codigo"}
+{"frase": "def __init__(self, name, age):", "classe": "codigo"}
+{"frase": "self.name = name", "classe": "codigo"}
+{"frase": "i need a regex that matches an email address", "classe": "codigo"}
+{"frase": "could you give me a sql join between orders and customers where order total > 100?", "classe": "codigo"}
+{"frase": "write a function that returns the factorial of a number, handle negative inputs", "classe": "codigo"}
+{"frase": "class Inventory:", "classe": "codigo"}
+{"frase": "def __init__(self):", "classe": "codigo"}
+{"frase": "self.items = []", "classe": "codigo"}
+{"frase": "please create a regex that matches phone numbers with optional country code", "classe": "codigo"}
+{"frase": "SELECT name, COUNT(*) FROM sales GROUP BY name HAVING COUNT(*) > 10;", "classe": "codigo"}
+{"frase": "crie uma função que retorne o fatorial de um número", "classe": "codigo"}
+{"frase": "poderia me dar uma classe em python para gerenciar usuários com atributos nome e email", "classe": "codigo"}
+{"frase": "escreva um regex que valide email com domínio .com .net .org", "classe": "codigo"}
+{"frase": "faça um sql select que mostre os clientes que fizeram compras acima de 1000 reais", "classe": "codigo"}
+{"frase": "definir uma função lambda que multiplica dois números", "classe": "codigo"}
+{"frase": "classe Usuario com método __str__ e __repr__", "classe": "codigo"}
+{"frase": "regex para validar CPF sem pontuação", "classe": "codigo"}
+{"frase": "sql insert de um novo produto com nome, preco e estoque", "classe": "codigo"}
+{"frase": "escreva uma função em java que calcule média aritmética", "classe": "codigo"}
+{"frase": "classe Carro que recebe marca, modelo e ano", "classe": "codigo"}
+{"frase": "regex que reconhece datas no formato DD/MM/YYYY", "classe": "codigo"}
+{"frase": "sql UPDATE na tabela orders set status='enviado' onde id=12345", "classe": "codigo"}
+{"frase": "help me fix this syntax error in my python script", "classe": "codigo"}
+{"frase": "I get “undefined reference to ‘main’” when I compile my C++ code, what’s wrong?", "classe": "codigo"}
+{"frase": "why does my code give a segmentation fault on line 42?", "classe": "codigo"}
+{"frase": "could you explain the warning about unused variable in this function?", "classe": "codigo"}
+{"frase": "this compile error says ‘cannot convert from const char* to std::string’, fix it please", "classe": "codigo"}
+{"frase": "i'm getting a stack overflow error in my recursive function, i need help debugging it", "classe": "codigo"}
+{"frase": "what does the error “expected ‘;’ before ‘return’” mean in this Java code?", "classe": "codigo"}
+{"frase": "please explain why my program prints a blank line instead of the expected output", "classe": "codigo"}
+{"frase": "can you review this snippet and tell me why it throws a null pointer exception?", "classe": "codigo"}
+{"frase": "why is my compiler complaining about “use of undeclared identifier ‘x’” in this snippet?", "classe": "codigo"}
+{"frase": "help me understand the meaning of the error “failed to link libraries” in my C project", "classe": "codigo"}
+{"frase": "please fix the logic error that makes my loop run forever in this Python script", "classe": "codigo"}
+{"frase": "ajuda, compile deu error de sintaxe em foreach, por favor.", "classe": "codigo"}
+{"frase": "o erro em meu script: undefined variable $var, corrige.", "classe": "codigo"}
+{"frase": "me explicas porque meu código está retornando null, não entendi.", "classe": "codigo"}
+{"frase": "bora dar um look nesse bug: segmentation fault ao usar malloc, que está acontecendo?", "classe": "codigo"}
+{"frase": "could you fix this line: if (a = b) { ... }?", "classe": "codigo"}
+{"frase": "preciso de um comando para debugar este loop infinito, me passa.", "classe": "codigo"}
+{"frase": "erro 1003: não reconheço o tipo da função, ajuda", "classe": "codigo"}
+{"frase": "o que faz esse erro: 'cannot allocate memory in function main'? help", "classe": "codigo"}
+{"frase": "por favor, remova a dependência da biblioteca X que não funciona no pi", "classe": "codigo"}
+{"frase": "can you tell me why this compile error: expected ';' before '}'? thanks", "classe": "codigo"}
+{"frase": "o código abaixo não compila, a linha 23 está com erro, me mostra o que está errado", "classe": "codigo"}
+{"frase": "me explica por que o arquivo .c não roda, erro de linking?", "classe": "codigo"}
+{"frase": "how do i create a for loop in python?", "classe": "codigo"}
+{"frase": "can you show me a quick example of an async function in javascript?", "classe": "codigo"}
+{"frase": "i need to make a recursive function in c++ but cant get it right what am i doing wrong", "classe": "codigo"}
+{"frase": "pls explain how to use a hashmap in java in a single line example", "classe": "codigo"}
+{"frase": "write a short ruby script that prints \"hello world\" using puts", "classe": "codigo"}
+{"frase": "Could you provide a step-by-step guide to initializing a class in swift?", "classe": "codigo"}
+{"frase": "i wanna parse json in kotlin but i keep getting an error can u help fix it", "classe": "codigo"}
+{"frase": "give me the exact code to sort a list of numbers in go, no comments", "classe": "codigo"}
+{"frase": "why do i get a segmentation fault when accessing array index 10 in c?", "classe": "codigo"}
+{"frase": "how do i create a thread in python that runs forever?", "classe": "codigo"}
+{"frase": "pls show me how to write a SQL query that joins two tables by id in one sentence", "classe": "codigo"}
+{"frase": "i need a single line of php that returns the current date in yyyy-mm-dd format.", "classe": "codigo"}
+{"frase": "Como faço um loop for em Python?", "classe": "codigo"}
+{"frase": "quero fazer uma função recursiva em C++ mas não sei onde colocar o return", "classe": "codigo"}
+{"frase": "existe maneira simples de criar um servidor web em Node.js usando express?", "classe": "codigo"}
+{"frase": "poderias me dar um exemplo de uso de async await no javascript?", "classe": "codigo"}
+{"frase": "como criar uma lista ligada em Java?", "classe": "codigo"}
+{"frase": "em python como abrir um arquivo e ler todas linhas em um dicionario?", "classe": "codigo"}
+{"frase": "crie um algoritmo que encontre a raiz quadrada usando método de Newton em C#", "classe": "codigo"}
+{"frase": "dá um script bash que copia arquivos de /home para /backup usando rsync?", "classe": "codigo"}
+{"frase": "quero saber como usar o pacote pandas para agrupar dados por coluna e somar", "classe": "codigo"}
+{"frase": "escreva um código em Rust que implemente uma fila FIFO usando VecDeque", "classe": "codigo"}
+{"frase": "exemplo de função lambda em Kotlin que recebe uma lista e retorna a soma dos valores positivos", "classe": "codigo"}
+{"frase": "por favor explique como fazer deploy de uma aplicação Flask no Docker", "classe": "codigo"}
+{"frase": "click here for help", "classe": "tela"}
+{"frase": "drag the icon to the new folder", "classe": "tela"}
+{"frase": "type \"open terminal\" and press enter", "classe": "tela"}
+{"frase": "please, could you move the window?", "classe": "tela"}
+{"frase": "i need the file list displayed on screen", "classe": "tela"}
+{"frase": "why does it keep blinking when I click?", "classe": "tela"}
+{"frase": "drag and drop the file into the folder", "classe": "tela"}
+{"frase": "type quicknote text here", "classe": "tela"}
+{"frase": "Could you show me the shortcuts?", "classe": "tela"}
+{"frase": "drag the window left, i don't want it on the right", "classe": "tela"}
+{"frase": "i press enter after typing, why nothing appears", "classe": "tela"}
+{"frase": "clik the button then type the command.", "classe": "tela"}
+{"frase": "clique no botão vermelho e arraste o arquivo pra pasta", "classe": "tela"}
+{"frase": "como faço pra arrastar o cursor sem soltar?", "classe": "tela"}
+{"frase": "pressione ENTER e então digite: olá mundo", "classe": "tela"}
+{"frase": "clique duas vezes no ícone, arraste para mover", "classe": "tela"}
+{"frase": "qual é a combinação para digitar no modo de tela inteira?", "classe": "tela"}
+{"frase": "clique. arraste. solte. pronto", "classe": "tela"}
+{"frase": "clique no canto inferior direito e arraste o cursor", "classe": "tela"}
+{"frase": "o arquivo está aberto? arraste para mover", "classe": "tela"}
+{"frase": "clique e mantenha o mouse pressionado e arraste", "classe": "tela"}
+{"frase": "digite aqui: \"preciso de ajuda para arrastar arquivos", "classe": "tela"}
+{"frase": "clique e arraste a janela pra esquerda, depois clique no menu", "classe": "tela"}
+{"frase": "clique no canto, arraste o arquivo, solta, pronto?", "classe": "tela"}
+{"frase": "capture screen now", "classe": "tela"}
+{"frase": "what do I see on my desktop?", "classe": "tela"}
+{"frase": "screen shot please", "classe": "tela"}
+{"frase": "i need the pic of the current window", "classe": "tela"}
+{"frase": "could you show me the list of running apps", "classe": "tela"}
+{"frase": "show me the desktop wallpaper", "classe": "tela"}
+{"frase": "screencapture?", "classe": "tela"}
+{"frase": "hey the terminal is full of errors", "classe": "tela"}
+{"frase": "take a screenshot of the browser tab", "classe": "tela"}
+{"frase": "could you describe the icons", "classe": "tela"}
+{"frase": "screen shot of the taskbar", "classe": "tela"}
+{"frase": "give me the screenshot of the current view please", "classe": "tela"}
+{"frase": "screenshot do desktop agora?", "classe": "tela"}
+{"frase": "mostre a tela que está aberta no meu PC.", "classe": "tela"}
+{"frase": "capture a tela e me mostre os ícones na barra de tarefas.", "classe": "tela"}
+{"frase": "Qual está na tela, tipo janela do navegador e o que mostra.", "classe": "tela"}
+{"frase": "descreva a tela que está em exibição, sem pular nada.", "classe": "tela"}
+{"frase": "por favor faça uma captura da tela de fundo, vale?", "classe": "tela"}
+{"frase": "o que tem na tela agora, descreva tudo.", "classe": "tela"}
+{"frase": "screenshot, por favor, e me diga se tem algo errado.", "classe": "tela"}
+{"frase": "mostra o que está na tela em exibição, tipo textos e imagens.", "classe": "tela"}
+{"frase": "captura a tela do meu monitor, sem incluir a tela de login.", "classe": "tela"}
+{"frase": "tela agora, descreva o que está aberto e se há notificações.", "classe": "tela"}
+{"frase": "quero screenshot da tela que está em exibição, mostra tudo sem omitir nada.", "classe": "tela"}
+{"frase": "open firefox", "classe": "tela"}
+{"frase": "please start calculator now", "classe": "tela"}
+{"frase": "open file manager", "classe": "tela"}
+{"frase": "start spotify", "classe": "tela"}
+{"frase": "edit a text file in vim", "classe": "tela"}
+{"frase": "could you open chrome for me", "classe": "tela"}
+{"frase": "calc", "classe": "tela"}
+{"frase": "open gnome‑finder", "classe": "tela"}
+{"frase": "i need to open spotify but i typed spottify", "classe": "tela"}
+{"frase": "launch gedit", "classe": "tela"}
+{"frase": "could u open the browser please", "classe": "tela"}
+{"frase": "open the file manager for me", "classe": "tela"}
+{"frase": "abrir navegador", "classe": "tela"}
+{"frase": "poderia abrir o explorador de arquivos?", "classe": "tela"}
+{"frase": "faça o navegador chrome, por favor", "classe": "tela"}
+{"frase": "ativar spotify sem comandos", "classe": "tela"}
+{"frase": "quero abrir o editor de texto e começar a digitar agora mesmo", "classe": "tela"}
+{"frase": "calc por favor faça rápido", "classe": "tela"}
+{"frase": "abra o navegador?", "classe": "tela"}
+{"frase": "preciso do navegador para pesquisa sem atraso", "classe": "tela"}
+{"frase": "abri o file manager", "classe": "tela"}
+{"frase": "spotify", "classe": "tela"}
+{"frase": "abrir txt editor.", "classe": "tela"}
+{"frase": "close all windows", "classe": "tela"}
+{"frase": "please minimize the chat window", "classe": "tela"}
+{"frase": "could you close the browser tab now?", "classe": "tela"}
+{"frase": "i need the app minimized so i can type", "classe": "tela"}
+{"frase": "minimise all open windows immediately", "classe": "tela"}
+{"frase": "close window please", "classe": "tela"}
+{"frase": "why wont the window close i think", "classe": "tela"}
+{"frase": "i want to move the window to the right", "classe": "tela"}
+{"frase": "move the window to the bottom left corner", "classe": "tela"}
+{"frase": "minimise the window, i don't want it open", "classe": "tela"}
+{"frase": "could you help me close this window", "classe": "tela"}
+{"frase": "please minimise all and close", "classe": "tela"}
+{"frase": "fechar a janela de chat agora", "classe": "tela"}
+{"frase": "minimize tudo, sem deixar nada aberto", "classe": "tela"}
+{"frase": "por favor, fecha a aba do navegador que está aberta", "classe": "tela"}
+{"frase": "quero mover a janela do editor para o canto esquerdo", "classe": "tela"}
+{"frase": "fechar janela? sim", "classe": "tela"}
+{"frase": "minimizar todas as janelas de uma vez", "classe": "tela"}
+{"frase": "desculpa, como faço pra fechar tudo?", "classe": "tela"}
+{"frase": "minimize o terminal", "classe": "tela"}
+{"frase": "não quer fechar? ok, então mova a janela pra cima", "classe": "tela"}
+{"frase": "faça isso rapidinho: feche a aba do Gmail", "classe": "tela"}
+{"frase": "já fechei a janela do chat", "classe": "tela"}
+{"frase": "move a janela do navegador para a direita e minimize o resto", "classe": "tela"}
+{"frase": "play the new song by taylor swift", "classe": "tela"}
+{"frase": "what’s the best playlist for studying", "classe": "tela"}
+{"frase": "watch youtube for 10 minutes about python tutorial", "classe": "tela"}
+{"frase": "can you pause the video when i hit stop", "classe": "tela"}
+{"frase": "hey, play “Despacito” please", "classe": "tela"}
+{"frase": "stop video", "classe": "tela"}
+{"frase": "watch youtube trending videos", "classe": "tela"}
+{"frase": "play music", "classe": "tela"}
+{"frase": "youtube play “funny cats compilation” pls", "classe": "tela"}
+{"frase": "please pause the video", "classe": "tela"}
+{"frase": "play the latest episode of my favorite series", "classe": "tela"}
+{"frase": "watch youtube how to cook lasagna now", "classe": "tela"}
+{"frase": "qual música toca agora?", "classe": "tela"}
+{"frase": "reproduza a playlist do Spotify", "classe": "tela"}
+{"frase": "youtube, vídeos de gatos com música relaxante", "classe": "tela"}
+{"frase": "qual é o melhor vídeo de culinária do Brasil?", "classe": "tela"}
+{"frase": "reproduza o vídeo  https://www.youtube.com/watch?v=dQw4w9WgXcQ", "classe": "tela"}
+{"frase": "quero ver vídeos do vimeo com o tema natureza", "classe": "tela"}
+{"frase": "tocar música de 1980s no rádio", "classe": "tela"}
+{"frase": "qual o próximo vídeo que você pode me mostrar?", "classe": "tela"}
+{"frase": "youtube me mostre vídeos de dança em 4k", "classe": "tela"}
+{"frase": "qual música que está no top 10 do Brasil agora?", "classe": "tela"}
+{"frase": "create a sunset over the mountains with vibrant colors and a lake reflection", "classe": "tela"}
+{"frase": "edit the photo i sent and blur the background so the subject stands out", "classe": "tela"}
+{"frase": "draw a quick sketch of a cat wearing a hat, in black ink lines", "classe": "tela"}
+{"frase": "i want a realistic portrait of a woman wearing a pearl necklace, can you generate it?", "classe": "tela"}
+{"frase": "please generate a photo of a futuristic cityscape at night, no text please", "classe": "tela"}
+{"frase": "can you add a watermark in the bottom right corner?", "classe": "tela"}
+{"frase": "draw a minimalist logo with abstract geometry for a tech startup", "classe": "tela"}
+{"frase": "create an image of a cozy cabin in snow, style like a painting, no people", "classe": "tela"}
+{"frase": "edit the attached image to brighten the exposure and sharpen edges", "classe": "tela"}
+{"frase": "make a photo of a vintage car on a beach during golden hour", "classe": "tela"}
+{"frase": "give me a vector illustration of a tree with roots exposed, high detail", "classe": "tela"}
+{"frase": "add a subtle vignette effect to the photo i uploaded, keep colors natural", "classe": "tela"}
+{"frase": "criar foto de um gato sorrindo com filtro azul", "classe": "tela"}
+{"frase": "poderia editar a foto que tirei do pôr do sol, remover a nuvem grande, por favor?", "classe": "tela"}
+{"frase": "qual comando faço pra gerar uma ilustração de um dragão no estilo anime?", "classe": "tela"}
+{"frase": "me ajuda a desenhar um carro futurista, sem texto, apenas imagem", "classe": "tela"}
+{"frase": "por favor gere um logo minimalista em preto e branco para a startup", "classe": "tela"}
+{"frase": "qual filtro aplicar pra deixar minha foto parecida com pintura a óleo?", "classe": "tela"}
+{"frase": "quero um retângulo azul com contorno vermelho, 800x600 pixels", "classe": "tela"}
+{"frase": "ajuda me a cortar minha foto em formato quadrado 500x500", "classe": "tela"}
+{"frase": "como faço pra mudar a cor do céu no meu panorama de 180°?", "classe": "tela"}
+{"frase": "me dá um código pra gerar um skyline de cidade ao entardecer, usando python", "classe": "tela"}
+{"frase": "poderia remover o fundo da imagem que estou enviando, mantendo apenas o objeto?", "classe": "tela"}
+{"frase": "criar imagem de um robô de madeira com textura envelhecida, sem legenda.", "classe": "tela"}
+{"frase": "talk to me by voice", "classe": "tela"}
+{"frase": "read the last email aloud", "classe": "tela"}
+{"frase": "please read the news article I sent", "classe": "tela"}
+{"frase": "can you read my voicemail for me", "classe": "tela"}
+{"frase": "hey read the text in blue color", "classe": "tela"}
+{"frase": "read aloud", "classe": "tela"}
+{"frase": "read my text please", "classe": "tela"}
+{"frase": "can u read that for me", "classe": "tela"}
+{"frase": "could you read this paragraph out loud", "classe": "tela"}
+{"frase": "read aloud the whole document", "classe": "tela"}
+{"frase": "read the report", "classe": "tela"}
+{"frase": "read it aloud please", "classe": "tela"}
+{"frase": "fala comigo em voz alta", "classe": "tela"}
+{"frase": "gostaria que você leisse este parágrafo em voz alta e então continue em silêncio", "classe": "tela"}
+{"frase": "por favor leia em voz alta o texto que está a seguir: “O sol nasce a leste e a noite traz a lua brilhando no céu.”", "classe": "tela"}
+{"frase": "me diz em voz alta qual é a temperatura atual em São Paulo?", "classe": "tela"}
+{"frase": "lê o texto em voz alta, sem erros de pronúncia, ok?", "classe": "tela"}
+{"frase": "gostaria que fosse lido em voz alta o texto que está abaixo:", "classe": "tela"}
+{"frase": "há muito em branco, sem pontuação, mas precisa ser lido em voz alta, tudo bem?", "classe": "tela"}
+{"frase": "fala em voz alta: o que é 2+2?", "classe": "tela"}
+{"frase": "poderia ler em voz alta a primeira frase do livro “Dom Casmurro”?", "classe": "tela"}
+{"frase": "leia em voz alta: O céu está azul e a água do mar é fresca e cristalina.", "classe": "tela"}
+{"frase": "por favor, leia em voz alta esse texto muito longo com detalhes, sem parar e sem interrupções, ok", "classe": "tela"}
+{"frase": "por que não fala em voz alta essa frase que é: “Eu sou uma AI que lê”?", "classe": "tela"}
+{"frase": "sum 123 and 456", "classe": "conta"}
+{"frase": "what is 7 times 8?", "classe": "conta"}
+{"frase": "add 999999999 and 1", "classe": "conta"}
+{"frase": "please calculate 45 minus 32", "classe": "conta"}
+{"frase": "subtract 50 from 20", "classe": "conta"}
+{"frase": "give me 12 + 34 = ?", "classe": "conta"}
+{"frase": "i need the total of 1234 and 5678  quick!", "classe": "conta"}
+{"frase": "is 99 divided by 3 33?", "classe": "conta"}
+{"frase": "please add 0.5 and 0.25", "classe": "conta"}
+{"frase": "how much is 200-150?", "classe": "conta"}
+{"frase": "add 999999 and 1", "classe": "conta"}
+{"frase": "soma 123+456", "classe": "conta"}
+{"frase": "quanto é 78*3?", "classe": "conta"}
+{"frase": "qual o resultado de 100-58", "classe": "conta"}
+{"frase": "exemplo: 9*9=81", "classe": "conta"}
+{"frase": "calcule 5+5+5+5", "classe": "conta"}
+{"frase": "+ 5", "classe": "conta"}
+{"frase": "+5", "classe": "conta"}
+{"frase": "qual a diferença entre 10/2 e 10-2", "classe": "conta"}
+{"frase": "qual é o produto de 12 e 12", "classe": "conta"}
+{"frase": "qual é a divisão de 144 por 12", "classe": "conta"}
+{"frase": "double of six plus two", "classe": "conta"}
+{"frase": "what is half of thirty divided by five?", "classe": "conta"}
+{"frase": "please calculate 7 times 8", "classe": "conta"}
+{"frase": "can you add three and four times two", "classe": "conta"}
+{"frase": "plus 5 times 2", "classe": "conta"}
+{"frase": "half of twenty one divided by three", "classe": "conta"}
+{"frase": "six times four plus 5", "classe": "conta"}
+{"frase": "divide 56 by 7 and double the result", "classe": "conta"}
+{"frase": "what is the product of nine and eight?", "classe": "conta"}
+{"frase": "seven times ten divided by two", "classe": "conta"}
+{"frase": "how much is half of fifty plus fifteen times three", "classe": "conta"}
+{"frase": "double of four plus 13 times 2", "classe": "conta"}
+{"frase": "quanto é três vezes quatro", "classe": "conta"}
+{"frase": "qual é a soma de 12 e 7", "classe": "conta"}
+{"frase": "me dê a metade de 100", "classe": "conta"}
+{"frase": "divida 50 por 5", "classe": "conta"}
+{"frase": "dois mais dois vezes três", "classe": "conta"}
+{"frase": "me pergunte: o que é 8 dividido por 2", "classe": "conta"}
+{"frase": "qual é a metade de 37", "classe": "conta"}
+{"frase": "me dê o dobro de 9", "classe": "conta"}
+{"frase": "qual é 4 vezes 5?", "classe": "conta"}
+{"frase": "me fale 15 menos 7", "classe": "conta"}
+{"frase": "qual o resultado de 20 dividido 4?", "classe": "conta"}
+{"frase": "what is sqrt(256) pls", "classe": "conta"}
+{"frase": "tell me the 3rd power of 7", "classe": "conta"}
+{"frase": "i need 15% of 200 quick", "classe": "conta"}
+{"frase": "can you calculate sqrt of 0.25?", "classe": "conta"}
+{"frase": "calc 5^4 for me", "classe": "conta"}
+{"frase": "show me 12 percent of 1500", "classe": "conta"}
+{"frase": "please do sqrt(81) for me", "classe": "conta"}
+{"frase": "how do i find 5^10?", "classe": "conta"}
+{"frase": "give me 20% off 500 dollars", "classe": "conta"}
+{"frase": "can you give me the square root of 144?", "classe": "conta"}
+{"frase": "find 3**3 please", "classe": "conta"}
+{"frase": "I need to know the 4th power of 9.", "classe": "conta"}
+{"frase": "calcula a raiz quadrada de 256", "classe": "conta"}
+{"frase": "qual é o 5^3?", "classe": "conta"}
+{"frase": "dá o percentual de 20 sobre 80", "classe": "conta"}
+{"frase": "root 144", "classe": "conta"}
+{"frase": "qual o 10% de 450?", "classe": "conta"}
+{"frase": "por favor, faz a potência de 2 elevado a 10", "classe": "conta"}
+{"frase": "qual a raiz quadrada de 2?", "classe": "conta"}
+{"frase": "calc 7*7?", "classe": "conta"}
+{"frase": "qual é a raiz quadrada de 10000?", "classe": "conta"}
+{"frase": "quero saber 50% de 200", "classe": "conta"}
+{"frase": "potencia 3^4, por favor", "classe": "conta"}
+{"frase": "me mostra a raiz quadrada de 81 e o 20% de 120?", "classe": "conta"}
+{"frase": "convert 10 miles to kilometers", "classe": "conta"}
+{"frase": "how many grams in 2.5 pounds?", "classe": "conta"}
+{"frase": "What is 5 kilograms in ounces?", "classe": "conta"}
+{"frase": "please convert 3 feet to meters", "classe": "conta"}
+{"frase": "convert 7 km/h to m/s", "classe": "conta"}
+{"frase": "lbs in kg", "classe": "conta"}
+{"frase": "tell me how many inches are in 1.5 meters", "classe": "conta"}
+{"frase": "convert 500ml to cups  (imperial)", "classe": "conta"}
+{"frase": "how much is 12 euros in usd today?", "classe": "conta"}
+{"frase": "what is 2000 seconds in minutes?", "classe": "conta"}
+{"frase": "kg to lbs? convert", "classe": "conta"}
+{"frase": "how many cm in 2.5 yd?", "classe": "conta"}
+{"frase": "qual a conversão de 10 metros em pés?", "classe": "conta"}
+{"frase": "converta 5.5 km/h para metros por segundo", "classe": "conta"}
+{"frase": "quantos litros são 3 galões americanos?", "classe": "conta"}
+{"frase": "dá o dobro de 12 em centímetros?", "classe": "conta"}
+{"frase": "qual é a temperatura 30°C em °F?", "classe": "conta"}
+{"frase": "transforme 2000 gramas em quilos", "classe": "conta"}
+{"frase": "/2 metro em centímetros?", "classe": "conta"}
+{"frase": "convert 250 ml to cups (US)", "classe": "conta"}
+{"frase": "qual a soma de 47 e 58?", "classe": "conta"}
+{"frase": "quero saber quantos metros 5.8 pés são?", "classe": "conta"}
+{"frase": "me dê a resposta de 12×9 em metros quadrados (assumindo 1m=1ft)", "classe": "conta"}
+{"frase": "por favor converta 0,75 acres para metros quadrados", "classe": "conta"}
