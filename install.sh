@@ -4,10 +4,11 @@
 set -euo pipefail
 
 VERSAO="@VERSAO@"
+REVISAO="@REVISAO@"
 URL="${OPENTARS_PI_URL:-https://github.com/project-opentars/OpenTARS-Pi/releases/download/$VERSAO}"
-URL_MODELO="${OPENTARS_PI_URL_MODELO:-https://huggingface.co/OpenTARS/Gargantua-Pi/resolve/main}"
-MODELO="gargantua-1.2-pi-functiongemma-270m-Q8_0.gguf"
-SHA_MODELO="18e02f9214b821da947fa9b3a2aae96f8679eeba2d7f25646e1032d76dd11775"
+URL_MODELO="${OPENTARS_PI_URL_MODELO:-@URL_MODELO@}"
+MODELO="@MODELO@"
+SHA_MODELO="@SHA_MODELO@"
 SHA_APP="@SHA_APP@"
 SHA_MOTOR_AARCH64="@SHA_MOTOR_AARCH64@"
 SHA_MOTOR_X86_64="@SHA_MOTOR_X86_64@"
@@ -60,6 +61,9 @@ rm -rf "$BASE/app" "$BASE/motor"
 mv "$TMP/app" "$BASE/app"
 mv "$TMP/motor" "$BASE/motor"
 ln -sf "$BASE/app/opentars-pi" "$BIN/opentars-pi"
+# o que está instalado, para `opentars update` baixar depois só o que mudar
+printf '{"versao": "%s", "revisao": %s, "app": "%s", "motor": "%s", "modelo": {"arquivo": "%s", "sha256": "%s"}}\n' \
+  "$VERSAO" "$REVISAO" "$SHA_APP" "$SHA_MOTOR" "$MODELO" "$SHA_MODELO" > "$BASE/instalado.json"
 
 # O comando é `opentars`. Se o openTARS completo já usa esse nome aqui, ele continua dono e este fica em opentars-pi.
 COMANDO=opentars

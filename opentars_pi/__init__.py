@@ -1,2 +1,5 @@
 """openTARS Pi: o assistente de IA local para placas pequenas (Raspberry Pi, Orange Pi e parecidas)."""
 VERSAO = "1.0"
+MODELO = "gargantua-1.2-pi-functiongemma-270m-Q8_0.gguf"
+SHA_MODELO = "18e02f9214b821da947fa9b3a2aae96f8679eeba2d7f25646e1032d76dd11775"
+URL_MODELO = "https://huggingface.co/OpenTARS/Gargantua-Pi/resolve/main"

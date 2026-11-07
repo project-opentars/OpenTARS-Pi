@@ -1,19 +1,15 @@
 """A linha de comando do openTARS Pi."""
 import argparse
-import hashlib
 import os
 import shutil
-import subprocess
 import sys
 import time
 
-from . import VERSAO, aprovacoes, busca, gpio, pastas, placa, seguranca, servico, textos
+from . import SHA_MODELO, VERSAO, aprovacoes, atualizar, busca, gpio, pastas, placa, seguranca, servico, textos
 from .agente import Agente
 from .motor import Motor, MotorForaDoAr
 from .textos import t
 
-SHA_MODELO = "f921e2370833585eda692d4878f9ba50899bdce18b57dc10d0300f8a66f5ac60"
-INSTALADOR = "https://github.com/project-opentars/OpenTARS-Pi/releases/latest/download/install.sh"
 COR = sys.stdout.isatty() and not os.environ.get("NO_COLOR")
 NOME = "Gargantua"
 
@@ -91,6 +87,9 @@ def conversar(motor, auto, pedido=None):
     total, livre = placa.memoria()
     print(cinza(f"openTARS Pi {VERSAO} · Gargantua Pi 270M · {placa.modelo()} · {livre} MB free"))
     print(cinza(t("ajuda", tela.idioma)))
+    if atualizar.aviso():
+        print(ambar("An update is ready: opentars update"))
+    atualizar.consultar_em_segundo_plano()
     while True:
         try:
             texto = input(cor("34", "you") + " ").strip()
@@ -171,6 +170,55 @@ def comando_busca(args):
         sys.exit("usage: opentars search on | off | http://your-searxng:8888")
 
 
+def progresso(texto):
+    """Uma linha que se reescreve no terminal; fora dele, só o fim de cada arquivo."""
+    if sys.stdout.isatty():
+        print("\r" + cinza(texto), end="\n" if texto.endswith("100%") else "", flush=True)
+    elif texto.endswith("100%"):
+        print(texto)
+
+
+def comando_atualizar(args):
+    """opentars update [check | undo | auto on | auto off]"""
+    if args[:1] == ["auto"] and args[1:2] in (["on"], ["off"]):
+        pastas.salvar_config(atualizar_auto=args[1] == "on")
+        return print("Daily update check: " + args[1] + ".")
+    if args[:1] in (["undo"], ["desfazer"]):
+        trocou = atualizar.desfazer()
+        if not trocou:
+            return print("There is no previous version to go back to.")
+        servico.reiniciar_se_ligado()
+        return print("Back to the previous version: " + ", ".join(trocou) + ". Run opentars update undo again to redo.")
+    if args and args[0] not in ("check", "verificar"):
+        sys.exit("Use: opentars update [check | undo | auto on | auto off]")
+    local = atualizar.instalado()
+    print(f"Installed: openTARS Pi {VERSAO}" + (f" ({local['revisao']})" if local.get("revisao") else ""))
+    try:
+        manifesto = atualizar.publicado()
+        mudou = atualizar.o_que_mudou(manifesto, local)
+    except Exception as e:
+        sys.exit(f"Could not reach the update server ({e.__class__.__name__}). Check the internet and try again.")
+    pastas.salvar_config(ultima_consulta=time.time(), atualizacao_disponivel=manifesto["revisao"] if mudou else None)
+    if not mudou:
+        return print(verde("Everything is up to date."))
+    partes = atualizar._partes(manifesto)
+    nomes = {"app": "app and Murph", "motor": "engine (llama.cpp)", "modelo": "Gargantua Pi model"}
+    print(f"New: {manifesto['versao']} ({manifesto['revisao']})" + (f". {manifesto['notas']}" if manifesto.get("notas") else ""))
+    for nome in mudou:
+        print(f"  {nomes[nome]}: {partes[nome][3]} MB")
+    if args[:1] in (["check"], ["verificar"]):
+        return print("Install it with: opentars update")
+    if sys.stdin.isatty() and input("Update now? [Y/n] ").strip().lower() in ("n", "no", "nao", "não"):
+        return print("Nothing was changed.")
+    try:
+        trocou = atualizar.aplicar(manifesto, mudou, mostrar=progresso)
+    except (OSError, ValueError) as e:
+        sys.exit(f"Update stopped, nothing was changed: {e}")
+    if servico.reiniciar_se_ligado():
+        print("The background service was restarted.")
+    print(verde("Updated: " + ", ".join(nomes[n] for n in trocou) + ".") + " To go back: opentars update undo")
+
+
 def responder_aprovacoes():
     pendentes = aprovacoes.pendentes()
     if not pendentes:
@@ -184,12 +232,12 @@ def diagnostico():
     motor = Motor()
     binario = motor.binario()
     total, livre = placa.memoria()
-    linhas = [("Board", placa.modelo()), ("System", f"{placa.sistema()} ({os.uname().machine}, kernel {os.uname().release})"),
+    revisao = atualizar.instalado().get("revisao")
+    linhas = [("Version", VERSAO + (f" ({revisao})" if revisao else "")), ("Board", placa.modelo()), ("System", f"{placa.sistema()} ({os.uname().machine}, kernel {os.uname().release})"),
               ("Memory", f"{livre} of {total} MB free"), ("Disk", f"{placa.disco()[1]:.1f} GB free"),
               ("Python", sys.version.split()[0]), ("Engine", binario or "NOT FOUND")]
     if os.path.exists(motor.modelo):
-        with open(motor.modelo, "rb") as f:
-            soma = hashlib.file_digest(f, "sha256").hexdigest() if hasattr(hashlib, "file_digest") else hashlib.sha256(f.read()).hexdigest()
+        soma = atualizar.sha256(motor.modelo)
         linhas.append(("Model", "ok (SHA-256 verified)" if soma == SHA_MODELO else f"different from the published one: {soma[:16]}…"))
     else:
         linhas.append(("Model", "NOT FOUND"))
@@ -226,7 +274,7 @@ def remover():
 
 def opcoes():
     p = argparse.ArgumentParser(prog="opentars", description="openTARS Pi: a local AI assistant for small boards.",
-                                epilog="Also: opentars gpio ..., opentars service on|off|status, opentars search on|off|URL")
+                                epilog="Also: opentars update [check|undo|auto on|off], opentars gpio ..., opentars service on|off|status, opentars search on|off|URL")
     p.add_argument("pedido", nargs="*", help="what to do; leave empty to chat")
     p.add_argument("--version", action="version", version=f"openTARS Pi {VERSAO}")
     p.add_argument("--auto", action="store_true", help="run commands that change things without asking (dangerous ones still ask)")
@@ -238,7 +286,7 @@ def opcoes():
     p.add_argument("--approvals", "--aprovacoes", action="store_true", help="answer the approvals waiting from the network")
     p.add_argument("--doctor", "--diagnostico", action="store_true", help="check this installation")
     p.add_argument("--test", "--prova", action="store_true", help="run the built-in test with the real model")
-    p.add_argument("--update", "--atualizar", action="store_true", help="install the latest release")
+    p.add_argument("--update", "--atualizar", action="store_true", help="same as: opentars update")
     p.add_argument("--uninstall", "--remover", action="store_true", help="remove openTARS Pi")
     return p
 
@@ -248,6 +296,8 @@ def main():
         return comando_gpio(sys.argv[2:])
     if sys.argv[1:2] in (["service"], ["servico"]):
         return comando_servico(sys.argv[2:])
+    if sys.argv[1:2] in (["update"], ["atualizar"]):
+        return comando_atualizar(sys.argv[2:])
     if sys.argv[1:2] in (["search"], ["busca"]):
         return comando_busca(sys.argv[2:])
     a = opcoes().parse_args()
@@ -256,7 +306,7 @@ def main():
     if a.uninstall:
         return remover()
     if a.update:
-        return subprocess.call(["bash", "-c", f"curl -fsSL {INSTALADOR} | bash"])
+        return comando_atualizar([])
     if a.token or a.new_token:
         return print(aprovacoes.novo_token() if a.new_token else aprovacoes.token())
     if a.approvals:

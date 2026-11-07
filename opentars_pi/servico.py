@@ -32,5 +32,13 @@ def desligar():
     _systemctl("daemon-reload")
 
 
+def reiniciar_se_ligado():
+    """Depois de atualizar: o serviço de pé ainda roda o código e o modelo velhos."""
+    if estado() == "active":
+        _systemctl("restart", "opentars-pi.service")
+        return True
+    return False
+
+
 def estado():
     return _systemctl("is-active", "opentars-pi.service").stdout.strip() or "inactive"

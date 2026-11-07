@@ -67,7 +67,7 @@ The model is small, so the rule is strict: **only commands that just read run on
 
 ## Local by default
 
-The model, your memory and your commands stay on the board. The one thing that leaves is the text of a search: it goes to Wikipedia. For the whole web, point it at your own [SearXNG](https://docs.searxng.org/) with `opentars search http://your-server:8888`. To keep everything on the board, use `opentars search off`.
+The model, your memory and your commands stay on the board. The text of a search leaves: it goes to Wikipedia. For the whole web, point it at your own [SearXNG](https://docs.searxng.org/) with `opentars search http://your-server:8888`. Once a day it also downloads a small file from GitHub that lists the latest version (`opentars update auto off` stops that). To keep everything on the board, use `opentars search off` and `opentars update auto off`.
 
 ## Commands
 
@@ -83,7 +83,8 @@ The model, your memory and your commands stay on the board. The one thing that l
 | `opentars --window` | The small window (needs `python3-tk`) |
 | `opentars --doctor` | Check the installation |
 | `opentars --test` | Run the built-in test with the real model |
-| `opentars --update` | Install the latest release |
+| `opentars update` | Get what is new: app, engine or model, only the parts that changed, each checked by SHA-256 |
+| `opentars update check`, `undo`, `auto off` | See what is new, go back to the previous version, stop the daily check |
 | `opentars --uninstall` | Remove everything |
 
 ## Use it from other devices

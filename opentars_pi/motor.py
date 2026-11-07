@@ -50,7 +50,7 @@ class Motor:
             return
         binario = self.binario()
         if not binario or not os.path.exists(self.modelo):
-            raise MotorForaDoAr("engine or model not found. Reinstall with: opentars --update")
+            raise MotorForaDoAr("engine or model not found. Reinstall with: opentars update")
         pastas.CACHE.mkdir(parents=True, exist_ok=True)
         nucleos = os.cpu_count() or 4
         comando = [binario, "-m", self.modelo, "--host", "127.0.0.1", "--port", str(self.porta), "-c", str(CONTEXTO), "-t", str(nucleos),
@@ -81,7 +81,13 @@ class Motor:
         self.processo = None
 
     def _arquivo_do_prefixo(self, prefixo):
-        return hashlib.sha1(prefixo.encode()).hexdigest()[:16] + ".bin"
+        try:
+            info = os.stat(self.modelo)
+            modelo = f"{self.modelo}:{info.st_size}:{info.st_mtime_ns}"
+        except OSError:
+            modelo = self.modelo
+        # o estado guardado só vale para o mesmo modelo: com outro, voltaria lixo
+        return hashlib.sha1((modelo + "\0" + prefixo).encode()).hexdigest()[:16] + ".bin"
 
     def preparar_prefixo(self, prefixo):
         """Traz do disco o prompt de sistema já lido; se ainda não existe, lê uma vez e guarda."""
