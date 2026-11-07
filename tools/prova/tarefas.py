@@ -4,6 +4,8 @@ Dois conjuntos com as mesmas categorias e frases diferentes:
 - "dev": o que se olha enquanto se trabalha no app;
 - "guardada": só roda no fim, para medir. Se alguém ajustar o app olhando o resultado dela, ela deixa de valer.
 Nenhuma destas frases pode entrar em dado de treino.
+Juiz ajustado em 07/11, depois da linha de base do dev e antes de mudar o app (o juiz deixava passar por acaso):
+as contagens que pedem "me diz quantos" querem o número na resposta, e as perguntas do mundo valem pela primeira linha.
 
 Cada tarefa roda sozinha, numa pasta pessoal nova (criar_casa). Campos:
   pedidos   uma frase ou uma lista (conversa); as conferências de resposta valem para a última
@@ -47,14 +49,14 @@ _t("d08", D, "ler", "quantas linhas tem o arquivo logs/app.log?", ve=r"\b40\b")
 _t("d09", D, "ler", "em qual arquivo está escrita a senha do wifi?", ve=r"wifi\.txt")
 _t("d10", D, "ler", "qual é o maior arquivo da pasta Downloads?", ve=r"filme\.mp4")
 _t("d11", D, "ler", "list only the folders in my home", ve=r"projetos", cmd=r"(ls|find|tree)\b")
-_t("d12", D, "ler", "quantos erros aparecem no app.log?", ve=r"\b5\b")
+_t("d12", D, "ler", "quantos erros aparecem no app.log?", resp=r"\b5\b")
 _t("g06", G, "ler", "what's inside the projetos/sensor folder?", ve=r"leitura\.py")
 _t("g07", G, "ler", "lê o README do projeto sensor", ve=r"quintal")
 _t("g08", G, "ler", "how many lines does Documents/relatorio-2026.txt have?", ve=r"\b12\b")
 _t("g09", G, "ler", "qual arquivo fala de casa5g?", ve=r"wifi\.txt")
 _t("g10", G, "ler", "qual o menor arquivo do Downloads?", ve=r"leia-me\.txt")
 _t("g11", G, "ler", "mostra os arquivos escondidos da home", ve=r"\.bashrc")
-_t("g12", G, "ler", "quantas vezes WARN aparece em logs/app.log?", ve=r"\b3\b")
+_t("g12", G, "ler", "quantas vezes WARN aparece em logs/app.log?", resp=r"\b3\b")
 
 # ---- escrever e organizar ----
 _t("d13", D, "escrever", "cria a pasta projetos/camera/fotos", existe=["projetos/camera/fotos"])
@@ -100,13 +102,13 @@ _t("g29", G, "recuperar", "mostra as últimas linhas do arquivo errors.log", ve=
 _t("d30", D, "passos", "cria a pasta backup e copia Documents/notas.txt para ela", existe=["backup/notas.txt"])
 _t("d31", D, "passos", "vê quanto espaço livre tem e me diz se dá pra baixar um arquivo de 2 GB", resp=r"\b(sim|yes|da|cabe|enough|sobra)\b")
 _t("d32", D, "passos", "make a folder called scripts and create inside it a file hello.sh that prints hello", conteudo={"scripts/hello.sh": r"echo.*hello"})
-_t("d33", D, "passos", "lista os arquivos .jpg do Downloads e me diz quantos são", ve=r"\b2\b")
+_t("d33", D, "passos", "lista os arquivos .jpg do Downloads e me diz quantos são", resp=r"\b2\b")
 _t("d34", D, "passos", "move o filme.mp4 para uma pasta Videos e mostra o que ficou no Downloads", existe=["Videos/filme.mp4"], ve=r"foto-praia")
 _t("d35", D, "passos", "procura ERROR no logs/app.log e salva essas linhas num arquivo erros.txt", conteudo={"erros.txt": r"ERROR"})
 _t("g30", G, "passos", "cria a pasta antigos e move o pacote.deb pra lá", existe=["antigos/pacote.deb"])
 _t("g31", G, "passos", "veja quanta RAM está livre e me diga se dá pra rodar um programa que usa 500 MB", resp=r"\b(sim|yes|da|cabe|enough|sobra|nao|no)\b")
 _t("g32", G, "passos", "create a folder called bin and put a script up.sh in it that runs uptime", conteudo={"bin/up.sh": r"uptime"})
-_t("g33", G, "passos", "conta quantos arquivos tem no Downloads", ve=r"\b5\b")
+_t("g33", G, "passos", "conta quantos arquivos tem no Downloads", resp=r"\b5\b")
 _t("g34", G, "passos", "move as fotos do Downloads para Imagens e lista o que tem em Imagens", existe=["Imagens/foto-gato.jpg"], ve=r"foto-praia")
 _t("g35", G, "passos", "find the lines with WARN in logs/app.log and save them to avisos.txt", conteudo={"avisos.txt": r"WARN"})
 

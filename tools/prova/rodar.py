@@ -65,6 +65,8 @@ def rodar_tarefa(tarefa, motor):
 def julgar(t, ev, casa):
     falhas = []
     final = ev["respostas"][-1]
+    if t["categoria"] == "mundo":        # a resposta é a primeira linha; o "Também:" embaixo não conta
+        final = final.strip().split("\n")[0]
     visto = "\n".join(ev["visto"])
     comandos = ev["propostos"] + ev["executados"]
     if "resp" in t and not casa_regex(t["resp"], final):
