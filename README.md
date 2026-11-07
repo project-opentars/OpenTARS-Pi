@@ -13,28 +13,34 @@ One line, no sudo, about a minute. Then just type `opentars`. Everything lands i
 
 ## What it looks like
 
-Real session on an Orange Pi Zero 2W (4x Cortex-A53, 1 GB of RAM):
+Real session on an Orange Pi Zero 2W (4x Cortex-A53, 1 GB of RAM), openTARS Pi 1.1:
 
 ```text
 $ opentars
-openTARS Pi 1.0 · Gargantua Pi 270M · OrangePi Zero 2W · 796 MB free
-
-you how much free memory is there?
-Gargantua  796 MB of memory free, out of 969 MB.
-
-you list the files in /etc/ssl
-  ⎿ ls -la /etc/ssl
-    drwxr-xr-x   2 root root 16384 Nov  1 14:56 certs
-    -rw-r--r--   1 root root 12509 Apr  7  2026 openssl.cnf
-
-you remember that the relay is on pin PI13
-Gargantua  Noted: the relay is on pin PI13.
-
-you turn the relay on
-Change a pin?
-  PI13 on
+openTARS Pi 1.1 · Gargantua Pi · OrangePi Zero 2W · 817 MB free
+you is the sd card full?
+Gargantua  9.5 GB used on the disk, 182.2 GB free, out of 191.7 GB. Plenty of room.
+you how many lines does oled_status.py have?
+  ⎿ wc -l ~/oled_status.py
+    157 /home/enzo/oled_status.py
+Gargantua  ~/oled_status.py has 157 lines.
+you make a folder demo-backup and copy oled_teste.py into it
+Run this command?
+  mkdir -p ~/demo-backup
 Allow [y/N] y
-Gargantua  PI13 is on.
+Run this command?
+  cp -r ~/oled_teste.py ~/demo-backup/
+Allow [y/N] y
+Gargantua  Done.
+you what is the biggest file in my home?
+  ⎿ ls -lhS ~ | grep -v '^[dt]' | head -n 1
+    -rw-rw-r-- 1 enzo enzo 103K Nov  1 15:03 pihole-basic-install.sh
+Gargantua  The biggest file in ~ is pihole-basic-install.sh (103K).
+you who painted guernica?
+  ⎿ who painted guernica
+Gargantua  From en.wikipedia.org: Guernica is a large 1937 oil painting by Spanish artist Pablo Picasso.
+Also: en.wikipedia.org (Guernica)
+Also: en.wikipedia.org (Pablo Picasso)
 ```
 
 ## What it does
