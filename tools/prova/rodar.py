@@ -117,7 +117,7 @@ def main():
             ev, falhas = rodar_tarefa(t, motor)
             resultados.append({"id": t["id"], "categoria": t["categoria"], "conjunto": t["conjunto"], "ok": not falhas, "falhas": falhas, **ev})
             marca = "ok " if not falhas else "XX "
-            if t["conjunto"] == "dev":       # a guardada não mostra detalhe na tela: quem ajusta o app não deve ler
+            if t["conjunto"] == "dev":       # a guardada e a final não mostram detalhe na tela: quem ajusta o app não deve ler
                 print(marca, t["id"], t["pedidos"][-1][:60], "|", "; ".join(falhas), "|", (ev["respostas"][-1] or "")[:90].replace("\n", " / "),
                       "|", " ; ".join(ev["executados"] or ev["propostos"])[:120], flush=True)
     finally:
