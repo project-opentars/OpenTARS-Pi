@@ -157,3 +157,6 @@ TEXTOS["pt"].update({
 
 TEXTOS["en"].update({"r_loc": "{alvo} has {n} lines of code.", "processador": "The processor is a {nome}, with {nucleos} cores."})
 TEXTOS["pt"].update({"r_loc": "{alvo} tem {n} linhas de código.", "processador": "O processador é um {nome}, com {nucleos} núcleos."})
+
+TEXTOS["en"].update({"hostname": "This board is called {nome} on the network.", "nada_para_salvar": "I have nothing to save from the step before."})
+TEXTOS["pt"].update({"hostname": "O nome desta placa na rede é {nome}.", "nada_para_salvar": "Não tenho o que salvar do passo anterior."})

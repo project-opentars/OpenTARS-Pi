@@ -201,6 +201,17 @@ def _escondidos(f, idioma):
     return None
 
 
+def _linhas_com(f, idioma):
+    a = f.busca(r"\b(?:procura|procure|acha|ache|mostra|mostre|find|show|list|lista|get|pega|pegue)\s+(?:me\s+)?(?:as |the |all (?:the )?|todas as )?(?:linhas|lines)\s+(?:com|que tem|que contem|with|containing|that have|that contain|matching)\s+"
+                r"[\"']?(.+?)[\"']?\s+(?:no|na|em|in|from|of|do|da)\s+" + _ARTIGO + r"(?:arquivo |file )?(\S+?)" + _FIM)
+    if not a:
+        return None
+    real, nota = _arquivo_ou_substituto(f.g(a, 2), idioma)
+    if not real:
+        return nota
+    return _resultado(f"grep -n -- {shlex.quote(f.g(a, 1))} {_q(_rel(real))}", idioma, "achados", _rel(real), nota)
+
+
 def _ultimas(f, idioma):
     a = f.busca(r"\b(?:(?:as )?ultimas linhas|(?:the )?last lines|o final|the end|tail)\b" + _DE + _ARTIGO + r"(?:arquivo |file )?(\S+?)" + _FIM)
     if not a or re.search(r"\d", f.n[:a.start(1)]):       # "as 5 últimas linhas" é com a regra que lê o número
@@ -211,12 +222,35 @@ def _ultimas(f, idioma):
     return _resultado(f"tail -n 20 {_q(_rel(real))}", idioma, nota=nota, alvo=_rel(real))
 
 
+_VAZIAS_ASSUNTO = {"o", "a", "os", "as", "de", "do", "da", "dos", "das", "meu", "minha", "the", "of", "my", "with", "com", "sobre", "about", "e", "and"}
+
+
+def _arquivo_sobre(assunto):
+    """O arquivo cujo nome tem uma palavra do assunto ou cujo texto tem a frase. None se não há um só candidato claro."""
+    palavras = [p for p in re.findall(r"[\w-]+", assunto.lower()) if p not in _VAZIAS_ASSUNTO and len(p) > 2]
+    for palavra in sorted(palavras, key=len, reverse=True):
+        real, certeza = nomes.resolver(palavra, arquivo=True)
+        if real:
+            return real
+    import subprocess
+    try:
+        achados = subprocess.run(["grep", "-ril", "--exclude-dir=.*", "--", assunto.strip(), nomes.casa()], capture_output=True, text=True, timeout=10).stdout.split()
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return achados[0] if len(achados) == 1 else None
+
+
 def _ver(f, idioma):
     a = f.busca(r"^(?:por favor |please |pode |can you )?(?:mostra|mostre|abre|abra|abrir|le|leia|ler|ver|veja|exibe|exiba|show|open|read|display|cat|print|me mostra)\s+"
                 r"(?:me\s+)?(?:o conteudo d[eoa]\s+|the contents? of\s+|o que (?:tem|ficou|sobrou|restou|ha|existe) (?:n[oa]|em)\s+|what(?:'s| is) (?:left )?in\s+)?(.+?)" + _FIM)
     if not a or f.busca(r"\b(processos|processes|memoria|memory|disco|disk|temperatura|temperature|ip|pinos?|pins?|gpio|log do sistema|system log|portas|ports|linhas|lines)\b"):
         return None
     texto = f.g(a, 1)
+    sobre = re.match(r"^(?:o |a |the |my )?(?:arquivo|file)\s+(?:d[aoe]s?|about|with|sobre|com)\s+(.+)$", texto.strip(), re.IGNORECASE)
+    if sobre:                            # "o arquivo da senha do wifi": o arquivo cujo nome ou texto fala disso
+        achado = _arquivo_sobre(sobre.group(1))
+        if achado:
+            return _resultado(f"head -n 100 {_q(_rel(achado))}", idioma, nota=("achei", sobre.group(1), _rel(achado)))
     real, nota = _fonte(texto)
     if not real:
         nome = _limpar_alvo(texto)
@@ -495,6 +529,19 @@ def _linhas_de_codigo(f, idioma):
     return _resultado(f"find {_q(_rel(pasta))} -name '*.{_LINGUAGENS[linguagem]}' -not -path '*/.*' -print0 | wc -l --files0-from=- | tail -n 1", idioma, "loc", _rel(pasta), nota)
 
 
+_COMO_VERSAO = {"python": "python3", "pip": "pip3", "node": "node", "nodejs": "node"}
+
+
+def _versao(f, idioma):
+    a = f.busca(r"\b(?:versao|version)\s+(?:d[oae] |of (?:the )?|of my )?(?:programa |the )?([a-z][\w.+-]*)") or f.busca(r"\b([a-z][\w.+-]*)\s+version\b")
+    if not a or a.group(1) in ("kernel", "linux", "sistema", "system", "os", "do", "of", "the", "which", "what", "qual", "my", "minha", "nova", "new", "latest"):
+        return None
+    programa = _COMO_VERSAO.get(a.group(1), a.group(1))
+    if not shutil.which(programa):
+        return {"fala": t("nao_instalado", idioma, programa=a.group(1), pacote=a.group(1))}
+    return _resultado(f"{programa} --version 2>&1 | head -n 1", idioma)
+
+
 def _gpio(f, idioma):
     if f.busca(r"\b(pinos|pins|gpio|chips? de gpio|gpio chips?)\b") and f.busca(r"\b(quais|lista|liste|list|which|what|existem|mostra|show|tem)\b") \
             and not f.busca(r"\b(p[a-k]\d{1,2}|gpio ?\d{1,3})\b"):
@@ -502,7 +549,7 @@ def _gpio(f, idioma):
     return None
 
 
-OPERACOES = (_gpio, _descompactar, _trocar, _recentes, _linhas_de_codigo, _ocorrencias, _contar_linhas, _contar_arquivos, _qual_arquivo, _maior_menor, _so_pastas, _escondidos, _ultimas, _por_extensao, _tamanho_por_pasta, _tamanho,
+OPERACOES = (_gpio, _versao, _descompactar, _trocar, _recentes, _linhas_de_codigo, _ocorrencias, _contar_linhas, _contar_arquivos, _qual_arquivo, _maior_menor, _so_pastas, _escondidos, _linhas_com, _ultimas, _por_extensao, _tamanho_por_pasta, _tamanho,
              _mkdir, _executavel, _compactar, _script, _criar_com_texto, _acrescentar, _copiar_mover, _renomear, _apagar_parecido, _ver)
 
 

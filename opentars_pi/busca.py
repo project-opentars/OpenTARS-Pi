@@ -73,7 +73,7 @@ _RELACOES = (({"pintou", "pintado", "pintor", "painted", "painter", "painting", 
              ({"caiu", "queda", "fell", "fall"}, {"cai", "qued", "fell", "fall", "derr"}),
              ({"maior", "largest", "biggest"}, {"maior", "larg", "bigg"}), ({"menor", "smallest"}, {"menor", "smal"}),
              ({"extenso", "longest", "comprido"}, {"exte", "long", "compr"}),
-             ({"capital"}, {"capi"}), ({"altura", "tall", "height", "alta", "alto", "high"}, {"altu", "tall", "heig", "metr", "high", "alt"}))
+             ({"capital"}, {"capital"}), ({"altura", "tall", "height", "alta", "alto", "high"}, {"altu", "tall", "heig", "metr", "high", "alt"}))
 _SO_DA_PERGUNTA = {"ano", "year", "quando", "when", "vez", "pela", "time", "mais", "most", "fica", "ficam", "located", "localizada", "localizado",
                    "situada", "situado", "esta", "está"}
 _INICIO_PERGUNTA = re.compile(r"^(?:quem|qual|quais|quando|onde|como|o que|em que ano|que ano|who|what|which|when|where|how|why|did|does|do|is|are|was|were)"
@@ -88,15 +88,23 @@ def tipo_de_resposta(consulta):
     return next((tipo for tipo, padrao in _TIPOS if re.search(padrao, n)), None)
 
 
+class _Grupos(frozenset):
+    """As raízes de cada relação da pergunta: um grupo conta uma vez só, por mais sinônimos que a frase tenha."""
+    def __new__(cls, grupos):
+        objeto = super().__new__(cls, [r for g in grupos for r in g])
+        objeto.grupos = list(grupos)
+        return objeto
+
+
 def _relacao(palavras):
-    """(palavras que são a relação, raízes que a frase deve ter)."""
-    usadas, raizes_ = set(), set()
+    """(palavras que são a relação, raízes que a frase deve ter, agrupadas por relação)."""
+    usadas, grupos = set(), []
     for formas, alvo in _RELACOES:
         achadas = formas & set(palavras)
         if achadas:
             usadas |= achadas
-            raizes_ |= alvo
-    return usadas, raizes_
+            grupos.append(frozenset(alvo))
+    return usadas, _Grupos(grupos)
 
 
 def _r4(texto):
@@ -109,9 +117,12 @@ _INTERVALO = re.compile(r"\b(1[0-9]{3}|20[0-9]{2})\)?\s*[–-]\s*(?:\d{1,2}\s+\w
 def _tem_relacao(frase, raizes_rel, titulo=""):
     """Quantas raízes da relação a frase tem, sem contar as que só repetem o título ("Discover America" não descobriu nada)."""
     do_titulo = set(chaves(titulo))
-    palavras = [p for p in chaves(frase) if p not in do_titulo]
-    achadas = sum(1 for r in raizes_rel if any(p.startswith(r) for p in palavras))
-    if not achadas and raizes_rel & {"term", "end", "come", "star"} and _INTERVALO.search(frase):
+    tokens = re.findall(r"[\wÀ-ú'-]+", frase)
+    minusculas = " ".join(p for i, p in enumerate(tokens) if i == 0 or not p[:1].isupper())     # "Murder, She Wrote" é nome, não "escreveu"
+    palavras = [p for p in chaves(minusculas) if p not in do_titulo]
+    grupos = getattr(raizes_rel, "grupos", [frozenset([r]) for r in raizes_rel])
+    achadas = sum(1 for grupo in grupos if any(p.startswith(r) for r in grupo for p in palavras))
+    if not achadas and raizes_rel & {"term", "end", "come", "star", "cai", "qued"} and _INTERVALO.search(frase):
         achadas = 1                      # "(1939 – 1945)": o intervalo diz quando começou e quando acabou
     return achadas
 
@@ -171,6 +182,32 @@ def _resumo(idioma, pagina):
         return ""
 
 
+_DESAMBIGUACAO = re.compile(r"(may|can) refer to|pode (se )?referir|pode designar|desambigua", re.IGNORECASE)
+
+
+def _introducoes(idioma, paginas):
+    """A introdução inteira de cada página, num pedido só: o resumo curto deixava de fora a altura da Torre Eiffel (07/11).
+    Devolve {key: texto}, com None para página de desambiguação. Se a API falhar, cai para o resumo de cada uma."""
+    try:
+        titulos = "|".join(p.get("title", "") for p in paginas)
+        url = f"https://{idioma}.wikipedia.org/w/api.php?" + urllib.parse.urlencode(
+            {"action": "query", "prop": "extracts", "exintro": 1, "explaintext": 1, "redirects": 1, "format": "json", "formatversion": 2, "titles": titulos})
+        dados = json.loads(_baixar(url))
+        destino = {r["from"]: r["to"] for r in dados.get("query", {}).get("redirects", [])}
+        textos = {p.get("title"): p.get("extract") or "" for p in dados["query"]["pages"]}
+        saida = {}
+        for p in paginas:
+            texto = textos.get(destino.get(p.get("title"), p.get("title")), "")
+            paragrafos = [" ".join(par.split()) for par in texto.split("\n") if par.strip()]
+            saida[p.get("key")] = None if _DESAMBIGUACAO.search(texto[:200]) else "\n".join(paragrafos)
+        if any(saida.values()):
+            return saida
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    with ThreadPoolExecutor(8) as grupo:
+        return dict(zip((p.get("key") for p in paginas), grupo.map(lambda p: _resumo(idioma, p), paginas)))
+
+
 def _procurar_paginas(consulta, idioma, limite=5):
     url = f"https://{idioma}.wikipedia.org/w/rest.php/v1/search/page?" + urllib.parse.urlencode({"q": consulta, "limit": limite})
     return json.loads(_baixar(url)).get("pages", [])
@@ -199,21 +236,33 @@ def wikipedia(consulta, idioma="en"):
                 vistas.add(p.get("key"))
                 paginas.append(p)
     paginas = paginas[:10]
-    with ThreadPoolExecutor(8) as grupo:
-        resumos = list(grupo.map(lambda p: _resumo(idioma, p), paginas))
+    introducoes = _introducoes(idioma, paginas)
+    resumos = [introducoes.get(p.get("key"), "") for p in paginas]
     achados = []
     for ordem, (pagina, resumo) in enumerate(zip(paginas, resumos)):
         if resumo is None:      # página de desambiguação não responde nada
             continue
         titulo = pagina.get("title", "")
         limpo = re.sub(r"\s*\(.*?\)", "", titulo)
-        frase = melhor_frase(resumo, consulta, limpo) or _limpar(pagina.get("excerpt", ""))
         do_titulo = _r4(limpo)
         cobre = len(do_titulo & {_ROMANOS.get(p, p)[:4] for p in assunto})
-        nota_frase, responde = _nota_da_frase(frase, consulta, tipo, raizes_rel, [p for p in assunto if p[:4] not in do_titulo], limpo)
+        resto_do_assunto = [p for p in assunto if p[:4] not in do_titulo]
+        abertura, _, depois = resumo.partition("\n")
+        if not cobre:                        # "Nineteen Eighty-Four (also published as 1984)": o começo da página diz que ela é o assunto
+            sujeito = re.split(r"\s(?:is|was|are|were|é|foi|são|era)\s", abertura[:160], maxsplit=1)[0]     # só o sujeito da primeira frase
+            cobre = len({_ROMANOS.get(p, p)[:4] for p in chaves(sujeito)} & {_ROMANOS.get(p, p)[:4] for p in assunto})
+            do_titulo = do_titulo | ({_ROMANOS.get(p, p)[:4] for p in assunto} if cobre else set())
+        frase = melhor_frase(abertura, consulta, limpo) or _limpar(pagina.get("excerpt", ""))
+        nota_frase, responde = _nota_da_frase(frase, consulta, tipo, raizes_rel, resto_do_assunto, limpo)
+        if not responde and depois:          # o primeiro parágrafo não responde: o resto da introdução, valendo menos
+            outra = melhor_frase(resumo.replace("\n", " "), consulta, limpo)
+            nota_outra, responde_outra = _nota_da_frase(outra, consulta, tipo, raizes_rel, resto_do_assunto, limpo)
+            if responde_outra:
+                frase, nota_frase, responde = outra, nota_outra - 3, True
         if tipo in ("definicao", "lugar"):        # aqui a página do próprio assunto é a resposta
             responde = cobre >= max(1, len(assunto) - (tipo == "definicao"))
-        sobra = 0 if responde else len(do_titulo - {_ROMANOS.get(p, p)[:4] for p in palavras})
+        extras = len(do_titulo - {_ROMANOS.get(p, p)[:4] for p in palavras})
+        sobra = extras * (0.5 if responde else 1)         # "Expedição britânica ao Monte Everest em 1922" perde para "Monte Everest"
         # o assunto ganha da página que só repete as palavras ("France", não "Capital punishment in France"), menos quando a resposta é outro nome
         nota = 3 * cobre - sobra + nota_frase + (4 if responde else 0) - 0.1 * ordem
         if re.match(r"(lista|list|history|historia|formacao|formação|timeline|cronologia|index|indice|índice|outline|glossary|glossario)\b", limpo.lower()):

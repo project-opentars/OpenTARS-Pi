@@ -2,6 +2,7 @@
 na hora e sem errar. O que sobra (comandos livres e conversa) vai para o Gargantua Pi."""
 import os
 import re
+import socket
 import time
 import unicodedata
 
@@ -70,6 +71,8 @@ _PROCESSADOR = re.compile(r"\b(modelo|model|nome|name|qual|which|what|tipo|type)
 def _estado(n, idioma):
     if _DA_ASSISTENTE.search(n) or _DE_PROCESSO.search(n):      # "qual processo está usando mais memória" é com o ps
         return None
+    if re.search(r"\b(nome|name|hostname)\b.{0,25}\b(placa|board|computador|computer|maquina|machine|rede|network|host)\b|\bhostname\b", n):
+        return t("hostname", idioma, nome=socket.gethostname())
     if _PROCESSADOR.search(n) and not re.search(r"\b(uso|usage|load|carga|temperatura|temperature|nucleos|cores)\b", n):
         return t("processador", idioma, nome=placa.processador(), nucleos=os.cpu_count())
     capacidade = _capacidade(n, idioma)
@@ -273,12 +276,15 @@ def resolver(pedido, idioma):
     n = normalizar(pedido)
     if pino := _pino(n):
         return {"pino": pino}
-    fala = _memoria(pedido, n, idioma) or _estado(n, idioma) or _recusa(n, idioma) or conta.resolver(n, idioma)
+    fala = _memoria(pedido, n, idioma)
     if fala:
         return {"fala": fala}
-    operacao = operacoes.plano(pedido, n, idioma)
+    operacao = operacoes.plano(pedido, n, idioma)      # antes do estado: "um script que roda uptime" é um arquivo, não o uptime
     if operacao:
         return operacao if isinstance(operacao, dict) else {"comando": operacao}
+    fala = _estado(n, idioma) or _recusa(n, idioma) or conta.resolver(n, idioma)
+    if fala:
+        return {"fala": fala}
     comando = comandos.plano(pedido, n, idioma)
     if comando:
         return comando if isinstance(comando, dict) else {"comando": comando}

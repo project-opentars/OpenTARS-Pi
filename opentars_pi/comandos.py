@@ -162,7 +162,8 @@ def plano(pedido, n, idioma="pt"):
     # as pastas da pessoa, pelo nome
     a = _achar(r"\b(?:lista|liste|listar|list|mostra|mostre|show|ver|veja|o que tem|what is in|what's in|whats in|what's inside|contents of)\b.{0,25}?\b(?:my|minha|meus|meu|a|na|da)?\s*(?:pasta )?" + _NOMES, n)
     if a:
-        pasta = _PASTAS.get(a.group(1), a.group(1).capitalize())
+        literal = original[a.start(1):a.end(1)]
+        pasta = literal if os.path.isdir(os.path.expanduser("~/" + literal)) else _PASTAS.get(a.group(1), a.group(1).capitalize())   # a pasta "Imagens" que existe ganha do apelido
         return "ls -la ~/" + (shlex.quote(pasta) if pasta else "")
     # o sistema
     if _achar(r"\b(processos?|processes|what is running|what's running|whats running|o que esta rodando|programas rodando)\b", n) and not _achar(r"\b(mata|mate|matar|kill|encerra|encerre|para|pare|stop)\b", n):

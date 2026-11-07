@@ -36,7 +36,7 @@ class Agente:
         self.mostrar = mostrar or (lambda tipo, texto: None)
         self.ferramentas = Ferramentas(aprovar, auto, ao_rodar=lambda comando: self.mostrar("comando", comando))
         self.historico = []
-        self.ultimo_resultado, self.lugar = None, None      # para o passo seguinte: "salva isso", "copia para ela"
+        self.ultimo_resultado, self.ultimo_comando, self.lugar = None, None, None      # para o passo seguinte: "salva isso", "copia para ela"
         self.idioma_base = textos.idioma_padrao()
         self.assunto = ""
 
@@ -89,6 +89,8 @@ class Agente:
         if nome != "execute_terminal":      # o comando aparece depois da aprovação
             self.mostrar("comando", argumentos.get("query") or argumentos.get("fact") or nome)
         resultado = self.ferramentas.chamar(nome, argumentos)
+        if nome == "execute_terminal":       # o passo seguinte pode querer "salva isso"
+            self.ultimo_comando, self.ultimo_resultado = argumentos.get("command"), resultado
         saida = (resultado.get("stdout") or "") + (resultado.get("stderr") or "")
         if saida.strip():
             self.mostrar("saida", saida.strip())
@@ -156,7 +158,7 @@ class Agente:
     def _varios(self, partes, idioma):
         """Um passo depois do outro. Para no primeiro que falha ou que a pessoa nega. None: o primeiro passo não é de regra."""
         falas, anterior = [], None
-        self.lugar, self.ultimo_resultado = None, None
+        self.lugar, self.ultimo_resultado, self.ultimo_comando = None, None, None
         for i, parte in enumerate(partes):
             n = atalhos.normalizar(parte)
             if i and passos.pede_contagem(n) and anterior is not None:
@@ -164,6 +166,10 @@ class Agente:
                 falas.append(t("r_sao", idioma, n=len([l for l in saida.splitlines() if l.strip()])))
                 continue
             destino = passos.salvar_em(n) if i else None
+            anterior = anterior or (self.ultimo_comando if (self.ultimo_resultado or {}).get("success") else None)
+            if destino and not anterior:
+                falas.append(t("nada_para_salvar", idioma))
+                break
             if destino and anterior:
                 comeco = n.rfind(destino)
                 destino = parte[comeco:comeco + len(destino)] if comeco >= 0 else destino
