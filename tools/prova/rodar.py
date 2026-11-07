@@ -99,6 +99,15 @@ def julgar(t, ev, casa):
 
 def main():
     conjunto = sys.argv[1] if len(sys.argv) > 1 else "dev"
+    if conjunto == "frases":             # frases avulsas, sem juiz: para olhar o comportamento
+        motor = Motor()
+        try:
+            for frase in sys.argv[2:]:
+                ev, _ = rodar_tarefa({"id": "avulsa", "pedidos": [frase], "categoria": "", "conjunto": ""}, motor)
+                print(f"> {frase}\n  executou: {ev['executados']}  propôs: {ev['propostos']}\n  resposta: {ev['respostas'][-1][:300]}  ({ev['segundos']} s)", flush=True)
+        finally:
+            motor.desligar()
+        return
     ids = set(sys.argv[2:])
     tarefas = [t for t in TAREFAS if (conjunto == "todas" or t["conjunto"] == conjunto) and (not ids or t["id"] in ids)]
     motor = Motor()

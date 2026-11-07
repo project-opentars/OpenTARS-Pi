@@ -4,7 +4,7 @@ import shlex
 import shutil
 import urllib.parse
 
-from . import atalhos, busca, contrato, gpio, memoria, operacoes, passos, pastas, textos
+from . import atalhos, busca, cerebro, contrato, gpio, memoria, operacoes, passos, pastas, textos
 from .ferramentas import NAO_APROVOU, Ferramentas
 from .textos import t
 
@@ -31,6 +31,7 @@ class Agente:
     def __init__(self, motor, aprovar, mostrar=None, auto=False):
         """aprovar(descricao, nivel) -> bool. mostrar(tipo, texto): 'comando', 'saida', 'pedaco' (a fala saindo aos poucos)."""
         self.motor = motor
+        self.cerebro = cerebro.escolher(motor)
         self.aprovar = aprovar
         self.mostrar = mostrar or (lambda tipo, texto: None)
         self.ferramentas = Ferramentas(aprovar, auto, ao_rodar=lambda comando: self.mostrar("comando", comando))
@@ -40,7 +41,7 @@ class Agente:
         self.assunto = ""
 
     def _sistema(self):
-        return contrato.sistema("", memoria.ler(), self.idioma_base)
+        return self.cerebro.sistema(memoria.ler(), self.idioma_base)
 
     def _mensagens(self, pedido, idioma):
         mensagens = [{"role": "system", "content": self._sistema()}]
@@ -79,10 +80,10 @@ class Agente:
             return t("falhou", idioma, erro=erro[-1])
         if plano.get("lugar"):
             self.lugar = plano["lugar"]
-        frase = " ".join(p for p in (plano.get("nota"), operacoes.resumir(plano, resultado, idioma)) if p)
-        if frase:
-            return frase
-        return "" if resultado.get("stdout", "").strip() else t("feito", idioma)     # a saída já apareceu
+        resumo = operacoes.resumir(plano, resultado, idioma)
+        if not resumo and not resultado.get("stdout", "").strip():
+            resumo = t("feito", idioma)
+        return " ".join(p for p in (plano.get("nota"), resumo) if p)       # sem resumo, a saída já apareceu
 
     def _usar_ferramenta(self, nome, argumentos):
         if nome != "execute_terminal":      # o comando aparece depois da aprovação
@@ -95,14 +96,7 @@ class Agente:
 
     def _falar_do_modelo(self, mensagens, ao_pedaco=None):
         """(chamada, fala) da próxima jogada do modelo. A fala sai aos poucos; a chamada não aparece."""
-        estado = {"chamada": False}
-
-        def pedaco(texto):
-            if texto.startswith("<start_function_call>"):
-                estado["chamada"] = True
-            if not estado["chamada"] and not texto.startswith("<") and ao_pedaco:
-                ao_pedaco(texto)
-        return contrato.ler_resposta(self.motor.completar(contrato.renderizar(mensagens), pedaco))
+        return self.cerebro.jogada(mensagens, ao_pedaco)
 
     def _pesquisar(self, consulta, idioma):
         """A resposta sai dos resultados, sem passar pelo modelo: com 270M ele diz que abriu o navegador em vez de ler (medido em 06/11)."""
@@ -122,10 +116,8 @@ class Agente:
 
     def _conversar(self, pedido, idioma):
         """Papo: sem ferramentas e sem prompt. Só voltas curtas entram: uma resposta de placa no meio atrapalha um modelo deste tamanho."""
-        self.motor.ligar()
         voltas = [(u, r) for u, r in self.historico[-2:] if r and len(r) < 200]
-        fala = self.motor.completar(contrato.renderizar_conversa(voltas, pedido), lambda p: self.mostrar("pedaco", p), maximo=120, temperatura=0.4)
-        return self._conferir(contrato.ler_resposta(fala)[1], 0, None, idioma)
+        return self._conferir(self.cerebro.conversar(voltas, pedido, lambda p: self.mostrar("pedaco", p)), 0, None, idioma)
 
     def responder(self, pedido):
         """A resposta final, em texto. O que mudou na placa já aconteceu quando isto volta."""
@@ -195,8 +187,7 @@ class Agente:
         return "\n".join(f for f in falas if f)
 
     def _pelo_modelo(self, pedido, idioma):
-        self.motor.ligar()
-        self.motor.preparar_prefixo(contrato.prefixo(self._sistema()))
+        self.cerebro.preparar(self._sistema())
         mensagens = self._mensagens(pedido, idioma)
         usou, ultimo, vistas = 0, None, set()
         for _ in range(PASSOS):
@@ -204,6 +195,8 @@ class Agente:
             if not chamada:
                 return self._conferir(fala, usou, ultimo, idioma)
             nome, argumentos = chamada
+            if nome not in cerebro.FERRAMENTAS_DA_PLACA:          # o Gargantua do app conhece 19; tela, janela e mouse não existem aqui
+                return t("tela", idioma)
             if nome == "search_web" and argumentos.get("query"):
                 return self._pesquisar(argumentos["query"], idioma)
             if nome == "execute_terminal" and not argumentos.get("command"):
@@ -220,8 +213,8 @@ class Agente:
                 return t("negado", idioma)
             if not ultimo.get("success"):                # um modelo deste tamanho não se recupera: só pediria mais aprovações à toa
                 return self._conferir("", usou, ultimo, idioma)
-            if nome == "execute_terminal" and ultimo.get("stdout", "").strip():    # a saída já apareceu; o comentário do modelo só inventava ("I have saved that...")
-                return ""
+            if nome == "execute_terminal" and ultimo.get("stdout", "").strip() and isinstance(self.cerebro, cerebro.CerebroPi):
+                return ""                # a saída já apareceu; o comentário do 270M só inventava ("I have saved that..."). O Lite comenta.
             mensagens += [{"role": "assistant", "content": "", "chamada": chamada},
                           {"role": "tool", "name": nome, "content": contrato.resultado(ultimo)}]
         return self._conferir("", usou, ultimo, idioma)

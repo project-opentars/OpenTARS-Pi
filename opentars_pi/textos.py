@@ -154,3 +154,6 @@ TEXTOS["pt"].update({
     "nao_instalado": "O {programa} não está instalado. Para instalar: sudo apt install {pacote}",
     "htop_falta": "O htop não está instalado (sudo apt install htop). Mostrando o top:",
 })
+
+TEXTOS["en"].update({"r_loc": "{alvo} has {n} lines of code.", "processador": "The processor is a {nome}, with {nucleos} cores."})
+TEXTOS["pt"].update({"r_loc": "{alvo} tem {n} linhas de código.", "processador": "O processador é um {nome}, com {nucleos} núcleos."})

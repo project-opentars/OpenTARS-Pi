@@ -63,9 +63,15 @@ def _capacidade(n, idioma):
     return t("cabe_disco" if mb < livre * 1024 * 0.95 else "nao_cabe_disco", idioma, livre=livre, pedido=f"{tamanho.group(1)} {tamanho.group(2).upper()}")
 
 
+_DE_PROCESSO = re.compile(r"\b(processos?|process(es)?|programas?|apps?|aplicativos?|quem esta|what'?s|whats|which program|o que esta)\b.{0,30}\b(usando|comendo|gastando|consumindo|using|eating|hogging|taking)\b")
+_PROCESSADOR = re.compile(r"\b(modelo|model|nome|name|qual|which|what|tipo|type)\b.{0,15}\b(processador|cpu|chip|soc)\b|\bcpu model\b")
+
+
 def _estado(n, idioma):
-    if _DA_ASSISTENTE.search(n):
+    if _DA_ASSISTENTE.search(n) or _DE_PROCESSO.search(n):      # "qual processo está usando mais memória" é com o ps
         return None
+    if _PROCESSADOR.search(n) and not re.search(r"\b(uso|usage|load|carga|temperatura|temperature|nucleos|cores)\b", n):
+        return t("processador", idioma, nome=placa.processador(), nucleos=os.cpu_count())
     capacidade = _capacidade(n, idioma)
     if capacidade:
         return capacidade

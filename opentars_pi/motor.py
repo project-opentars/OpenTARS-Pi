@@ -22,9 +22,11 @@ class MotorForaDoAr(Exception):
 
 
 class Motor:
-    def __init__(self, porta=None, modelo=None):
+    def __init__(self, porta=None, modelo=None, jinja=False):
+        """jinja: o modelo conversa pela API de chat com o molde dele (o Gargantua Lite); sem isso, texto cru (o Gargantua Pi)."""
         self.porta = porta or int(os.environ.get("OPENTARS_PI_PORTA") or PORTA)
         self.modelo = modelo or os.environ.get("OPENTARS_PI_MODELO") or str(pastas.MODELOS / pastas.ARQUIVO_MODELO)
+        self.jinja = jinja
         self.processo = None
         self.prefixo_pronto = None
 
@@ -53,9 +55,9 @@ class Motor:
             raise MotorForaDoAr("engine or model not found. Reinstall with: opentars update")
         pastas.CACHE.mkdir(parents=True, exist_ok=True)
         nucleos = os.cpu_count() or 4
-        comando = [binario, "-m", self.modelo, "--host", "127.0.0.1", "--port", str(self.porta), "-c", str(CONTEXTO), "-t", str(nucleos),
-                   "-sp", "--parallel", "1", "--swa-full", "-b", "256", "-ub", "256", "--cache-ram", "0", "--no-warmup",
-                   "--no-webui", "--slot-save-path", str(pastas.CACHE)]
+        comando = [binario, "-m", self.modelo, "--host", "127.0.0.1", "--port", str(self.porta), "-t", str(nucleos),
+                   "--parallel", "1", "-b", "256", "-ub", "256", "--cache-ram", "0", "--no-warmup", "--no-webui", "--slot-save-path", str(pastas.CACHE)]
+        comando += ["-c", "4096", "--jinja"] if self.jinja else ["-c", str(CONTEXTO), "-sp", "--swa-full"]
         pastas.DADOS.mkdir(parents=True, exist_ok=True)
         with open(pastas.DADOS / "motor.log", "ab") as registro:
             self.processo = subprocess.Popen(comando, stdin=subprocess.DEVNULL, stdout=registro, stderr=registro, start_new_session=True,

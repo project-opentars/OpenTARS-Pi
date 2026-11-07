@@ -258,6 +258,13 @@ def _mkdir(f, idioma):
     return _resultado(f"mkdir -p {_q(destino)}", idioma, lugar=destino)
 
 
+def _tamanho_por_pasta(f, idioma):
+    if f.busca(r"\b(cada pasta|cada diretorio|each folder|each directory|por pasta|per folder|todas as pastas|all folders|which folders?|quais pastas)\b") and \
+            f.busca(r"\b(espaco|tamanho|ocupa|ocupam|pesa|pesam|size|space|big|large|takes?|uses?|maiores|biggest|largest)\b"):
+        return _resultado("du -sh ~/*/ 2>/dev/null | sort -h", idioma)
+    return None
+
+
 def _tamanho(f, idioma):
     a = f.busca(r"\b(?:tamanho|quanto ocupa|quanto pesa|quanto espaco (?:ocupa|usa)?|how big|how large|how much space(?: does)?|size of|disk usage of)\b"
                 r"(?:\s+(?:tem|e|is|does|uses))?(?:\s+(?:d[oae]|of|the))?\s+" + _ARTIGO + r"(?:pasta |folder |arquivo |file )?(\S+?)(?:\s+(?:folder|use|take|ocupa|have|has))?" + _FIM)
@@ -335,7 +342,15 @@ def _criar_com_texto(f, idioma):
         real = nomes.exato(dono)
         if real:
             destino = os.path.join(_rel(real), os.path.basename(destino))
+    valor = _DINAMICO.get(re.sub(r"^(?:a |o |the )", "", f.n[a.start(2):a.end(2)].strip(" .'\"")))
+    if valor:                            # "com a data de hoje" quer a data, não as palavras
+        return _resultado(f"{valor} > {_q(destino)}", idioma, criou=destino)
     return _resultado(f"printf '%s\\n' {shlex.quote(_texto(f.g(a, 2)))} > {_q(destino)}", idioma, criou=destino)
+
+
+_DINAMICO = {"data de hoje": "date '+%d/%m/%Y'", "data": "date '+%d/%m/%Y'", "data atual": "date '+%d/%m/%Y'", "today's date": "date +%F", "todays date": "date +%F",
+             "date": "date +%F", "current date": "date +%F", "hora": "date +%H:%M", "hora atual": "date +%H:%M", "time": "date +%H:%M", "current time": "date +%H:%M",
+             "data e hora": "date '+%d/%m/%Y %H:%M'", "date and time": "date '+%F %H:%M'", "meu ip": "hostname -I", "ip": "hostname -I", "my ip": "hostname -I"}
 
 
 def _acrescentar(f, idioma):
@@ -416,6 +431,70 @@ def _apagar_parecido(f, idioma):
     return {"fala": t("apagar_parecido", idioma, nome=_limpar_alvo(f.g(a, 1)), real=_rel(sugestoes[0]))}
 
 
+def _descompactar(f, idioma):
+    a = f.busca(r"\b(?:descompacta|descompacte|descompactar|extrai|extraia|extrair|extract|unzip|untar|unpack|abre o zip|abra o zip)\s+" + _ARTIGO + r"(?:arquivo |file )?(\S+?\.(?:tar\.gz|tgz|tar|zip|tar\.xz|tar\.bz2))"
+                r"(?:\s+(?:em|na|no|numa|num|para|pra|into|to|in)\s+(?:a |uma |the |an? )?(?:nova |new )?(?:pasta |folder |diretorio |directory )?(?:chamada |called |named )?(\S+?))?" + _FIM)
+    if not a:
+        return None
+    real, nota = _arquivo_ou_substituto(f.g(a, 1), idioma)
+    if not real:
+        return nota
+    destino = f.g(a, 2) or "."
+    origem = _q(_rel(real))
+    extrair = f"unzip -q {origem} -d {_q(destino)}" if real.endswith(".zip") else f"tar xf {origem} -C {_q(destino)}"
+    return _resultado((f"mkdir -p {_q(destino)} && " if destino != "." else "") + extrair, idioma, nota=nota, lugar=destino if destino != "." else None)
+
+
+def _trocar(f, idioma):
+    a = f.busca(r"\b(?:troca|troque|trocar|substitui|substitua|substituir|replace|change|muda|mude)\s+(?:a palavra |o texto |the word |the text |todas as ocorrencias de |all )?[\"']?(.+?)[\"']?\s+"
+                r"(?:por|pelo|pela|with|to|by|para)\s+[\"']?(.+?)[\"']?\s+(?:no|na|em|in|dentro d[oae])\s+" + _ARTIGO + r"(?:arquivo |file )?(\S+?)" + _FIM)
+    if not a:
+        return None
+    real, nota = _fonte(f.g(a, 3), arquivo=True)
+    if not real:
+        return _nao_achei(f.g(a, 3), idioma)
+    escapar = lambda texto: re.sub(r"([/\\&.*\[\]^$])", r"\\\1", texto)    # noqa: E731
+    return _resultado(f"sed -i {shlex.quote('s/' + escapar(f.g(a, 1)) + '/' + escapar(f.g(a, 2)) + '/g')} {_q(_rel(real))}", idioma, nota=nota)
+
+
+_UNIDADE_TEMPO = {"minuto": ("mmin", 1), "minutos": ("mmin", 1), "minute": ("mmin", 1), "minutes": ("mmin", 1), "hora": ("mmin", 60), "horas": ("mmin", 60),
+                  "hour": ("mmin", 60), "hours": ("mmin", 60), "dia": ("mtime", 1), "dias": ("mtime", 1), "day": ("mtime", 1), "days": ("mtime", 1),
+                  "semana": ("mtime", 7), "semanas": ("mtime", 7), "week": ("mtime", 7), "weeks": ("mtime", 7)}
+
+
+def _recentes(f, idioma):
+    a = f.busca(r"\b(?:arquivos|files)\s+(?:que (?:foram |eu )?|eu |i |that i |i've |ive )?(?:modificad[oa]s|alterad[oa]s|mudad[oa]s|editad[oa]s|criad[oa]s|mexid[oa]s|"
+                r"mexi|editei|alterei|modifiquei|criei|mudei|modified|changed|edited|created|touched)\b"
+                r"(?:.{0,20}?\b(?:(\d+)\s+)?(minutos?|horas?|dias?|semanas?|minutes?|hours?|days?|weeks?)\b|.{0,20}?\b(hoje|today|ontem|yesterday)\b)?")
+    if not a:
+        return None
+    if a.group(3) in ("ontem", "yesterday"):
+        teste = "-mtime -2"
+    elif a.group(2):
+        tipo, fator = _UNIDADE_TEMPO[a.group(2)]
+        teste = f"-{tipo} -{int(a.group(1) or 1) * fator}"
+    else:
+        teste = "-mtime -1"                       # "hoje" e o padrão: as últimas 24 horas
+    return _resultado(f"find ~ -type f {teste} -not -path '*/.*' 2>/dev/null | head -50", idioma, "achados", "~")
+
+
+_LINGUAGENS = {"python": "py", "javascript": "js", "typescript": "ts", "shell": "sh", "bash": "sh", "c": "c", "c++": "cpp", "java": "java", "go": "go", "rust": "rs", "html": "html", "css": "css"}
+
+
+def _linhas_de_codigo(f, idioma):
+    a = f.busca(r"\b(?:linhas de codigo|lines of code|loc)\b(?:\s+(?:em |de |in |of )?(python|javascript|typescript|shell|bash|c\+\+|java|go|rust|html|css|c))?.{0,25}?(?:" + _DE + r"(?:a pasta |pasta |the folder |my )?(\S+?))?" + _FIM)
+    if not a:
+        return None
+    linguagem = a.group(1) or (re.search(r"\b(python|javascript|typescript|shell|bash|java|rust|html|css)\b", f.n) or [None, None])[1] or "python"
+    pasta = nomes.casa()
+    nota = None
+    if a.group(2):
+        pasta, nota = _fonte(f.g(a, 2), pasta=True)
+        if not pasta:
+            return None
+    return _resultado(f"find {_q(_rel(pasta))} -name '*.{_LINGUAGENS[linguagem]}' -not -path '*/.*' -print0 | wc -l --files0-from=- | tail -n 1", idioma, "loc", _rel(pasta), nota)
+
+
 def _gpio(f, idioma):
     if f.busca(r"\b(pinos|pins|gpio|chips? de gpio|gpio chips?)\b") and f.busca(r"\b(quais|lista|liste|list|which|what|existem|mostra|show|tem)\b") \
             and not f.busca(r"\b(p[a-k]\d{1,2}|gpio ?\d{1,3})\b"):
@@ -423,7 +502,7 @@ def _gpio(f, idioma):
     return None
 
 
-OPERACOES = (_gpio, _ocorrencias, _contar_linhas, _contar_arquivos, _qual_arquivo, _maior_menor, _so_pastas, _escondidos, _ultimas, _por_extensao, _tamanho,
+OPERACOES = (_gpio, _descompactar, _trocar, _recentes, _linhas_de_codigo, _ocorrencias, _contar_linhas, _contar_arquivos, _qual_arquivo, _maior_menor, _so_pastas, _escondidos, _ultimas, _por_extensao, _tamanho_por_pasta, _tamanho,
              _mkdir, _executavel, _compactar, _script, _criar_com_texto, _acrescentar, _copiar_mover, _renomear, _apagar_parecido, _ver)
 
 
@@ -458,6 +537,9 @@ def resumir(plano_, resultado, idioma):
         partes = linhas[0].split(None, 8)
         if len(partes) >= 9:
             return t("r_" + chave, idioma, nome=partes[8], tamanho=partes[4], alvo=alvo)
+    if chave == "loc":
+        numero = re.match(r"\s*(\d+)", saida)
+        return t("r_loc", idioma, n=int(numero.group(1)), alvo=alvo) if numero else None
     if chave == "achados":
         return t("r_achados", idioma, n=len(linhas), alvo=alvo) if linhas else t("r_nada_achado", idioma, alvo=alvo)
     if chave == "tamanho" and linhas:

@@ -1,6 +1,7 @@
 """O estado da placa, lido direto do sistema: rápido e sem chance de o modelo inventar o número."""
 import glob
 import os
+import re
 import socket
 
 
@@ -62,6 +63,22 @@ def ip_local():
             return s.getsockname()[0]
     except OSError:
         return None
+
+
+def processador():
+    """O nome do processador: 'model name' no x86; nas placas ARM o lscpu diz o núcleo (Cortex-A53) e a device tree o chip."""
+    for linha in _ler("/proc/cpuinfo").splitlines():
+        if linha.lower().startswith(("model name", "hardware", "cpu model")):
+            return linha.split(":", 1)[1].strip()
+    try:
+        import subprocess
+        saida = subprocess.run(["lscpu"], capture_output=True, text=True, timeout=5).stdout
+        achado = re.search(r"Model name:\s*(.+)", saida)
+        if achado:
+            return achado.group(1).strip()
+    except (OSError, subprocess.SubprocessError):
+        pass
+    return os.uname().machine
 
 
 def wifi():
