@@ -39,18 +39,23 @@ Gargantua  PI13 is on.
 
 ## What it does
 
-- **Your board, in plain words.** Memory, disk, temperature, address, files, folders, processes. In English and Portuguese.
+- **Your board, in plain words.** Memory, disk, temperature, address, files, folders, processes, in English and Portuguese. It reads the numbers for you: "is the SD card full?" gets an answer, not just a table.
+- **It finds what you mean.** "Open the report" opens `Documents/relatorio-2026.txt`. Wrong case, missing extension, a typo, a folder called by its everyday name: the path is fixed before anything runs, and it tells you which file it used. Deleting never guesses: it asks.
+- **Tasks with several steps.** "Create a folder backup and copy notas.txt into it." "Find WARN in the log and save those lines to avisos.txt." Each step runs in order, and it stops at the first one that fails or that you decline.
+- **Answers in words.** "ERROR appears 5 times in ~/logs/app.log." "The biggest file in Downloads is filme.mp4 (2.9M)." "Yes: the disk has 416 GB free, so 2 GB fits."
 - **The pins.** Read and switch GPIO by name (`PC5`, `GPIO17`), or teach it your own names: "the relay is on pin PC5". Works through the kernel, with nothing else to install.
 - **Memory.** "Remember that the backup runs at 3." It stays on the board.
-- **Answers with a source.** Questions about the world go to Wikipedia, or to your own SearXNG, and come back with the site they came from, so a small model does not have to guess. Without a connection it says so instead of making something up.
+- **Answers with a source.** Questions about the world go to Wikipedia, or to your own SearXNG. It looks for the sentence that holds the kind of answer you asked for (a name, a year, a height, a place) and gives you the site it came from, so a small model does not have to guess. Without a connection it says so instead of making something up.
+- **Pick the brain.** Gargantua Pi (270M) runs on any board. `opentars brain lite` switches to Gargantua Lite (0.8B) on boards with more memory. `opentars brain http://your-pc:11434` uses the Gargantua on your computer, over your own network.
+- **Updates in place.** `opentars update` downloads only what changed (app, engine or model), checks each file by SHA-256 and keeps the previous version: `opentars update undo` goes back.
 - **A service for the house.** Keep the model loaded and ask from other devices, with a token.
 - **A small window** on boards with a desktop. On a board without one it stays in the terminal.
 
 ## Built for a small board
 
-Most requests never reach the model: common commands, board status, memory, pins and questions about the world are answered by code and search, so they come back right away, with the exact path you typed or the source they came from. The model, **[Gargantua Pi](https://huggingface.co/OpenTARS/Gargantua-Pi)** (270M, 300 MB), takes the conversation and everything else. It is honest about its size: ask it to write a program and it will point you to the full openTARS instead of handing you broken code.
+Most requests never reach the model: files, folders, several-step tasks, board status, memory, pins and questions about the world are answered by code and search, so they come back right away, with the real path or the source they came from. The model, **[Gargantua Pi](https://huggingface.co/OpenTARS/Gargantua-Pi)** (270M, 300 MB), takes the conversation and everything else. It is honest about its size: ask it to write a program and it will point you to the full openTARS instead of handing you broken code.
 
-Measured on the Orange Pi Zero 2W:
+Measured on the Orange Pi Zero 2W (the capability test runs the same app and model in a clean container; the tasks are in `tools/prova`):
 
 | | |
 |---|---|
@@ -59,7 +64,7 @@ Measured on the Orange Pi Zero 2W:
 | First answer from the model, cold | 25 s |
 | Next runs (the prompt is cached on disk) | about 11 s |
 | Conversation, once the model is loaded | 2 to 4 s |
-| Test with 30 new requests, on the board | 29 of 30 |
+| Capability test: 40 everyday tasks it had never seen | 30 of 40 (1.0: 19 of 40) |
 
 ## Nothing changes without your yes
 
@@ -67,7 +72,7 @@ The model is small, so the rule is strict: **only commands that just read run on
 
 ## Local by default
 
-The model, your memory and your commands stay on the board. The text of a search leaves: it goes to Wikipedia. For the whole web, point it at your own [SearXNG](https://docs.searxng.org/) with `opentars search http://your-server:8888`. Once a day it also downloads a small file from GitHub that lists the latest version (`opentars update auto off` stops that). To keep everything on the board, use `opentars search off` and `opentars update auto off`.
+The model, your memory and your commands stay on the board. The text of a search leaves: it goes to Wikipedia. For the whole web, point it at your own [SearXNG](https://docs.searxng.org/) with `opentars search http://your-server:8888`. Once a day it also downloads a small file from GitHub that lists the latest version (`opentars update auto off` stops that). If you choose a Gargantua on your network with `opentars brain`, what the rules cannot answer goes to that address and nowhere else. To keep everything on the board, use `opentars search off` and `opentars update auto off`.
 
 ## Commands
 
@@ -81,6 +86,7 @@ The model, your memory and your commands stay on the board. The text of a search
 | `opentars --approvals` | Answer what is waiting from the network |
 | `opentars search on`, `off`, `URL` | Web search on, off, or through your SearXNG |
 | `opentars --window` | The small window (needs `python3-tk`) |
+| `opentars brain`, `brain lite`, `brain http://your-pc:11434`, `brain pi` | Who thinks: the model on the board, a bigger one, or one on your network |
 | `opentars --doctor` | Check the installation |
 | `opentars --test` | Run the built-in test with the real model |
 | `opentars update` | Get what is new: app, engine or model, only the parts that changed, each checked by SHA-256 |
