@@ -64,14 +64,15 @@ def plano(pedido, n):
     a = _achar(r"\b(?:escreve|escreva|escrever|write|put|grava|grave|salva|salve|save)\s+(?:o texto |the text )?(.+?)\s+(?:no arquivo|num arquivo|em um arquivo|em|to the file|to a file named|to a file called|to|into|in)\s+" + _CAMINHO + r"\s*$", n)
     if a:
         return f"printf '%s\\n' {shlex.quote(grupo(a, 1).strip(chr(34) + chr(39)))} > {_q(grupo(a, 2))}"
-    a = _achar(r"\b(?:cria|crie|criar|faz|faca|make|create)\b.{0,15}\b(?:arquivo|file)\b(?: chamado| named| called)?\s+" + _CAMINHO + r"\s*$", n)
+    a = _achar(r"\b(?:cria|crie|criar|faz|faca|make|create)\b.{0,15}\b(?:arquivo|file)\b(?: vazio)?(?: chamado| named| called)?\s+" + _CAMINHO + r"\s*$", n)
     if a:
         return f"touch {_q(grupo(a, 1))}"
     # pastas
+    sem_home = re.sub(r"\s+(?:na|em|in)\s+(?:minha |my |a )?home\s*$", "", n)
     a = _achar(r"\b(?:pasta|diretorio|folder|directory)\b(?: nova| novo)?(?: chamada| chamado| called| named)?\s+([\w.-]+)\s+(?:dentro d[eao]|em|na|no|in|inside|under)\s+(?:a pasta |the folder )?" + _CAMINHO, n)
     if a and _achar(r"\b(cria|crie|criar|faz|faca|make|create|new|nova)\b", n):
         return "mkdir -p " + _q(grupo(a, 2).rstrip("/") + "/" + grupo(a, 1))
-    a = _achar(r"\b(?:cria|crie|criar|faz|faca|make|create|new|nova)\b.{0,20}\b(?:pasta|diretorio|folder|directory)\b(?: chamada| chamado| called| named)?\s+(?:a |the )?" + r"(~?/[^\s'\"?,;]*|[\w.-]+)\s*$", n)
+    a = _achar(r"\b(?:cria|crie|criar|faz|faca|make|create|new|nova)\b.{0,20}\b(?:pasta|diretorio|folder|directory)\b(?: chamada| chamado| called| named)?\s+(?:a |the )?" + r"(~?/[^\s'\"?,;]*|[\w.-]+)\s*$", sem_home)
     if a:
         destino = grupo(a, 1)
         return "mkdir -p " + _q(destino if destino.startswith(("/", "~")) else "~/" + destino)
@@ -100,6 +101,11 @@ def plano(pedido, n):
     if a:
         nome = grupo(a, 1)
         return f"find {_q(grupo(a, 2))} -name {shlex.quote('*' + nome if nome.startswith('.') else nome)} 2>/dev/null | head -50"
+    # procurar dentro de um arquivo
+    a = _achar(r"\b(?:procura|procure|busca|busque|acha|ache|encontra|encontre|search|find|look)\b(?: for)?(?: a palavra| o texto| the word| the text)?\s+[\"']?([\w-]+)[\"']?\s+"
+               r"(?:dentro d[eao]|no|na|em|in|inside)\s+(?:o arquivo |the file )?" + _CAMINHO, n)
+    if a and not _eh_pasta(grupo(a, 2)):
+        return f"grep -n -- {shlex.quote(grupo(a, 1))} {_q(grupo(a, 2))} | head -50"
     # contar e medir
     a = _achar(r"\b(?:linhas|lines)\b.{0,25}?" + _CAMINHO, n) or _achar(_CAMINHO + r".{0,10}\b(?:linhas|lines)\b", n)
     if a and _achar(r"\b(conta|conte|contar|count|quantas|how many)\b", n):
@@ -138,8 +144,10 @@ def plano(pedido, n):
     a = _achar(r"^(?:ping|pinga)\s+([\w.-]+)", n)
     if a:
         return f"ping -c 3 -W 3 {shlex.quote(a.group(1))}"
-    if _achar(r"\b(versao do kernel|kernel version|qual kernel|which kernel)\b", n) and not _achar(r"\b(ultima|mais nova|latest|newest)\b", n):
+    if _achar(r"\b(versao do kernel|kernel version|qual kernel|que kernel|which kernel|what kernel)\b", n) and not _achar(r"\b(ultima|mais nova|latest|newest)\b", n):
         return "uname -r"
+    if _achar(r"\b(portas? (?:estao )?abertas?|portas? em uso|open ports?|listening ports?|ports? (?:are )?open)\b", n):
+        return "ss -tuln"
     if _achar(r"\b(quem esta logado|quem esta conectado|who is logged in|who's logged in)\b", n):
         return "who"
     return None

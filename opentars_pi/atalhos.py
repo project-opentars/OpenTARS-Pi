@@ -104,7 +104,7 @@ _TELA = re.compile(r"\b(clica|clique|clicar|click|arrasta|arraste|drag|mouse)\b|
                    r"\b(na|da|minha) tela\b|\b(my|the) screen\b")
 _ABRIR = re.compile(_POLIDEZ + r"(abre|abra|abrir|open|launch|inicia|inicie|start|fecha|feche|close)\s+(o |a |the |my |meu |minha )?([\w-]+|bloco de notas)\??$")
 _COMPLETO = re.compile(r"\b(por voz|com voz|em voz alta|out loud|read aloud|use your voice|voice mode|modo de voz)\b|"
-                       r"\b(edita|edite|corta|corte|desenha|desenhe|gera|gere|cria|crie|faz|faca|tira|tire|draw|generate|create|make|edit|crop|take)\b.{0,30}\b(foto|fotografia|imagem|desenho|photo|picture|image)\b")
+                       r"\b(edita|edite|corta|corte|desenha|desenhe|gera|gere|cria|crie|faz|faca|tira|tire|draw|generate|create|make|edit|crop|take)\b(?:(?!pasta|diretorio|folder|directory|arquivo|file).){0,30}\b(foto|fotografia|imagem|desenho|photo|picture|image)\b")
 
 
 def _recusa(n, idioma):
@@ -119,9 +119,10 @@ def _recusa(n, idioma):
 
 
 # ---- memória ----
-_LEMBRAR = re.compile(_POLIDEZ + r"(lembra|lembre|lembrar|anota|anote|grava|grave|guarda|guarde|salva|salve|memoriza|memorize|nao esquece|nao esqueca|"
-                                 r"remember|note|save|make a note|keep in mind|don'?t forget|write down)\b"
+_LEMBRAR = re.compile(_POLIDEZ + r"(lembra|lembre|lembrar|anota|anote|grava|grave|guarda|guarde|salva|salve|memoriza|memorize|nao esquece|nao esqueca|deixa registrado|deixe registrado|registra|registre|tenha em mente|"
+                                 r"remember|note|save|make a note|keep in mind|don'?t forget|write down|jot down)\b"
                                  r"( ai| isso| disso| this| na memoria| to memory)?( que| that|:|(?= (my|meu|minha|eu|i)\b))\s*")
+_LEMBRAR_NO_FIM = re.compile(r"^(.+?)[,.]?\s+(keep that|remember that|guarda isso|lembra disso|anota isso|anota ai)[.!]?$")
 _ESQUECER = re.compile(_POLIDEZ + r"(esquece|esqueca|esquecer|forget)\b|\b(apaga|apague|remove|remova|tira|tire|limpa|delete|clear|take)\b.{0,40}\b(memoria|memory)\b")
 _VER_MEMORIA = re.compile(r"\bo que (voce )?(lembra|guardou|sabe (de|sobre) mim)\b|\bwhat do you (remember|know about me)\b|\b(mostra|mostre|show)( a| your)? (sua )?(memoria|memory)\b|^/mem")
 
@@ -134,6 +135,10 @@ def _memoria(pedido, n, idioma):
     if achado:
         fato = (pedido.strip() if len(pedido.strip()) == len(n) else n)[achado.end():].strip(" .")
         return t("anotado", idioma, fato=fato) if fato and memoria.lembrar(fato) else None
+    achado = _LEMBRAR_NO_FIM.search(n)
+    if achado:
+        fato = (pedido.strip() if len(pedido.strip()) == len(n) else n)[:achado.end(1)]
+        return t("anotado", idioma, fato=fato) if memoria.lembrar(fato) else None
     if _ESQUECER.search(n):
         saiu = memoria.esquecer(n)
         return t("esqueci", idioma, fato="; ".join(saiu)) if saiu else t("nada_guardado", idioma)
@@ -199,6 +204,10 @@ def _fato_que_responde(n):
     return None
 
 
+_ABATIDO = re.compile(r"\b(to|tou|estou|ando|me sinto|im|i'm|i am|feeling)\s+(muito |meio |bem |so |very |really )?"
+                      r"(cansad[oa]|exaust[oa]|triste|desanimad[oa]|doente|tired|exhausted|sad|sick)\b( hoje| agora| today| now)?[.!]*$")
+
+
 def resolver(pedido, idioma):
     """{'fala': texto}, {'pino': (...)}, {'comando': shell}, {'pesquisa': consulta}, {'conversa': True} ou None (o modelo com as ferramentas).
     As regras cuidam do que precisa sair exato (pinos, memória, contas, caminhos); o resto a Murph separa pela intenção."""
@@ -218,6 +227,8 @@ def resolver(pedido, idioma):
         return {"fala": t("oi", idioma)}
     if _OBRIGADO.search(n):
         return {"fala": t("de_nada", idioma)}
+    if _ABATIDO.search(n):      # o modelo respondia com conselho médico inventado ("pare de tomar líquidos")
+        return {"fala": t("abatido", idioma)}
     pergunta = _PERGUNTA.search(n)
     fato = _fato_que_responde(n) if pergunta else None
     if fato:

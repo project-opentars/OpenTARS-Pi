@@ -1,5 +1,6 @@
 """O laço do assistente: atalhos primeiro, depois o modelo com as ferramentas, até ele responder."""
 import re
+import shutil
 import urllib.parse
 
 from . import atalhos, busca, contrato, gpio, memoria, pastas, textos
@@ -12,6 +13,17 @@ _TROCA_IDIOMA = re.compile(r"^(?:(?:back|switch|go back|change|volta|voltar|muda
                            r"(english|ingles|portuguese|portugues)(?: please| por favor)?[.!]?$")
 _DIZ_QUE_FEZ = re.compile(r"\b(criei|criada|criado|feito|pronto|apaguei|apagado|salvei|salvo|movi|movido|instalei|instalado|renomeei|escrevi|"
                           r"done|created|deleted|saved|moved|installed|renamed|wrote|finished|success)\b", re.IGNORECASE)
+
+_DO_SHELL = {"cd", "export", "set", "source", ".", "for", "if", "while", "[", "(", "{", "exit", "type", "ulimit", "umask", "read"}
+
+
+def _programa_que_falta(comando):
+    """O primeiro programa do comando, se ele não existe aqui. Só olha o começo: o resto da linha é com o shell."""
+    partes = [p for p in comando.split() if p != "sudo" and "=" not in p]
+    programa = partes[0] if partes else ""
+    if not programa or "/" in programa or programa in _DO_SHELL or shutil.which(programa):
+        return None
+    return programa
 
 
 class Agente:
@@ -138,6 +150,8 @@ class Agente:
                 return self._guardar(pedido, self._pesquisar(argumentos["query"], idioma))
             if nome == "execute_terminal" and not argumentos.get("command"):
                 return self._guardar(pedido, t("nao_fiz", idioma))
+            if nome == "execute_terminal" and (faltando := _programa_que_falta(argumentos["command"])):      # "sudoulp": não vale pedir aprovação do que nem existe
+                return self._guardar(pedido, t("falhou", idioma, erro=f"{faltando}: command not found"))
             chave = (nome, tuple(sorted(argumentos.items())))
             if chave in vistas:         # modelo pequeno repete a mesma chamada: para aqui, com o que já tem
                 break

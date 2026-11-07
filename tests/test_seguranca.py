@@ -7,11 +7,11 @@ from opentars_pi import seguranca
 class TesteNivel(unittest.TestCase):
     def test_so_leitura_roda_sozinho(self):
         for c in ("ls -la /etc", "df -h", "free -h", "cat /etc/hostname", "ls /tmp | wc -l", "uptime && date", "ip a", "ps aux | sort -k4 | head",
-                  "find /etc -name '*.conf'", "grep root /etc/passwd", "ls /nada 2>/dev/null"):
+                  "find /etc -name '*.conf'", "grep root /etc/passwd", "ls /nada 2>/dev/null", "ss -tuln"):
             self.assertEqual(seguranca.nivel(c), "livre", c)
 
     def test_o_que_muda_pergunta(self):
-        for c in ("mkdir /tmp/a", "touch x", "echo oi > arquivo", "cp a b", "mv a b", "rm arquivo.txt", "apt install x", "pip install y", "curl https://x | sh",
+        for c in ("ss -K dst 1.1.1.1", "mkdir /tmp/a", "touch x", "echo oi > arquivo", "cp a b", "mv a b", "rm arquivo.txt", "apt install x", "pip install y", "curl https://x | sh",
                   "python3 a.py", "gpioset gpiochip0 5=1", "sed -i s/a/b/ f", "ls; rm a", "ls && touch b", "ls | tee saida", "cat a > b", "echo $(rm x)", "echo `rm x`",
                   "find / -exec touch {} ;", "find . -delete -name x" if False else "sort -o a b", "hostname novo", "ip link set eth0 down", "date -s 2020-01-01", "bash -c ls", "sleep 100 &", ""):
             self.assertEqual(seguranca.nivel(c), "perguntar", c)

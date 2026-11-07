@@ -2,7 +2,7 @@
 import unittest
 
 import _util  # noqa: F401
-from opentars_pi import agente, atalhos, comandos, conta, contrato, memoria, pastas
+from opentars_pi import agente, atalhos, cli, comandos, conta, contrato, memoria, pastas
 
 
 class Motor:
@@ -90,6 +90,34 @@ class TesteSessao(unittest.TestCase):
         self.assertIn("English", a.responder("back to english"))
         self.assertEqual(a.idioma_base, "en")
         self.assertIn("português", a.responder("fala em português"))
+
+    def test_serie_de_07_11(self):
+        self.assertEqual(atalhos.resolver("cria uma pasta chamada fotos na minha home", "pt"), {"comando": "mkdir -p ~/fotos"})
+        self.assertEqual(atalhos.resolver("search for the word error in app.log", "en"), {"comando": "grep -n -- error app.log | head -50"})
+        self.assertEqual(atalhos.resolver("what kernel is running here", "en"), {"comando": "uname -r"})
+        self.assertEqual(atalhos.resolver("quais portas estão abertas", "pt"), {"comando": "ss -tuln"})
+        self.assertEqual(atalhos.resolver("cria um arquivo vazio chamado teste.txt", "pt"), {"comando": "touch teste.txt"})
+        self.assertIn("Rex", atalhos.resolver("my dog is called Rex, keep that", "en")["fala"])
+        self.assertIn("gaveta", atalhos.resolver("deixa registrado que a chave fica na gaveta", "pt")["fala"])
+        self.assertIn("calma", atalhos.resolver("tô cansado hoje", "pt")["fala"])
+        self.assertIn("completo", atalhos.resolver("crie uma foto de um gato", "pt")["fala"])
+
+    def test_comando_inventado_nem_pede_aprovacao(self):
+        pedidos = []
+        a = agente.Agente(Motor([chamada("sudoulp --error")]), lambda *x: pedidos.append(x) or False)
+        a.idioma_base = "en"
+        resposta = a.responder("zzz qqq")
+        self.assertIn("sudoulp: command not found", resposta)
+        self.assertEqual(pedidos, [])
+        self.assertIsNone(agente._programa_que_falta("sudo LANG=C ls -la"))
+        self.assertIsNone(agente._programa_que_falta("cd /tmp && ls"))
+
+    def test_endereco_de_busca_morto_nao_muda_nada(self):
+        pastas.salvar_config(busca=True, searxng=None)
+        with self.assertRaises(SystemExit) as saida:
+            cli.comando_busca(["http://127.0.0.1:9"])
+        self.assertIn("Nothing changed", str(saida.exception))
+        self.assertIsNone(pastas.config().get("searxng"))
 
 
 if __name__ == "__main__":

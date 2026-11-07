@@ -7,7 +7,7 @@ import subprocess
 import sys
 import time
 
-from . import VERSAO, aprovacoes, gpio, pastas, placa, seguranca, servico, textos
+from . import VERSAO, aprovacoes, busca, gpio, pastas, placa, seguranca, servico, textos
 from .agente import Agente
 from .motor import Motor, MotorForaDoAr
 from .textos import t
