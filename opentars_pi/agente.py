@@ -230,7 +230,7 @@ class Agente:
             if not ultimo.get("success"):                # um modelo deste tamanho não se recupera: só pediria mais aprovações à toa
                 return self._conferir("", usou, ultimo, idioma)
             if nome == "execute_terminal" and ultimo.get("stdout", "").strip() and isinstance(self.cerebro, cerebro.CerebroPi):
-                return ""                # a saída já apareceu; o comentário do 270M só inventava ("I have saved that..."). O Lite comenta.
+                return ""                # a saída já apareceu; o comentário do 270M só inventava ("I have saved that..."). O da rede comenta.
             mensagens += [{"role": "assistant", "content": "", "chamada": chamada},
                           {"role": "tool", "name": nome, "content": contrato.resultado(ultimo)}]
         return self._conferir("", usou, ultimo, idioma)

@@ -1,10 +1,10 @@
 """Quem pensa quando as regras não bastam.
 
 - Gargantua Pi (270M): o padrão, cabe em qualquer placa. Contrato próprio, texto cru no llama.cpp (contrato.py).
-- Gargantua Lite (0,8B): na própria placa, quando ela tem memória; muito melhor nos comandos que as regras não cobrem,
-  mais lento. Usa o contrato do app completo: o prompt e as 19 ferramentas do treino, byte a byte (contrato_gargantua.json).
 - Um Gargantua de outro computador da rede (Ollama ou servidor compatível com OpenAI): a pessoa escolhe com
-  `opentars brain URL`, e o pedido sai da placa só para esse endereço.
+  `opentars brain URL`, e o pedido sai da placa só para esse endereço. Usa o contrato do app completo: o prompt e as
+  19 ferramentas do treino, byte a byte (contrato_gargantua.json).
+O Gargantua Lite na placa saiu em 07/11, a pedido do Enzo: na Orange Pi Zero 2W levava minutos por pedido e não acertava mais que o Pi.
 
 As ferramentas de tela das 19 não existem numa placa: o agente responde que não há tela, sem rodar nada.
 """
@@ -73,12 +73,11 @@ def _bloco_da_placa():
 
 
 class CerebroGargantua:
-    """Um Gargantua 2 (Lite ou 2B) pelo contrato do app, local ou na rede."""
+    """Um Gargantua 2 de outro computador da rede, pelo contrato do app."""
 
-    def __init__(self, url, modelo="", motor=None, nome="Gargantua"):
-        self.url, self.modelo, self.motor, self.nome = url.rstrip("/"), modelo, motor, nome
+    def __init__(self, url, modelo="", nome="Gargantua"):
+        self.url, self.modelo, self.nome = url.rstrip("/"), modelo, nome
         self.ollama = None
-        self._arquivo = self._pronto = None
 
     def sistema(self, memoria, idioma):
         texto = _CONTRATO["sistema"] + _bloco_da_placa()
@@ -87,16 +86,6 @@ class CerebroGargantua:
         return texto + "\n" + IDIOMA_APP[idioma] + "\n"
 
     def preparar(self, sistema):
-        if self.motor:
-            self.motor.ligar()
-            # o prompt com as 19 ferramentas leva minutos numa placa lenta: lido uma vez, fica guardado em disco (como o do Pi)
-            self._arquivo = self.motor._arquivo_do_prefixo((sistema or "") + json.dumps(_CONTRATO["ferramentas"]))
-            if self._pronto != self._arquivo and (pastas.CACHE / self._arquivo).exists():
-                try:
-                    self.motor._pedir("/slots/0?action=restore", {"filename": self._arquivo}).close()
-                    self._pronto = self._arquivo
-                except (OSError, ValueError):
-                    pass
         if self.ollama is None:
             try:
                 urllib.request.urlopen(self.url + "/api/tags", timeout=3).close()
@@ -140,15 +129,6 @@ class CerebroGargantua:
             if self.modelo:
                 corpo["model"] = self.modelo
             mensagem = self._pedir("/v1/chat/completions", corpo)["choices"][0]["message"]
-            if self.motor and self._arquivo and self._pronto != self._arquivo:
-                try:
-                    self.motor._pedir("/slots/0?action=save", {"filename": self._arquivo}).close()
-                    self._pronto = self._arquivo
-                    for velho in pastas.CACHE.glob("*.bin"):         # a data no prompt muda todo dia: não acumula no cartão
-                        if velho.name != self._arquivo and time.time() - velho.stat().st_mtime > 2 * 86400:
-                            velho.unlink()
-                except (OSError, ValueError):
-                    pass
         chamadas = mensagem.get("tool_calls") or []
         if chamadas:
             funcao = chamadas[0]["function"]
@@ -174,24 +154,14 @@ class CerebroGargantua:
 
 
 def escolher(motor):
-    """O cérebro configurado. OPENTARS_PI_CEREBRO (ou "cerebro" na config): "lite" usa o Gargantua Lite da placa; um endereço usa o da rede."""
+    """O cérebro configurado. OPENTARS_PI_CEREBRO (ou "cerebro" na config): um endereço usa o Gargantua da rede; o resto, o Pi."""
     escolha = os.environ.get("OPENTARS_PI_CEREBRO") or pastas.config().get("cerebro") or ""
     if isinstance(escolha, dict):
         return CerebroGargantua(escolha.get("url", ""), escolha.get("modelo", ""), nome=escolha.get("nome") or "Gargantua")
-    if escolha == "lite":                # o mesmo motor, com o Lite: quem desliga o motor no fim desliga este
-        motor.modelo = os.environ.get("OPENTARS_PI_MODELO_LITE") or os.environ.get("OPENTARS_PI_MODELO") or str(pastas.MODELOS / ARQUIVO_LITE)
-        motor.jinja = True
-        return CerebroGargantua(f"http://127.0.0.1:{motor.porta}", motor=motor, nome="Gargantua Lite")
     if escolha.startswith("http"):
         url, _, modelo = escolha.partition("#")
         return CerebroGargantua(url, modelo or "ProjectOpenTARS/Gargantua-2", nome="Gargantua")
     return CerebroPi(motor)
-
-
-ARQUIVO_LITE = "gargantua-1.2-lite-qwen3.5-0.8b-Q4_0.gguf"
-SHA_LITE = "c519103c65de13742ed3fded28aad066d75834dada4c651ce1bbcb87747d9c27"
-URL_LITE = "https://huggingface.co/OpenTARS/Gargantua-2-Lite/resolve/main/" + ARQUIVO_LITE
-MB_LITE = 479
 
 
 def descricao():
@@ -199,7 +169,7 @@ def descricao():
     escolha = os.environ.get("OPENTARS_PI_CEREBRO") or pastas.config().get("cerebro") or ""
     if isinstance(escolha, dict):
         return f"{escolha.get('nome') or 'Gargantua'} at {escolha.get('url')} ({escolha.get('modelo') or 'default model'})"
-    return "Gargantua Lite (0.8B, on this board)" if escolha == "lite" else "Gargantua Pi (270M, on this board)"
+    return "Gargantua Pi (270M, on this board)"
 
 
 def testar_rede(url, modelo):

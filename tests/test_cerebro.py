@@ -1,4 +1,4 @@
-"""Os cérebros: o padrão é o Gargantua Pi; o Lite e o da rede falam pela API de chat com o contrato do app."""
+"""Os cérebros: o padrão é o Gargantua Pi; o da rede fala pela API de chat com o contrato do app."""
 import http.server
 import json
 import threading

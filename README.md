@@ -52,7 +52,7 @@ Also: en.wikipedia.org (Pablo Picasso)
 - **The pins.** Read and switch GPIO by name (`PC5`, `GPIO17`), or teach it your own names: "the relay is on pin PC5". Works through the kernel, with nothing else to install.
 - **Memory.** "Remember that the backup runs at 3." It stays on the board.
 - **Answers with a source.** Questions about the world go to Wikipedia, or to your own SearXNG. It looks for the sentence that holds the kind of answer you asked for (a name, a year, a height, a place) and gives you the site it came from, so a small model does not have to guess. Without a connection it says so instead of making something up.
-- **Pick the brain.** Gargantua Pi (270M) runs on any board. `opentars brain lite` switches to Gargantua Lite (0.8B) on boards with more memory. `opentars brain http://your-pc:11434` uses the Gargantua on your computer, over your own network.
+- **A bigger brain when you want one.** Gargantua Pi (270M) runs on the board. `opentars brain http://your-pc:11434` uses the Gargantua on your computer, over your own network; `opentars brain pi` comes back.
 - **Updates in place.** `opentars update` downloads only what changed (app, engine or model), checks each file by SHA-256 and keeps the previous version: `opentars update undo` goes back.
 - **A service for the house.** Keep the model loaded and ask from other devices, with a token.
 - **A small window** on boards with a desktop. On a board without one it stays in the terminal.
@@ -92,7 +92,7 @@ The model, your memory and your commands stay on the board. The text of a search
 | `opentars --approvals` | Answer what is waiting from the network |
 | `opentars search on`, `off`, `URL` | Web search on, off, or through your SearXNG |
 | `opentars --window` | The small window (needs `python3-tk`) |
-| `opentars brain`, `brain lite`, `brain http://your-pc:11434`, `brain pi` | Who thinks: the model on the board, a bigger one, or one on your network |
+| `opentars brain`, `brain http://your-pc:11434`, `brain pi` | Who thinks: the model on the board or the one on your computer |
 | `opentars --doctor` | Check the installation |
 | `opentars --test` | Run the built-in test with the real model |
 | `opentars update` | Get what is new: app, engine or model, only the parts that changed, each checked by SHA-256 |

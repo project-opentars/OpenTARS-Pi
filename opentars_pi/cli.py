@@ -171,40 +171,22 @@ def comando_busca(args):
 
 
 def comando_cerebro(args):
-    """opentars brain [pi | lite | URL [modelo]]"""
-    from . import cerebro, atualizar
+    """opentars brain [pi | URL [modelo]]"""
+    from . import cerebro
     valor = args[0] if args else ""
     if not valor or valor in ("status", "estado"):
         print("Thinking with: " + cerebro.descricao())
-        return print("Change with: opentars brain pi | lite | http://your-pc:11434")
+        return print("Change with: opentars brain pi | http://your-pc:11434")
     if valor == "pi":
         pastas.salvar_config(cerebro=None)
         return print("Back to Gargantua Pi (270M): small and fast on any board.")
-    if valor == "lite":
-        total, _ = placa.memoria()
-        if total < 900:
-            sys.exit(f"This board has {total} MB of memory; Gargantua Lite needs about 750 MB free. Staying with Gargantua Pi.")
-        destino = pastas.MODELOS / cerebro.ARQUIVO_LITE
-        if not destino.exists() or atualizar.sha256(destino) != cerebro.SHA_LITE:
-            print(f"Downloading Gargantua Lite ({cerebro.MB_LITE} MB)…")
-            pastas.MODELOS.mkdir(parents=True, exist_ok=True)
-            temporario = destino.with_suffix(".parcial")
-            try:
-                atualizar._baixar(cerebro.URL_LITE, str(temporario), cerebro.SHA_LITE, progresso)
-            except (OSError, ValueError) as e:
-                temporario.unlink(missing_ok=True)
-                sys.exit(f"The download stopped, nothing changed: {e}")
-            temporario.replace(destino)
-        pastas.salvar_config(cerebro="lite")
-        aviso = " On a board like this one it is slower: the first answer of the day can take minutes." if total < 1900 else ""
-        return print("Thinking with Gargantua Lite (0.8B) from now on." + aviso + " Back with: opentars brain pi")
     if valor.startswith(("http://", "https://")):
         ok, modelo, mensagem = cerebro.testar_rede(valor, args[1] if len(args) > 1 else "")
         if not ok:
             sys.exit(f"No Gargantua there: {mensagem}. Nothing changed.")
         pastas.salvar_config(cerebro={"url": valor.rstrip("/"), "modelo": modelo, "nome": "Gargantua"})
         return print(f"Thinking with {mensagem} at {valor}. What the rules can't answer goes only to that address. Back with: opentars brain pi")
-    sys.exit("usage: opentars brain [pi | lite | http://your-pc:11434 [model]]")
+    sys.exit("usage: opentars brain [pi | http://your-pc:11434 [model]]")
 
 
 def progresso(texto):
@@ -313,7 +295,7 @@ def remover():
 
 def opcoes():
     p = argparse.ArgumentParser(prog="opentars", description="openTARS Pi: a local AI assistant for small boards.",
-                                epilog="Also: opentars brain [pi|lite|URL], opentars update [check|undo|auto on|off], opentars gpio ..., opentars service on|off|status, opentars search on|off|URL")
+                                epilog="Also: opentars brain [pi|URL], opentars update [check|undo|auto on|off], opentars gpio ..., opentars service on|off|status, opentars search on|off|URL")
     p.add_argument("pedido", nargs="*", help="what to do; leave empty to chat")
     p.add_argument("--version", action="version", version=f"openTARS Pi {VERSAO}")
     p.add_argument("--auto", action="store_true", help="run commands that change things without asking (dangerous ones still ask)")
