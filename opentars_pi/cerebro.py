@@ -78,6 +78,7 @@ class CerebroGargantua:
     def __init__(self, url, modelo="", motor=None, nome="Gargantua"):
         self.url, self.modelo, self.motor, self.nome = url.rstrip("/"), modelo, motor, nome
         self.ollama = None
+        self._arquivo = self._pronto = None
 
     def sistema(self, memoria, idioma):
         texto = _CONTRATO["sistema"] + _bloco_da_placa()
@@ -88,6 +89,14 @@ class CerebroGargantua:
     def preparar(self, sistema):
         if self.motor:
             self.motor.ligar()
+            # o prompt com as 19 ferramentas leva minutos numa placa lenta: lido uma vez, fica guardado em disco (como o do Pi)
+            self._arquivo = self.motor._arquivo_do_prefixo((sistema or "") + json.dumps(_CONTRATO["ferramentas"]))
+            if self._pronto != self._arquivo and (pastas.CACHE / self._arquivo).exists():
+                try:
+                    self.motor._pedir("/slots/0?action=restore", {"filename": self._arquivo}).close()
+                    self._pronto = self._arquivo
+                except (OSError, ValueError):
+                    pass
         if self.ollama is None:
             try:
                 urllib.request.urlopen(self.url + "/api/tags", timeout=3).close()
@@ -131,6 +140,15 @@ class CerebroGargantua:
             if self.modelo:
                 corpo["model"] = self.modelo
             mensagem = self._pedir("/v1/chat/completions", corpo)["choices"][0]["message"]
+            if self.motor and self._arquivo and self._pronto != self._arquivo:
+                try:
+                    self.motor._pedir("/slots/0?action=save", {"filename": self._arquivo}).close()
+                    self._pronto = self._arquivo
+                    for velho in pastas.CACHE.glob("*.bin"):         # a data no prompt muda todo dia: não acumula no cartão
+                        if velho.name != self._arquivo and time.time() - velho.stat().st_mtime > 2 * 86400:
+                            velho.unlink()
+                except (OSError, ValueError):
+                    pass
         chamadas = mensagem.get("tool_calls") or []
         if chamadas:
             funcao = chamadas[0]["function"]
