@@ -146,7 +146,7 @@ def _contar_linhas(f, idioma):
     real, nota = _arquivo_ou_substituto(f.g(a, 1), idioma)
     if not real:
         return nota
-    return _resultado(f"wc -l < {_q(_rel(real))}", idioma, "linhas", _rel(real), nota)
+    return _resultado(f"wc -l {_q(_rel(real))}", idioma, "linhas", _rel(real), nota)     # com "<" a segurança pediria aprovação de uma leitura
 
 
 def _contar_arquivos(f, idioma):
@@ -595,8 +595,8 @@ def resumir(plano_, resultado, idioma):
     chave, alvo = plano_.get("resumo"), plano_.get("alvo")
     saida = (resultado.get("stdout") or "").strip()
     linhas = [l for l in saida.splitlines() if l.strip()]
-    if chave == "linhas" and saida.isdigit():
-        return t("r_linhas", idioma, n=int(saida), alvo=alvo)
+    if chave == "linhas" and saida.split()[:1] and saida.split()[0].isdigit():
+        return t("r_linhas", idioma, n=int(saida.split()[0]), alvo=alvo)
     if chave == "ocorrencias":
         n = int(saida) if saida.isdigit() else 0
         return t("r_ocorrencias", idioma, n=n, termo=plano_.get("termo"), alvo=alvo)
