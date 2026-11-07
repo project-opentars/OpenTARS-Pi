@@ -25,7 +25,8 @@ _TEMP = re.compile(r"\b(temperatura|temperature|temp)\b.{0,20}\b(placa|cpu|proce
                    r"\b(placa|cpu|processador|board|chip)\b.{0,25}\b(temperatura|temperature|temp|quente|hot)\b|\bhow (hot|warm)\b|\boverheat|^(what'?s|whats|what is|qual e|qual) (the |a )?(temperature|temperatura)\??$|\b(superaquec|esquentando)|^(qual a )?temperatura\??$|^temperature\??$")
 _LIGADA = re.compile(r"\buptime\b|\b(ha )?quanto tempo\b.{0,30}\b(ligad|rodando)|\bhow long\b.{0,30}\b(running|been on|been up|up)\b")
 _IP = re.compile(r"\b(meu ip|o ip|endereco ip|ip address|my ip|the ip|ip local|ip da placa)\b|^ip\??$")
-_CPU = re.compile(r"\b(uso|carga|usage|load)\b.{0,15}\b(cpu|processador)\b|\b(cpu|processador)\b.{0,15}\b(uso|carga|usage|load)\b|\b(quantos nucleos|how many cores)\b")
+_CPU = re.compile(r"\b(uso|carga|usage|load)\b.{0,15}\b(cpu|processador)\b|\b(cpu|processador)\b.{0,15}\b(uso|carga|usage|load)\b|\b(quantos nucleos|how many (cpu )?cores|quantos (cores|processadores)|nucleos (de cpu|do processador|tem)|cpu cores)\b")
+_WIFI = re.compile(r"\b(wi-?fi|wi fi|wireless|rede sem fio)\b")
 _QUE_PLACA = re.compile(r"\b(que|qual|which|what)\b.{0,12}\b(placa|board|computador|computer|hardware)\b.{0,12}\b(e|esta|essa|is|this)\b|"
                         r"\b(modelo|model)\b.{0,20}\b(placa|board|computador|computer)\b|\b(distro|distribuicao|sistema operacional|operating system)\b")
 _HORA = re.compile(r"\b(que horas|what time|horas sao)\b")
@@ -52,6 +53,11 @@ def _estado(n, idioma):
     if _IP.search(n):
         ip = placa.ip_local()
         return t("ip", idioma, ip=ip) if ip else t("sem_ip", idioma)
+    if _WIFI.search(n) and not re.search(r"\b(senha|password|liga|desliga|conecta|connect to|turn)\b", n):
+        rede = placa.wifi()
+        if not rede:
+            return t("sem_wifi", idioma)
+        return t("wifi", idioma, iface=rede[0], ip=placa.ip_local() or "?") if rede[1] else t("wifi_fora", idioma)
     if _CPU.search(n):
         return t("cpu", idioma, nucleos=os.cpu_count(), carga=os.getloadavg()[0])
     if _QUE_PLACA.search(n):
@@ -120,10 +126,12 @@ def _recusa(n, idioma):
 
 # ---- memória ----
 _LEMBRAR = re.compile(_POLIDEZ + r"(lembra|lembre|lembrar|anota|anote|grava|grave|guarda|guarde|salva|salve|memoriza|memorize|nao esquece|nao esqueca|deixa registrado|deixe registrado|registra|registre|tenha em mente|"
-                                 r"remember|note|save|make a note|keep in mind|don'?t forget|write down|jot down)\b"
+                                 r"remember|note|save|make a note|keep in mind|don'?t forget|write down|jot down|remind me|me lembra|me lembre)\b"
                                  r"( ai| isso| disso| this| na memoria| to memory)?( que| that|:|(?= (my|meu|minha|eu|i)\b))\s*")
 _LEMBRAR_NO_FIM = re.compile(r"^(.+?)[,.]?\s+(keep that|remember that|guarda isso|lembra disso|anota isso|anota ai)[.!]?$")
 _ESQUECER = re.compile(_POLIDEZ + r"(esquece|esqueca|esquecer|forget)\b|\b(apaga|apague|remove|remova|tira|tire|limpa|delete|clear|take)\b.{0,40}\b(memoria|memory)\b")
+_ESQUECER_TUDO = re.compile(r"^(esquece|esqueca|esquecer|forget)\s+(tudo|everything)( que voce sabe( sobre mim)?| about me| you know( about me)?)?[.!]*$|"
+                            r"\b(apaga|apague|limpa|limpe|zera|zere|clear|wipe|erase|reset)\s+(toda |a |sua |your |the |all |de )*(memoria|memory)\b")
 _VER_MEMORIA = re.compile(r"\bo que (voce )?(lembra|guardou|sabe (de|sobre) mim)\b|\bwhat do you (remember|know about me)\b|\b(mostra|mostre|show)( a| your)? (sua )?(memoria|memory)\b|^/mem")
 
 
@@ -139,6 +147,9 @@ def _memoria(pedido, n, idioma):
     if achado:
         fato = (pedido.strip() if len(pedido.strip()) == len(n) else n)[:achado.end(1)]
         return t("anotado", idioma, fato=fato) if memoria.lembrar(fato) else None
+    if _ESQUECER_TUDO.search(n):
+        memoria.esquecer_tudo()
+        return t("esqueci_tudo", idioma)
     if _ESQUECER.search(n):
         saiu = memoria.esquecer(n)
         return t("esqueci", idioma, fato="; ".join(saiu)) if saiu else t("nada_guardado", idioma)

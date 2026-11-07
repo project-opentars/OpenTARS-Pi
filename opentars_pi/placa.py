@@ -64,5 +64,13 @@ def ip_local():
         return None
 
 
+def wifi():
+    """(interface, conectada) da primeira placa de Wi-Fi, ou None se não houver. Lê o /sys: sem programa e sem rede."""
+    for caminho in sorted(glob.glob("/sys/class/net/*/wireless")):
+        pasta = os.path.dirname(caminho)
+        return os.path.basename(pasta), _ler(pasta + "/operstate") == "up"
+    return None
+
+
 def tem_desktop():
     return bool(os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY"))

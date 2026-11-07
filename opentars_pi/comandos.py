@@ -12,6 +12,7 @@ _CAMINHO = r"(~?/[^\s'\"?,;]*|[\w.-]+\.[A-Za-z0-9]{1,6})"
 
 
 _PASTAS = {"documentos": "Documents", "area de trabalho": "Desktop", "imagens": "Pictures", "musicas": "Music", "home": "", "pessoal": ""}
+_NOMES = r"(downloads|documents|documentos|desktop|area de trabalho|pictures|imagens|music|musicas|videos|home|pessoal)\b"
 
 
 def _q(caminho):
@@ -86,6 +87,17 @@ def plano(pedido, n):
     a = _achar(r"\b(mv|move|mova|mover|renomeia|renomeie|renomear|rename)\s+(?:o arquivo |a pasta |the file |the folder )?" + _CAMINHO + r"\s+(?:para|pra|to|em|into|as|como)\s+(?:a pasta |the folder )?" + _CAMINHO, n)
     if a:
         return f"mv {_q(grupo(a, 2))} {_q(grupo(a, 3))}"
+    # esvaziar uma pasta ("apaga tudo da pasta /tmp"): o modelo trazia o comando da pergunta anterior
+    a = _achar(r"\b(?:apaga|apague|apagar|deleta|delete|remove|remova|limpa|limpe|limpar|esvazia|esvazie|esvaziar|clear|empty|wipe)\b\s+"
+               r"(?:(?:tudo|todo o conteudo|o conteudo|todos os arquivos|everything|all files|all|the contents)\s+(?:da|de|do|na|no|of|in|inside|from)\s+)?"
+               r"(?:a pasta |the folder |pasta |folder |o diretorio |the directory )" + _CAMINHO, n) or \
+        _achar(r"\b(?:apaga|apague|apagar|deleta|delete|remove|remova|limpa|limpe|limpar|esvazia|esvazie|clear|empty|wipe)\b\s+"
+               r"(?:tudo|todo o conteudo|o conteudo|todos os arquivos|everything|all files|all|the contents)\s+(?:da|de|do|na|no|of|in|inside|from)\s+" + _CAMINHO, n)
+    if a and _achar(r"\b(tudo|conteudo|todos|everything|all|contents|esvazia|esvazie|esvaziar|limpa|limpe|limpar|empty|clear|wipe)\b", n):
+        pasta = grupo(a, 1).rstrip("/")
+        if os.path.realpath(os.path.expanduser(pasta or "/")) in ("/", os.path.realpath(os.path.expanduser("~"))):
+            return None          # a raiz ou a pasta pessoal inteira: não vira regra, mesmo pedindo para digitar
+        return f"rm -rf -- {_q(pasta)}/*"
     # apagar
     a = _achar(r"\b(?:apaga|apague|apagar|deleta|delete|deletar|remove|remova|remover|exclui|exclua|excluir|rm)\s+(?:o arquivo |a pasta |the file |the folder |o |a |the )?" + _CAMINHO, n)
     if a:
@@ -101,6 +113,12 @@ def plano(pedido, n):
     if a:
         nome = grupo(a, 1)
         return f"find {_q(grupo(a, 2))} -name {shlex.quote('*' + nome if nome.startswith('.') else nome)} 2>/dev/null | head -50"
+    a = _achar(r"\b(?:procura|procure|acha|ache|encontra|encontre|find|locate|list|lista|liste|mostra|mostre)\b(?: all| the| todos os| os| my| meus)*\s+"
+               r"(?:(?:arquivos|files)\s+(?:terminados em |ending in |com extensao |with extension |do tipo )?(\*?\.[a-z0-9]{1,8})|(\*?\.[a-z0-9]{1,8})\s+(?:arquivos|files))"
+               r"(?:\s+(?:em|na|no|in|on|under)\s+(?:a |minha |my |the )?(?:home|pasta pessoal|home folder|placa|board|pasta inicial))?\s*[?.!]*$", n)
+    if a:
+        nome = a.group(1) or a.group(2)
+        return f"find ~ -name {shlex.quote(nome if nome.startswith('*') else '*' + nome)} -not -path '*/.*' 2>/dev/null | head -50"
     # procurar dentro de um arquivo
     a = _achar(r"\b(?:procura|procure|busca|busque|acha|ache|encontra|encontre|search|find|look)\b(?: for)?(?: a palavra| o texto| the word| the text)?\s+[\"']?([\w-]+)[\"']?\s+"
                r"(?:dentro d[eao]|no|na|em|in|inside)\s+(?:o arquivo |the file )?" + _CAMINHO, n)
@@ -116,6 +134,10 @@ def plano(pedido, n):
     a = _achar(r"\b(?:tamanho|quanto ocupa|quanto pesa|quanto espaco|how big|how large|how much space|size of|disk usage of)\b.{0,25}?" + _CAMINHO, n)
     if a:
         return "du -sh " + _q(grupo(a, 1))
+    a = _achar(r"\b(?:tamanho|quanto ocupa|quanto pesa|quanto espaco|how big|how large|how much space|size of|disk usage of)\b.{0,25}?\b(?:my|minha|meus|meu|a|na|da|the)?\s*(?:pasta |folder )?" + _NOMES, n)
+    if a:
+        pasta = _PASTAS.get(a.group(1), a.group(1).capitalize())
+        return "du -sh ~/" + (shlex.quote(pasta) if pasta else "")
     # olhar
     a = _achar(r"\b(?:(primeiras|first|ultimas|last)\s+(\d{1,4})|(\d{1,4})\s+(primeiras|ultimas))\s+(?:linhas|lines)\b.{0,20}?" + _CAMINHO, n)
     if a:
@@ -131,8 +153,7 @@ def plano(pedido, n):
     if a:
         return "head -n 100 " + _q(grupo(a, 1))
     # as pastas da pessoa, pelo nome
-    a = _achar(r"\b(?:lista|liste|listar|list|mostra|mostre|show|ver|veja|o que tem|what is in|what's in|whats in|what's inside|contents of)\b.{0,25}?\b(?:my|minha|meus|meu|a|na|da)?\s*(?:pasta )?"
-               r"(downloads|documents|documentos|desktop|area de trabalho|pictures|imagens|music|musicas|videos|home|pessoal)\b", n)
+    a = _achar(r"\b(?:lista|liste|listar|list|mostra|mostre|show|ver|veja|o que tem|what is in|what's in|whats in|what's inside|contents of)\b.{0,25}?\b(?:my|minha|meus|meu|a|na|da)?\s*(?:pasta )?" + _NOMES, n)
     if a:
         pasta = _PASTAS.get(a.group(1), a.group(1).capitalize())
         return "ls -la ~/" + (shlex.quote(pasta) if pasta else "")
@@ -150,4 +171,10 @@ def plano(pedido, n):
         return "ss -tuln"
     if _achar(r"\b(quem esta logado|quem esta conectado|who is logged in|who's logged in)\b", n):
         return "who"
+    if _achar(r"\b(usuarios|users|contas de usuario|user accounts)\b", n) and _achar(r"\b(quais|que|quantos|lista|liste|mostra|mostre|existem|tem|which|what|list|show|how many|are there)\b", n):
+        return "ls /home"
+    a = _achar(r"\b(?:log|logs|journal|registro) (?:do sistema|da placa|do kernel|of the system)\b|\bsystem ?logs?\b|\b(?:journal|syslog)\b", n)
+    if a:
+        quantas = _achar(r"\b(\d{1,3})\b", n)
+        return f"journalctl -n {quantas.group(1) if quantas else 20} --no-pager"
     return None

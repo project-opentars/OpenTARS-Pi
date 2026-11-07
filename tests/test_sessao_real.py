@@ -2,7 +2,7 @@
 import unittest
 
 import _util  # noqa: F401
-from opentars_pi import agente, atalhos, cli, comandos, conta, contrato, memoria, pastas
+from opentars_pi import agente, atalhos, cli, comandos, conta, contrato, memoria, pastas, seguranca
 
 
 class Motor:
@@ -101,6 +101,23 @@ class TesteSessao(unittest.TestCase):
         self.assertIn("gaveta", atalhos.resolver("deixa registrado que a chave fica na gaveta", "pt")["fala"])
         self.assertIn("calma", atalhos.resolver("tô cansado hoje", "pt")["fala"])
         self.assertIn("completo", atalhos.resolver("crie uma foto de um gato", "pt")["fala"])
+
+    def test_vinte_perguntas_de_07_11(self):
+        r = atalhos.resolver
+        self.assertEqual(r("quais usuários existem nessa placa", "pt"), {"comando": "ls /home"})
+        self.assertEqual(r("mostra as últimas 5 linhas do log do sistema", "pt"), {"comando": "journalctl -n 5 --no-pager"})
+        self.assertEqual(r("qual o tamanho da pasta Downloads", "pt"), {"comando": "du -sh ~/Downloads"})
+        self.assertEqual(r("procura arquivos .py na minha home", "pt"), {"comando": "find ~ -name '*.py' -not -path '*/.*' 2>/dev/null | head -50"})
+        self.assertEqual(r("apaga tudo da pasta /tmp", "pt"), {"comando": "rm -rf -- /tmp/*"})
+        self.assertEqual(seguranca.nivel("rm -rf -- /tmp/*"), "perigoso")
+        self.assertIsNone(r("apaga tudo da pasta /", "pt"), "a raiz não vira regra")
+        self.assertIn("núcleos", r("how many cpu cores do you have?", "pt")["fala"])
+        self.assertNotIn("Esquecido", r("apaga tudo da pasta /tmp/x", "pt").get("fala", ""), "esvaziar pasta não mexe na memória")
+        self.assertIn("backup", r("remind me that the backup runs on sunday", "en")["fala"])
+        self.assertIn("vazia", r("esquece tudo", "pt")["fala"])
+        self.assertEqual(memoria.ler(), [])
+        self.assertEqual(seguranca.nivel("journalctl -n 5 --no-pager"), "livre")
+        self.assertEqual(seguranca.nivel("journalctl --vacuum-size=1M"), "perguntar")
 
     def test_comando_inventado_nem_pede_aprovacao(self):
         pedidos = []

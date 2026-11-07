@@ -15,12 +15,13 @@ PERIGOSOS = [
 SO_LEITURA = {
     "ls", "cat", "head", "tail", "wc", "df", "du", "free", "uname", "uptime", "whoami", "id", "date", "pwd", "which", "ps",
     "lscpu", "lsblk", "lsusb", "lspci", "grep", "find", "sort", "uniq", "cut", "tr", "tree", "stat", "file", "sensors", "echo",
-    "printf", "basename", "dirname", "realpath", "nproc", "hostname", "ip", "ping", "gpioinfo", "dmesg", "vcgencmd", "ss",
+    "printf", "basename", "dirname", "realpath", "nproc", "hostname", "ip", "ping", "gpioinfo", "dmesg", "vcgencmd", "ss", "journalctl",
 }
 _PROIBIDO_NO_PROGRAMA = {
     "find": r"\s-(delete|exec|execdir|ok|okdir|fprint\w*|fls)\b", "sort": r"\s-\w*o\b|--output", "date": r"\s(-s|--set)\b",
     "hostname": r"\s\S", "ip": r"\b(add|del|delete|set|flush|change|replace)\b", "dmesg": r"\s-\w*[cC]\b|--clear",
     "vcgencmd": r"\b(display_power|otp_dump)\b", "ss": r"\s-\w*[KDF]|--kill|--diag|--filter",
+    "journalctl": r"--(vacuum|rotate|flush|sync|relinquish|smart-relinquish|setup-keys|update-catalog)",
 }
 SENSIVEL = re.compile(r"\.ssh\b|\.gnupg|\.config/|\.env\b|/etc/shadow|/etc/sudoers|id_rsa|id_ed25519|\.netrc|\.aws|\.hermes|"
                       r"opentars-pi/dados|\btoken\b|\bsenha\b|password", re.IGNORECASE)

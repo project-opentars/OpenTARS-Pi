@@ -43,6 +43,10 @@ def esquecer(texto):
     return saiu
 
 
+def esquecer_tudo():
+    pastas.gravar_json(pastas.MEMORIA, [])
+
+
 def pino_de(palavra):
     """O pino que a pessoa guardou para esse nome ('o relé está no pino PC5'), ou None."""
     alvo = _sem_acento(palavra)

@@ -39,13 +39,18 @@ def chaves(texto):
     return [p for p in re.findall(r"\w+", texto.lower()) if p not in _VAZIAS and (len(p) > 1 or p.isdigit())]
 
 
+def raizes(texto):
+    """As chaves cortadas em 5 letras: "descobriu" acha "descoberta", "wrote" não acha "written", mas "invented" acha "invention"."""
+    return {p[:5] for p in chaves(texto)}
+
+
 def melhor_frase(texto, consulta, assunto=""):
     """A frase do resumo que mais divide palavras com a pergunta. As palavras do título não contam: na página France, quem responde
     "capital of France" é a frase que fala de capital."""
     frases = [f.strip() for f in re.split(r"(?<=[.!?])\s+(?=[A-ZÀ-Ú])", texto) if f.strip()]
-    procura = set(chaves(consulta))
-    procura = (procura - set(chaves(assunto))) or procura
-    return max(frases, key=lambda f: len(set(chaves(f)) & procura), default="")
+    procura = raizes(consulta)
+    procura = (procura - raizes(assunto)) or procura
+    return max(frases, key=lambda f: len(raizes(f) & procura), default="")
 
 
 def _resumo(idioma, pagina):
