@@ -171,7 +171,7 @@ def escolher(motor):
 
 
 ARQUIVO_LITE = "gargantua-1.2-lite-qwen3.5-0.8b-Q4_0.gguf"
-SHA_LITE = "a6f164ca28bad3a6654078ea79f21d18f1da28b50489ff8012754b19772aaa39"
+SHA_LITE = "c519103c65de13742ed3fded28aad066d75834dada4c651ce1bbcb87747d9c27"
 URL_LITE = "https://huggingface.co/OpenTARS/Gargantua-2-Lite/resolve/main/" + ARQUIVO_LITE
 MB_LITE = 479
 
